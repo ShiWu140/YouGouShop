@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * 订单实体类
@@ -22,7 +22,7 @@ public class Order {
     /**
      * 订单创建时间
      */
-    private Timestamp createTime;
+    private LocalDateTime createTime;
 
     /**
      * 收货地址

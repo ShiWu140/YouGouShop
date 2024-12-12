@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * 商品实体类
@@ -48,7 +48,7 @@ public class Product {
     /**
      * 商品创建时间
      */
-    private Timestamp createTime;
+    private LocalDateTime createTime;
 
     /**
      * 商品品牌

@@ -14,7 +14,7 @@ import java.util.List;
 public class SearchHistoryServiceImpl implements SearchHistoryService {
 
     // 实例化dao层对象,方便调用dao层方法
-    private SearchHistoryDAO searchHistoryDAO = new SearchHistoryDAOImpl();
+    private final SearchHistoryDAO searchHistoryDAO = new SearchHistoryDAOImpl();
 
     /**
      * 查询分页方法

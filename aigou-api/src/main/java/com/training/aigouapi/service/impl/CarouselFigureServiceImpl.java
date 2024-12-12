@@ -18,7 +18,7 @@ public class CarouselFigureServiceImpl implements CarouselFigureService {
     /**
      * 调用dao层对象
      */
-    private CarouselFigureDAO carouselFigureDAO = new CarouselFigureDAOImpl();
+    private final CarouselFigureDAO carouselFigureDAO = new CarouselFigureDAOImpl();
 
     /**
      * 查询分页方法

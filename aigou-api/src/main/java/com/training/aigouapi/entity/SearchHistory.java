@@ -1,9 +1,10 @@
 package com.training.aigouapi.entity;
 
-import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 /**
  * 搜索历史实体类
@@ -32,5 +33,5 @@ public class SearchHistory {
     /**
      * 搜索时间
      */
-    private Timestamp searchTime;
+    private LocalDateTime searchTime;
 }

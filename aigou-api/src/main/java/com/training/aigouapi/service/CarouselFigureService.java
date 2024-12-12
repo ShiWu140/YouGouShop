@@ -13,7 +13,8 @@ import java.util.List;
 public interface CarouselFigureService {
     /**
      * 查询分页信息
-     * @param current 起始页
+     *
+     * @param current  起始页
      * @param pageSize 总数
      * @return 包含轮播图数据的分页对象
      */

@@ -6,10 +6,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -61,31 +59,31 @@ public class JDBCUtils {
         }
     }
 
-/**
- * 将给定的小驼峰命名法字符串转换为下划线命名法
- * 该方法主要用于将Java字段名转换为数据库列名
- * Java字段名通常使用驼峰命名法，而数据库列名则使用下划线来分隔单词
- *
- * @param camelCaseName Java字段名，例如：userName
- * @return 转换后的下划线命名法字符串，例如：user_name
- */
-private static String toSnakeCase(String camelCaseName) {
-    // 创建一个StringBuilder对象来构建最终的下划线命名字符串
-    StringBuilder snakeCase = new StringBuilder();
+    /**
+     * 将给定的小驼峰命名法字符串转换为下划线命名法
+     * 该方法主要用于将Java字段名转换为数据库列名
+     * Java字段名通常使用驼峰命名法，而数据库列名则使用下划线来分隔单词
+     *
+     * @param camelCaseName Java字段名，例如：userName
+     * @return 转换后的下划线命名法字符串，例如：user_name
+     */
+    private static String toSnakeCase(String camelCaseName) {
+        // 创建一个StringBuilder对象来构建最终的下划线命名字符串
+        StringBuilder snakeCase = new StringBuilder();
 
-    // 遍历输入字符串的每个字符
-    for (char c : camelCaseName.toCharArray()) {
-        // 如果当前字符是大写字母，则在其前面添加一个下划线，并将该字符转换为小写
-        if (Character.isUpperCase(c)) {
-            snakeCase.append('_').append(Character.toLowerCase(c));
-        } else {
-            // 否则，直接将当前字符添加到结果字符串中
-            snakeCase.append(c);
+        // 遍历输入字符串的每个字符
+        for (char c : camelCaseName.toCharArray()) {
+            // 如果当前字符是大写字母，则在其前面添加一个下划线，并将该字符转换为小写
+            if (Character.isUpperCase(c)) {
+                snakeCase.append('_').append(Character.toLowerCase(c));
+            } else {
+                // 否则，直接将当前字符添加到结果字符串中
+                snakeCase.append(c);
+            }
         }
+        // 返回构建好的下划线命名法字符串
+        return snakeCase.toString();
     }
-    // 返回构建好的下划线命名法字符串
-    return snakeCase.toString();
-}
 
 
     /**
@@ -121,6 +119,10 @@ private static String toSnakeCase(String camelCaseName) {
                     Object value = rs.getObject(columnName);
                     // 设置属性可以访问
                     field.setAccessible(true);
+                    // 检查是否需要转换 Timestamp 到 LocalDateTime
+                    if (value instanceof Timestamp && field.getType() == LocalDateTime.class) {
+                        value = ((Timestamp) value).toLocalDateTime();
+                    }
                     // 给属性赋值 对象.属性 = 值
                     field.set(object, value);
                 }

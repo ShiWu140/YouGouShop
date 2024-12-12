@@ -5,7 +5,6 @@ import com.training.aigouapi.entity.SearchHistory;
 import com.training.aigouapi.util.JDBCUtils;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -72,7 +71,7 @@ public class SearchHistoryDAOImpl implements SearchHistoryDAO {
                 searchHistory.getSearchWords(),
                 searchHistory.getNum(),
                 // 插入当前时间，其他业务不对时间进行修改
-                Timestamp.valueOf(LocalDateTime.now()));
+                LocalDateTime.now());
         return rows > 0;
     }
 

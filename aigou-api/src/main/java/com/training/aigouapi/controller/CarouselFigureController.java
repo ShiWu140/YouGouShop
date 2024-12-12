@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 轮播图控制器
+ */
 @RestController
 @RequestMapping("/carouselFigure")
 @CrossOrigin
@@ -20,19 +23,47 @@ public class CarouselFigureController {
     private CarouselFigureService carouselFigureService;
 
     /**
-     * 分页查询用户信息
+     * 分页查询轮播图
      *
      * @param current  当前页码
-     * @param pagesize 每页显示数量
-     * @return 包含分页用户信息的响应实体
+     * @param pageSize 每页显示数量
+     * @return 包含分页轮播图的响应实体
      */
-    @PostMapping("/page")
-    public ResponseEntity<PageEntity<CarouselFigure>> page(@RequestParam Integer current, @RequestParam Integer pagesize) {
-        PageEntity<CarouselFigure> carouselFigurePageEntityPageEntity = carouselFigureService.findPage(current, pagesize);
-        return ResponseEntity.ok(carouselFigurePageEntityPageEntity);
+    @GetMapping("/page/{current}/{pageSize}")
+    public ResponseEntity<PageEntity<CarouselFigure>> page(@PathVariable(value = "current") Integer current, @PathVariable(value = "pageSize") Integer pageSize) {
+        PageEntity<CarouselFigure> carouselFigurePageEntity = carouselFigureService.findPage(current, pageSize);
+        return ResponseEntity.ok(carouselFigurePageEntity);
     }
 
+    /**
+     * 根据ID查询轮播图
+     *
+     * @param id 轮播图ID
+     * @return 查询到的轮播图或错误响应实体
+     */
+    @GetMapping("/queryId")
+    public ResponseEntity<CarouselFigure> findById(@RequestParam String id) {
+        Optional<CarouselFigure> carouselFigure = Optional.ofNullable(carouselFigureService.findId(id));
+        return carouselFigure.map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build());
+    }
 
+    /**
+     * 查询所有轮播图
+     *
+     * @return 所有轮播图列表的响应实体
+     */
+    @GetMapping("/queryAll")
+    public ResponseEntity<List<CarouselFigure>> findAll() {
+        List<CarouselFigure> carouselFigures = carouselFigureService.findAll();
+        return ResponseEntity.ok(carouselFigures);
+    }
+
+    /**
+     * 添加轮播图
+     *
+     * @param carouselFigure 轮播图对象
+     * @return 添加结果的响应实体
+     */
     @PostMapping("/add")
     public ResponseEntity<ApiResponse<String>> register(CarouselFigure carouselFigure) {
         if (carouselFigureService.findId(carouselFigure.getId()) != null) {
@@ -46,8 +77,13 @@ public class CarouselFigureController {
         }
     }
 
-
-    @PostMapping("/modify")
+    /**
+     * 修改轮播图
+     *
+     * @param carouselFigure 轮播图对象
+     * @return 更新结果的响应实体
+     */
+    @PutMapping("/modify")
     public ResponseEntity<ApiResponse<Void>> update(CarouselFigure carouselFigure) {
         boolean rs = carouselFigureService.update(carouselFigure);
         if (rs) {
@@ -57,7 +93,13 @@ public class CarouselFigureController {
         }
     }
 
-    @PostMapping("/delete")
+    /**
+     * 删除轮播图
+     *
+     * @param id 轮播图ID
+     * @return 删除结果的响应实体
+     */
+    @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse<Void>> delete(@RequestParam String id) {
         boolean rs = carouselFigureService.remove(id);
         if (rs) {
@@ -66,19 +108,4 @@ public class CarouselFigureController {
             return ResponseEntity.badRequest().body(new ApiResponse<>(400, "CarouselFigure 删除失败"));
         }
     }
-
-
-    @PostMapping("/queryId")
-    public ResponseEntity<CarouselFigure> findById(@RequestParam String id) {
-        Optional<CarouselFigure> carouselFigure = Optional.ofNullable(carouselFigureService.findId(id));
-        return carouselFigure.map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build());
-    }
-
-
-    @RequestMapping("/queryAll")
-    public ResponseEntity<List<CarouselFigure>> findAll() {
-        List<CarouselFigure> carouselFigure = carouselFigureService.findAll();
-        return ResponseEntity.ok(carouselFigure);
-    }
-
 }
