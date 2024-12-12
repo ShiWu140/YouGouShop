@@ -3,14 +3,14 @@ export default {
   data() {
     return {
       form: {
-        user_name: '',
-        user_pwd: ''
+        userName: '',
+        userPwd: ''
       },
       rules: {
-        user_name: [
+        userName: [
           {required: true, message: '请输入用户名', trigger: 'change'}
         ],
-        user_pwd: [
+        userPwd: [
           {required: true, message: '请输入密码', trigger: 'change'}
         ]
       }
@@ -24,14 +24,32 @@ export default {
   methods: {
     login() {
       console.log('login:' + this.$qs.stringify(this.form))
-      this.$http.post('/user?method=login', this.$qs.stringify(this.form)).then(resp => {
+      this.$http.post('/user/login', this.$qs.stringify(this.form)).then(resp => {
         console.log(resp.data)
-        if (resp.data.msg === 'success') {
+        if (resp.status === 200) {
           //登录成功后跳转管理页面
-          localStorage.setItem('user', JSON.stringify(resp.data.data));
+          localStorage.setItem('user', JSON.stringify(resp.data));
           this.$router.push({path: '/admin'})
         } else {
-          this.$alert(resp.data.data, '登录失败', {
+          this.$alert('Error', {
+            confirmButtonText: '确定', type: 'warning'
+          });
+        }
+      }).catch(error => {
+        // 处理HTTP错误
+        if (error.response) {
+          this.$alert('登录失败,账号或密码错误', {
+            confirmButtonText: '确定', type: 'warning'
+          });
+        } else if (error.request) {
+          // 请求已发出，但没有收到响应
+          this.$alert('登录失败,未收到服务器相应', {
+            confirmButtonText: '确定', type:
+                'warning'
+          });
+        } else {
+          // 在设置请求时发生了一些事情，触发了错误
+          this.$alert('登录失败,请检查配置', {
             confirmButtonText: '确定', type: 'warning'
           });
         }
@@ -56,11 +74,11 @@ export default {
           <el-col :span="12">
             <h1>爱购网后台管理系统</h1>
             <el-form ref="form" :model="form" :rules="rules" style="padding: 30px">
-              <el-form-item label="用户名" prop="user_name">
-                <el-input v-model.trim="form.user_name" placeholder="请输入内容" @keyup.enter.native="login"></el-input>
+              <el-form-item label="用户名" prop="userName">
+                <el-input v-model.trim="form.userName" placeholder="请输入内容" @keyup.enter.native="login"></el-input>
               </el-form-item>
-              <el-form-item label="密码" prop="user_pwd">
-                <el-input v-model.trim="form.user_pwd" placeholder="请输入密码" show-password
+              <el-form-item label="密码" prop="userPwd">
+                <el-input v-model.trim="form.userPwd" placeholder="请输入密码" show-password
                           @keyup.enter.native="login"></el-input>
               </el-form-item>
               <el-form-item>

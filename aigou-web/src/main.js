@@ -10,7 +10,7 @@ Vue.config.productionTip = false;
 Vue.prototype.$qs = qs;
 Vue.prototype.$http = axios;
 Vue.prototype.$http.defaults.baseURL = 'http://127.0.0.1:8080';
-Vue.prototype.$http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+Vue.prototype.$http.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 Vue.use(ElementUI);
 new Vue({
     router, render: function (h) {

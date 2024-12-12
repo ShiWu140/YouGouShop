@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     operateUser(user) {
-      this.$http.post("/user?method=" + this.operate + "&" + this.$qs.stringify(user)).then((response) => {
+      this.$http.post("/user/" + this.operate + "/" + this.$qs.stringify(user)).then((response) => {
         if (response.data.msg === 'success') {
           this.$message({
             type: 'success',
@@ -119,7 +119,7 @@ export default {
       });
     },
     handleRegistUser() {
-      this.operate = 'register';
+      this.operate = 'add';
       this.userFormVisible = true;
     },
     handleDelete(index, row) {
@@ -138,8 +138,8 @@ export default {
       });
     },
     loadUsers(current) {
-      this.current = current
-      this.$http.post('/user?method=page&current=' + this.current + '&pagesize=' + this.pageSize)
+      this.current = current;
+      this.$http.post(`/user/${this.current}/${this.pageSize}`)
           .then(res => {
             console.log(res.data);
             if (res.data.msg === "success") {
@@ -151,6 +151,9 @@ export default {
               }
             }
           })
+          .catch(error => {
+            console.error('Error loading users:', error);
+          });
     },
     handleSizeChange(val) {
       this.pageSize = val;
