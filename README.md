@@ -10,20 +10,19 @@
 4. **主要修改controller**，修改之前dao.impl，service.impl不规范的地方
 5. 后端接口修改好后，记得同步**修改前端请求**
 6. 部分页面需要添加**搜索功能**
-7. Controller 方法名
-    - GET
-        - 分页 /page/{pageSize}/{current}
-        - 查询ID /{id}
-        - 查询全部 /all
-        - 搜索 /search/{words}    (仅部分页面需要)
-            - 搜索关键词 words
-    - PUT
-        - 修改 /modify
-    - DELETE
-        - 删除 /{id}
-    - POST
-        - 添加 /add
-        - 登录 /login
+7. Controller 方法名及接口定义。**item为资源名**，如product.
+
+   | 功能   | 方法     | 路径                               | Controller 方法名 |
+   |------|--------|----------------------------------|----------------|
+   | 分页   | GET    | `/items?page={page}&size={size}` | `page`         |
+   | 查询   | GET    | `/items/{id}`                    | `getID`        |
+   | 查询全部 | GET    | `/items`                         | `getAll`       |
+   | 搜索   | GET    | `/items/search?words={words}`    | `search`       |
+   | 修改   | PUT    | `/items/{id}`                    | `modify`       |
+   | 删除   | DELETE | `/items/{id}`                    | `delete`       |
+   | 添加   | POST   | `/items`                         | `add`          |
+   | 登录   | POST   | `/auth/login`                    | `login`        |
+
 8. 修改方法
     1. entity不变
     2. dao
