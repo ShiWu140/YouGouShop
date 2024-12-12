@@ -16,7 +16,7 @@
    |------|--------|----------------------------------|----------------|
    | 分页   | GET    | `/items?page={page}&size={size}` | `page`         |
    | 查询   | GET    | `/items/{id}`                    | `getID`        |
-   | 查询全部 | GET    | `/items`                         | `getAll`       |
+   | 查询全部 | GET    | `/items/all`                     | `getAll`       |
    | 搜索   | GET    | `/items/search?words={words}`    | `search`       |
    | 修改   | PUT    | `/items`                         | `modify`       |
    | 删除   | DELETE | `/items/{id}`                    | `delete`       |
