@@ -10,8 +10,8 @@
 4. **主要修改controller**，修改之前dao.impl，service.impl不规范的地方
 5. 后端接口修改好后，记得同步**修改前端请求**
 6. 部分页面需要添加**搜索功能**
-6. 统一使用**post**
-7. Controller 方法名/接口名
+7. 查询使用Get，增删改使用Post
+8. Controller 方法名/接口名
     - 添加 /add
     - 修改 /modify
     - 删除 /delete
@@ -23,7 +23,7 @@
     - 搜索 /search
       - 搜索关键词 words
       - 搜索字段名 field
-8. 修改方法
+9. 修改方法
    1. entity不变
    2. dao
       1. @Repository
