@@ -1,9 +1,7 @@
 package com.training.aigouapi.util;
 
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * 生成唯一ID
@@ -31,7 +29,9 @@ public class IDUtils {
         this.machineId = machineId;
     }
 
-    public synchronized long get() {
+//
+
+    public synchronized String get() {
         long timestamp = System.currentTimeMillis();
         if (timestamp < lastTimestamp) {
             throw new RuntimeException("Clock moved backwards. Refusing to generate id");
@@ -45,9 +45,9 @@ public class IDUtils {
             sequence = 0;
         }
         lastTimestamp = timestamp;
-        return ((timestamp - epoch) << (machineIdBits + sequenceBits))
+        return String.valueOf(((timestamp - epoch) << (machineIdBits + sequenceBits))
                 | (machineId << sequenceBits)
-                | sequence;
+                | sequence);
     }
 
     private long waitForNextMillis(long lastTimestamp) {
@@ -57,17 +57,16 @@ public class IDUtils {
         }
         return timestamp;
     }
-
-//    public static void main(String[] args) {
+//      public static void main(String[] args) {
 //        // 创建 IDUtils 实例
 //        IDUtils idUtils = new IDUtils(1L);
 //
 //        // 测试生成唯一ID的方法
-//        Set<Long> uniqueIds = new HashSet<>();
+//        Set<String> uniqueIds = new HashSet<>();
 //        int duplicateCount = 0;
 //
 //        for (int i = 0; i < 10000; i++) {
-//            long id = idUtils.get();
+//            String id = idUtils.get();
 //            System.out.println("Generated ID: " + id);
 //            if (!uniqueIds.add(id)) {
 //                duplicateCount++;
