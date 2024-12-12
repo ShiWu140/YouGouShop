@@ -1,5 +1,6 @@
 package com.training.aigouapi.controller;
 
+import com.training.aigouapi.entity.Brand;
 import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.entity.Sales;
 import com.training.aigouapi.service.SalesService;
@@ -31,8 +32,17 @@ public class SalesController {
      */
     @GetMapping
     public ResponseEntity<PageEntity<Sales>> page(@RequestParam Integer page, @RequestParam Integer size) {
-        PageEntity<Sales> salesPageEntity = salesService.findPage(page, size);
-        return ResponseEntity.ok(salesPageEntity);
+        return ResponseEntity.ok(salesService.findPage(page, size));
+    }
+
+    /**
+     * 查询所有销售记录
+     *
+     * @return 所有销售记录的列表
+     */
+    @GetMapping("/all")
+    public ResponseEntity<List<Sales>> getAll() {
+        return ResponseEntity.ok(salesService.findAll());
     }
 
     /**
@@ -49,17 +59,6 @@ public class SalesController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    /**
-     * 查询所有销售记录
-     *
-     * @return 所有销售记录的列表
-     */
-    @GetMapping("/all")
-    public ResponseEntity<List<Sales>> getAll() {
-        List<Sales> salesList = salesService.findAll();
-        return ResponseEntity.ok(salesList);
     }
 
     /**
@@ -83,34 +82,27 @@ public class SalesController {
      */
     @PostMapping
     public ResponseEntity<Sales> add(@RequestBody Sales sales) {
-        if (salesService.findId(sales.getId()) != null) {
-            return ResponseEntity.badRequest().body(null);
-        }
         boolean success = salesService.save(sales);
         if (success) {
             return ResponseEntity.ok(sales);
         } else {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().build();
         }
     }
 
     /**
      * 更新销售记录
      *
-     * @param id    销售记录 id
      * @param sales 要更新的销售记录
      * @return 更新后的销售记录
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<Sales> modify(@PathVariable String id, @RequestBody Sales sales) {
-        if (!id.equals(sales.getId())) {
-            return ResponseEntity.badRequest().body(null);
-        }
+    @PutMapping
+    public ResponseEntity<Sales> modify(@RequestBody Sales sales) {
         boolean success = salesService.update(sales);
         if (success) {
             return ResponseEntity.ok(sales);
         } else {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -124,7 +116,7 @@ public class SalesController {
     public ResponseEntity<Void> delete(@PathVariable String id) {
         boolean success = salesService.remove(id);
         if (success) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();
         }

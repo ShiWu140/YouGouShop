@@ -15,7 +15,7 @@
    | 功能   | 方法     | 路径                               | Controller 方法名 |
    |------|--------|----------------------------------|----------------|
    | 分页   | GET    | `/items?page={page}&size={size}` | `page`         |
-   | 查询   | GET    | `/items/{id}`                    | `getID`        |
+   | 查询   | GET    | `/items/{id}`                    | `getId`        |
    | 查询全部 | GET    | `/items/all`                     | `getAll`       |
    | 搜索   | GET    | `/items/search?words={words}`    | `search`       |
    | 修改   | PUT    | `/items`                         | `modify`       |
