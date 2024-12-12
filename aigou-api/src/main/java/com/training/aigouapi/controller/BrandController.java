@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 品牌 目前仅供测试，规范参考README
+ * 品牌
  *
  * @author ethan
  */
@@ -25,13 +25,13 @@ public class BrandController {
     /**
      * 分页查询品牌信息
      *
-     * @param current  当前页码
-     * @param pageSize 每页大小
+     * @param page  当前页码
+     * @param size 每页大小
      * @return 包含品牌数据的分页对象
      */
-    @GetMapping("/page")
-    public ResponseEntity<PageEntity<Brand>> findPage(@RequestParam int current, @RequestParam int pageSize) {
-        PageEntity<Brand> brands = brandService.findPage(current, pageSize);
+    @GetMapping
+    public ResponseEntity<PageEntity<Brand>> findPage(@RequestParam int page, @RequestParam int size) {
+        PageEntity<Brand> brands = brandService.findPage(page, size);
         return ResponseEntity.ok(brands);
     }
 
@@ -63,12 +63,24 @@ public class BrandController {
     }
 
     /**
+     * 搜索品牌信息
+     *
+     * @param words 关键字
+     * @return 符合条件的品牌列表
+     */
+//    @GetMapping("/search")
+//    public ResponseEntity<List<Brand>> search(@RequestParam String words) {
+//        List<Brand> brands = brandService.search(words);
+//        return ResponseEntity.ok(brands);
+//    }
+
+    /**
      * 添加品牌
      *
      * @param brand 品牌对象
      * @return 成功或失败信息
      */
-    @PostMapping("/save")
+    @PostMapping
     public ResponseEntity<?> save(@RequestBody Brand brand) {
         if (brand == null || brand.getId() == null || brand.getBrandName() == null || brand.getBrandType() == null || brand.getBrandImg() == null) {
             return ResponseEntity.badRequest().body("品牌信息不完整");
@@ -87,12 +99,13 @@ public class BrandController {
     /**
      * 更新品牌信息
      *
+     * @param id    品牌ID
      * @param brand 品牌对象
      * @return 成功或失败信息
      */
-    @PutMapping("/update")
-    public ResponseEntity<?> update(@RequestBody Brand brand) {
-        if (brand == null || brand.getId() == null || brand.getBrandName() == null || brand.getBrandType() == null || brand.getBrandImg() == null) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable String id, @RequestBody Brand brand) {
+        if (brand == null || id == null || brand.getBrandName() == null || brand.getBrandType() == null || brand.getBrandImg() == null) {
             return ResponseEntity.badRequest().body("品牌信息不完整");
         }
         boolean rs = brandService.update(brand);
@@ -109,7 +122,7 @@ public class BrandController {
      * @param id 品牌ID
      * @return 成功或失败信息
      */
-    @DeleteMapping("/remove/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable String id) {
         boolean rs = brandService.remove(id);
         if (rs) {
