@@ -10,32 +10,32 @@
 4. **主要修改controller**，修改之前dao.impl，service.impl不规范的地方
 5. 后端接口修改好后，记得同步**修改前端请求**
 6. 部分页面需要添加**搜索功能**
-7. 查询使用Get，增删改使用Post
-8. Controller 方法名/接口名
-    - 添加 /add
-    - 修改 /modify
-    - 删除 /delete
-    - 查询ID /queryId
-    - 查询全部 /queryAll
-    - 登录 /login
-    - 分页 /page
-    - 分页 /page
-    - 搜索 /search
-      - 搜索关键词 words
-      - 搜索字段名 field
-9. 修改方法
-   1. entity不变
-   2. dao
-      1. @Repository
-   3. service
-      1. @Service
-      2. @Resource
-   4. controller
-      1. @CrossOrigin
-      2. @RestController
-      3. @RequestMapping
-      4. @Resource
-
+7. Controller 方法名
+    - GET
+        - 分页 /page/{pageSize}/{current}
+        - 查询ID /{id}
+        - 查询全部 /all
+        - 搜索 /search/{words}    (仅部分页面需要)
+            - 搜索关键词 words
+    - PUT
+        - 修改 /modify
+    - DELETE
+        - 删除 /{id}
+    - POST
+        - 添加 /add
+        - 登录 /login
+8. 修改方法
+    1. entity不变
+    2. dao
+        1. @Repository
+    3. service
+        1. @Service
+        2. @Resource
+    4. controller
+        1. @CrossOrigin
+        2. @RestController
+        3. @RequestMapping
+        4. @Resource
 
 # 施工进度
 
