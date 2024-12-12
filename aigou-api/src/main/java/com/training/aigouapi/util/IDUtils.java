@@ -1,8 +1,5 @@
 package com.training.aigouapi.util;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * 生成唯一ID
  *
@@ -11,27 +8,25 @@ import java.util.Set;
  * @since 2024/12/12 14:22
  */
 public class IDUtils {
-    private final long epoch = 1288834974657L; // 自定义的起始时间戳
-    private final long machineIdBits = 5L; // 机器ID位数
-    private final long sequenceBits = 12L; // 序列号位数
-
+    private static final long epoch = 1288834974657L; // 自定义的起始时间戳
+    private static final long machineIdBits = 5L; // 机器ID位数
+    private static final long sequenceBits = 12L; // 序列号位数
+    private static final long sequenceMask = -1L ^ (-1L << sequenceBits); // 最大序列号
+    private static long machineId; // 机器ID
+    private static long sequence = 0L; // 当前序列号
+    private static long lastTimestamp = -1L; // 上次时间戳
     private final long maxMachineId = -1L ^ (-1L << machineIdBits); // 最大机器ID
-    private final long sequenceMask = -1L ^ (-1L << sequenceBits); // 最大序列号
-
-    private long machineId; // 机器ID
-    private long sequence = 0L; // 当前序列号
-    private long lastTimestamp = -1L; // 上次时间戳
 
     public IDUtils(long machineId) {
         if (machineId > maxMachineId || machineId < 0) {
             throw new IllegalArgumentException("Machine ID must be between 0 and " + maxMachineId);
         }
-        this.machineId = machineId;
+        IDUtils.machineId = machineId;
     }
 
 //
 
-    public synchronized String get() {
+    public synchronized static String get() {
         long timestamp = System.currentTimeMillis();
         if (timestamp < lastTimestamp) {
             throw new RuntimeException("Clock moved backwards. Refusing to generate id");
@@ -50,7 +45,7 @@ public class IDUtils {
                 | sequence);
     }
 
-    private long waitForNextMillis(long lastTimestamp) {
+    private static long waitForNextMillis(long lastTimestamp) {
         long timestamp = System.currentTimeMillis();
         while (timestamp <= lastTimestamp) {
             timestamp = System.currentTimeMillis();
@@ -66,7 +61,7 @@ public class IDUtils {
 //        int duplicateCount = 0;
 //
 //        for (int i = 0; i < 10000; i++) {
-//            String id = idUtils.get();
+//            String id = get();
 //            System.out.println("Generated ID: " + id);
 //            if (!uniqueIds.add(id)) {
 //                duplicateCount++;
