@@ -18,7 +18,7 @@
    | 查询   | GET    | `/items/{id}`                    | `getID`        |
    | 查询全部 | GET    | `/items`                         | `getAll`       |
    | 搜索   | GET    | `/items/search?words={words}`    | `search`       |
-   | 修改   | PUT    | `/items/{id}`                    | `modify`       |
+   | 修改   | PUT    | `/items`                         | `modify`       |
    | 删除   | DELETE | `/items/{id}`                    | `delete`       |
    | 添加   | POST   | `/items`                         | `add`          |
    | 登录   | POST   | `/auth/login`                    | `login`        |
