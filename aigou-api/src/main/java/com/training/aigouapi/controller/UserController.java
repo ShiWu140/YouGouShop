@@ -51,7 +51,7 @@ public class UserController {
      *
      * @return 所有用户信息列表的响应实体
      */
-    @GetMapping("/queryAll")
+    @GetMapping("/all")
     public ResponseEntity<List<User>> findAll() {
         List<User> users = userService.findAll();
         return ResponseEntity.ok(users);

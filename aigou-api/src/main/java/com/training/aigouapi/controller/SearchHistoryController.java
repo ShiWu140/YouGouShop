@@ -52,7 +52,7 @@ public class SearchHistoryController {
      *
      * @return 所有搜索历史记录列表的响应实体
      */
-    @GetMapping("/getAll")
+    @GetMapping("/all")
     public ResponseEntity<List<SearchHistory>> findAll() {
         List<SearchHistory> searchHistories = searchHistoryService.findAll();
         return ResponseEntity.ok(searchHistories);

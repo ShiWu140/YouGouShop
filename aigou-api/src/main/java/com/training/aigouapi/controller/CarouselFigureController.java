@@ -53,7 +53,7 @@ public class CarouselFigureController {
      *
      * @return 所有轮播图列表的响应实体
      */
-    @GetMapping("/getAll")
+    @GetMapping("/all")
     public ResponseEntity<List<CarouselFigure>> findAll() {
         List<CarouselFigure> carouselFigures = carouselFigureService.findAll();
         return ResponseEntity.ok(carouselFigures);
