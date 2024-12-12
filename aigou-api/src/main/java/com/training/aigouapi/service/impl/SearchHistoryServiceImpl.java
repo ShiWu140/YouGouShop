@@ -6,6 +6,7 @@ import com.training.aigouapi.dao.impl.SearchHistoryDAOImpl;
 import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.entity.SearchHistory;
 import com.training.aigouapi.service.SearchHistoryService;
+import com.training.aigouapi.util.IDUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,6 +50,8 @@ public class SearchHistoryServiceImpl implements SearchHistoryService {
 
     @Override
     public boolean save(SearchHistory searchHistory) {
+        // 使用 ID 生成工具类生成新的 ID
+        searchHistory.setId(IDUtils.get());
         return searchHistoryDAO.insert(searchHistory);
     }
 

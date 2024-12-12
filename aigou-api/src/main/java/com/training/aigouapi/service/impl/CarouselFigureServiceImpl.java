@@ -5,6 +5,7 @@ import com.training.aigouapi.dao.impl.CarouselFigureDAOImpl;
 import com.training.aigouapi.entity.CarouselFigure;
 import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.service.CarouselFigureService;
+import com.training.aigouapi.util.IDUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,6 +72,8 @@ public class CarouselFigureServiceImpl implements CarouselFigureService {
      */
     @Override
     public boolean save(CarouselFigure figure) {
+        // 使用 ID 生成工具类生成新的 ID
+        figure.setId(IDUtils.get());
         return carouselFigureDAO.insert(figure);
     }
 

@@ -5,6 +5,7 @@ import com.training.aigouapi.dao.UserDAO;
 import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.entity.User;
 import com.training.aigouapi.service.UserService;
+import com.training.aigouapi.util.IDUtils;
 import com.training.aigouapi.util.MD5Utils;
 import org.springframework.stereotype.Service;
 
@@ -66,6 +67,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean save(User user) {
+        // 使用 ID 生成工具类生成新的 ID
+        user.setUserId(IDUtils.get());
+        // 使用 MD5Utils 生成工具类加密 ID
+        user.setUserPwd(MD5Utils.md5(user.getUserPwd()));
         return userDAO.insert(user);
     }
 

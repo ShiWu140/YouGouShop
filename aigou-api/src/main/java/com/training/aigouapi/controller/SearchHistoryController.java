@@ -1,9 +1,9 @@
 package com.training.aigouapi.controller;
 
-import com.training.aigouapi.entity.ApiResponse;
 import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.entity.SearchHistory;
 import com.training.aigouapi.service.SearchHistoryService;
+import com.training.aigouapi.util.IDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -63,8 +63,9 @@ public class SearchHistoryController {
      */
     @GetMapping("/search")
     public ResponseEntity<List<SearchHistory>> search(@RequestParam String keyword) {
-//        List<User> users = userService.search(keyword);
-//        return ResponseEntity.ok(users);
+        // 假设 search 方法已经实现
+//        List<SearchHistory> searchHistories = searchHistoryService.search(keyword);
+//        return ResponseEntity.ok(searchHistories);
         return null;
     }
 
@@ -75,15 +76,15 @@ public class SearchHistoryController {
      * @return 添加结果的响应实体
      */
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse<String>> register(SearchHistory searchHistory) {
+    public ResponseEntity<?> register(@RequestBody SearchHistory searchHistory) {
         if (searchHistoryService.findId(searchHistory.getId()) != null) {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(400, "SearchHistory 已经存在"));
+            return ResponseEntity.badRequest().build();
         }
         boolean rs = searchHistoryService.save(searchHistory);
         if (rs) {
-            return ResponseEntity.ok(new ApiResponse<>(200, "SearchHistory 添加成功", searchHistory.getId()));
+            return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(400, "SearchHistory 添加失败"));
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -94,12 +95,12 @@ public class SearchHistoryController {
      * @return 更新结果的响应实体
      */
     @PutMapping("/modify")
-    public ResponseEntity<ApiResponse<Void>> update(SearchHistory searchHistory) {
+    public ResponseEntity<?> update(@RequestBody SearchHistory searchHistory) {
         boolean rs = searchHistoryService.update(searchHistory);
         if (rs) {
-            return ResponseEntity.ok(new ApiResponse<>(200, "SearchHistory 更新成功"));
+            return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(400, "SearchHistory 更新失败"));
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -110,12 +111,12 @@ public class SearchHistoryController {
      * @return 删除结果的响应实体
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable(value = "id") String id) {
+    public ResponseEntity<?> delete(@PathVariable(value = "id") String id) {
         boolean rs = searchHistoryService.remove(id);
         if (rs) {
-            return ResponseEntity.ok(new ApiResponse<>(200, "SearchHistory 删除成功"));
+            return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(400, "SearchHistory 删除失败"));
+            return ResponseEntity.badRequest().build();
         }
     }
 }

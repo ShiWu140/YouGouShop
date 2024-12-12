@@ -1,9 +1,9 @@
 package com.training.aigouapi.controller;
 
-import com.training.aigouapi.entity.ApiResponse;
 import com.training.aigouapi.entity.CarouselFigure;
 import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.service.CarouselFigureService;
+import com.training.aigouapi.util.IDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +13,7 @@ import java.util.Optional;
 
 /**
  * 轮播图控制器 BY 十五
+ * @author 十五
  */
 @RestController
 @RequestMapping("/carouselFigure")
@@ -63,8 +64,9 @@ public class CarouselFigureController {
      */
     @GetMapping("/search")
     public ResponseEntity<List<CarouselFigure>> search(@RequestParam String keyword) {
-//        List<User> users = userService.search(keyword);
-//        return ResponseEntity.ok(users);
+        // 假设 search 方法已经实现
+//        List<CarouselFigure> carouselFigures = carouselFigureService.search(keyword);
+//        return ResponseEntity.ok(carouselFigures);
         return null;
     }
 
@@ -75,15 +77,15 @@ public class CarouselFigureController {
      * @return 添加结果的响应实体
      */
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse<String>> register(CarouselFigure carouselFigure) {
+    public ResponseEntity<?> register(@RequestBody CarouselFigure carouselFigure) {
         if (carouselFigureService.findId(carouselFigure.getId()) != null) {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(400, "CarouselFigure 已经存在"));
+            return ResponseEntity.badRequest().build();
         }
         boolean rs = carouselFigureService.save(carouselFigure);
         if (rs) {
-            return ResponseEntity.ok(new ApiResponse<>(200, "CarouselFigure 添加成功", carouselFigure.getId()));
+            return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(400, "CarouselFigure 添加失败"));
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -94,12 +96,12 @@ public class CarouselFigureController {
      * @return 更新结果的响应实体
      */
     @PutMapping("/modify")
-    public ResponseEntity<ApiResponse<Void>> update(CarouselFigure carouselFigure) {
+    public ResponseEntity<?> update(@RequestBody CarouselFigure carouselFigure) {
         boolean rs = carouselFigureService.update(carouselFigure);
         if (rs) {
-            return ResponseEntity.ok(new ApiResponse<>(200, "CarouselFigure 更新成功"));
+            return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(400, "CarouselFigure 更新失败"));
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -110,12 +112,12 @@ public class CarouselFigureController {
      * @return 删除结果的响应实体
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable(value = "id") String id) {
+    public ResponseEntity<?> delete(@PathVariable(value = "id") String id) {
         boolean rs = carouselFigureService.remove(id);
         if (rs) {
-            return ResponseEntity.ok(new ApiResponse<>(200, "CarouselFigure 删除成功"));
+            return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(400, "CarouselFigure 删除失败"));
+            return ResponseEntity.badRequest().build();
         }
     }
 }

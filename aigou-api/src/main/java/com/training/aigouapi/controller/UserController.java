@@ -1,9 +1,9 @@
 package com.training.aigouapi.controller;
 
-import com.training.aigouapi.entity.ApiResponse;
 import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.entity.User;
 import com.training.aigouapi.service.UserService;
+import com.training.aigouapi.util.IDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,6 +62,7 @@ public class UserController {
      */
     @GetMapping("/search")
     public ResponseEntity<List<User>> search(@RequestParam String keyword) {
+        // 假设 search 方法已经实现
 //        List<User> users = userService.search(keyword);
 //        return ResponseEntity.ok(users);
         return null;
@@ -74,12 +75,12 @@ public class UserController {
      * @return 更新结果的响应实体
      */
     @PutMapping("/modify")
-    public ResponseEntity<ApiResponse<Void>> update(User user) {
+    public ResponseEntity<?> update(@RequestBody User user) {
         boolean rs = userService.update(user);
         if (rs) {
-            return ResponseEntity.ok(new ApiResponse<>(200, "User 更新成功"));
+            return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(400, "User 更新失败"));
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -90,12 +91,12 @@ public class UserController {
      * @return 删除结果的响应实体
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable(value = "id") String userId) {
+    public ResponseEntity<?> delete(@PathVariable(value = "id") String userId) {
         boolean rs = userService.remove(userId);
         if (rs) {
-            return ResponseEntity.ok(new ApiResponse<>(200, "User 删除成功"));
+            return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(400, "User 删除失败"));
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -106,15 +107,15 @@ public class UserController {
      * @return 注册结果的响应实体
      */
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse<String>> register(User user) {
+    public ResponseEntity<?> register(@RequestBody User user) {
         if (userService.findId(user.getUserId()) != null) {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(400, "User 已经存在"));
+            return ResponseEntity.badRequest().build();
         }
         boolean rs = userService.save(user);
         if (rs) {
-            return ResponseEntity.ok(new ApiResponse<>(200, "User 注册成功", user.getUserId()));
+            return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(400, "User 注册失败"));
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -126,10 +127,10 @@ public class UserController {
      * @return 登录成功的用户信息或错误响应实体
      */
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<User>> login(@RequestParam String userName, @RequestParam String userPwd) {
+    public ResponseEntity<User> login(@RequestParam String userName, @RequestParam String userPwd) {
         User user = userService.login(userName, userPwd);
         if (user != null) {
-            return ResponseEntity.ok(new ApiResponse<>(200, "success"));
+            return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.badRequest().build();
         }
