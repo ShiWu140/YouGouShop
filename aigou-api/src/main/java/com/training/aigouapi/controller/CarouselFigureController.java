@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 轮播图控制器
+ * 轮播图控制器 BY 十五
  */
 @RestController
 @RequestMapping("/carouselFigure")
@@ -29,7 +29,7 @@ public class CarouselFigureController {
      * @param pageSize 每页显示数量
      * @return 包含分页轮播图的响应实体
      */
-    @GetMapping("/page/{current}/{pageSize}")
+    @GetMapping("/{current}/{pageSize}")
     public ResponseEntity<PageEntity<CarouselFigure>> page(@PathVariable(value = "current") Integer current, @PathVariable(value = "pageSize") Integer pageSize) {
         PageEntity<CarouselFigure> carouselFigurePageEntity = carouselFigureService.findPage(current, pageSize);
         return ResponseEntity.ok(carouselFigurePageEntity);
@@ -41,8 +41,8 @@ public class CarouselFigureController {
      * @param id 轮播图ID
      * @return 查询到的轮播图或错误响应实体
      */
-    @GetMapping("/queryId")
-    public ResponseEntity<CarouselFigure> findById(@RequestParam String id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<CarouselFigure> findById(@PathVariable(value = "id") String id) {
         Optional<CarouselFigure> carouselFigure = Optional.ofNullable(carouselFigureService.findId(id));
         return carouselFigure.map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build());
     }
@@ -52,10 +52,20 @@ public class CarouselFigureController {
      *
      * @return 所有轮播图列表的响应实体
      */
-    @GetMapping("/queryAll")
+    @GetMapping("/getAll")
     public ResponseEntity<List<CarouselFigure>> findAll() {
         List<CarouselFigure> carouselFigures = carouselFigureService.findAll();
         return ResponseEntity.ok(carouselFigures);
+    }
+
+    /**
+     * search 搜索
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<CarouselFigure>> search(@RequestParam String keyword) {
+//        List<User> users = userService.search(keyword);
+//        return ResponseEntity.ok(users);
+        return null;
     }
 
     /**
@@ -99,8 +109,8 @@ public class CarouselFigureController {
      * @param id 轮播图ID
      * @return 删除结果的响应实体
      */
-    @DeleteMapping("/delete")
-    public ResponseEntity<ApiResponse<Void>> delete(@RequestParam String id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable(value = "id") String id) {
         boolean rs = carouselFigureService.remove(id);
         if (rs) {
             return ResponseEntity.ok(new ApiResponse<>(200, "CarouselFigure 删除成功"));

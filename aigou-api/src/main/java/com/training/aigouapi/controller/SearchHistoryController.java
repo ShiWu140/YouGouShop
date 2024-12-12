@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 搜索历史控制器
+ * 搜索历史控制器 BY 十五
  */
 @RestController
 @RequestMapping("/searchHistory")
@@ -41,8 +41,8 @@ public class SearchHistoryController {
      * @param id 搜索历史记录ID
      * @return 查询到的搜索历史记录或错误响应实体
      */
-    @GetMapping("/queryId")
-    public ResponseEntity<SearchHistory> findById(@RequestParam String id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<SearchHistory> findById(@PathVariable(value = "id") String id) {
         Optional<SearchHistory> searchHistory = Optional.ofNullable(searchHistoryService.findId(id));
         return searchHistory.map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build());
     }
@@ -52,10 +52,20 @@ public class SearchHistoryController {
      *
      * @return 所有搜索历史记录列表的响应实体
      */
-    @GetMapping("/queryAll")
+    @GetMapping("/getAll")
     public ResponseEntity<List<SearchHistory>> findAll() {
         List<SearchHistory> searchHistories = searchHistoryService.findAll();
         return ResponseEntity.ok(searchHistories);
+    }
+
+    /**
+     * search 搜索
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<SearchHistory>> search(@RequestParam String keyword) {
+//        List<User> users = userService.search(keyword);
+//        return ResponseEntity.ok(users);
+        return null;
     }
 
     /**
@@ -99,8 +109,8 @@ public class SearchHistoryController {
      * @param id 搜索历史记录ID
      * @return 删除结果的响应实体
      */
-    @DeleteMapping("/delete")
-    public ResponseEntity<ApiResponse<Void>> delete(@RequestParam String id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable(value = "id") String id) {
         boolean rs = searchHistoryService.remove(id);
         if (rs) {
             return ResponseEntity.ok(new ApiResponse<>(200, "SearchHistory 删除成功"));

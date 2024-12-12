@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 用户控制器
+ * 用户控制器 BY 十五
  */
 @RestController
 @RequestMapping("/user")
@@ -28,7 +28,7 @@ public class UserController {
      * @param pageSize 每页显示数量
      * @return 包含分页用户信息的响应实体
      */
-    @GetMapping("/page/{current}/{pageSize}")
+    @GetMapping("/{current}/{pageSize}")
     public ResponseEntity<PageEntity<User>> page(@PathVariable(value = "current") Integer current, @PathVariable(value = "pageSize") Integer pageSize) {
         PageEntity<User> userPageEntity = userService.findPage(current, pageSize);
         return ResponseEntity.ok(userPageEntity);
@@ -89,8 +89,8 @@ public class UserController {
      * @param userId 用户ID
      * @return 删除结果的响应实体
      */
-    @DeleteMapping("/delete")
-    public ResponseEntity<ApiResponse<Void>> delete(@RequestParam String userId) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable(value = "id") String userId) {
         boolean rs = userService.remove(userId);
         if (rs) {
             return ResponseEntity.ok(new ApiResponse<>(200, "User 删除成功"));
