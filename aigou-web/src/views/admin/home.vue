@@ -1,0 +1,152 @@
+<script>
+export default {
+  data() {
+    var validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      } else {
+        if (this.ruleForm.checkPass !== '') {
+          this.$refs.ruleForm.validateField('checkPass');
+        }
+        callback();
+      }
+    };
+    var validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (value !== this.ruleForm.pass) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
+    return {
+      user: {
+        user_id: '',
+        user_name: '',
+        user_pwd: '',
+        user_type: '',
+      },
+      changePasswordVisible: false,
+      ruleForm: {
+        pass: '',
+        checkPass: ''
+      },
+      rules: {
+        pass: [
+          {validator: validatePass, trigger: 'change'}
+        ],
+        checkPass: [
+          {validator: validatePass2, trigger: 'change'}
+        ]
+      },
+    };
+  },
+  methods: {
+    changePassword() {
+      this.changePasswordVisible = true;
+    },
+    logout() {
+      this.$confirm('确认退出登录?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        localStorage.removeItem('user');
+        this.$router.push('/login');
+      }).catch(() => {
+        this.$message.info('已取消退出');
+      });
+    },
+    handleClose() {
+      this.ruleForm.pass = '';
+      this.ruleForm.checkPass = '';
+    },
+    submitChangePassword() {
+      this.$refs['ruleForm'].validate((valid) => {
+        this.user.user_pwd = this.ruleForm.pass;
+        console.log(this.user)
+        if (valid) {
+          this.$http.post("/user?method=update&" + this.$qs.stringify(this.user)).then((response) => {
+            if (response.data.msg === 'success') {
+              this.$message({
+                type: 'success',
+                message: '密码修改成功!'
+              });
+              this.changePasswordVisible = false;
+              localStorage.removeItem('user');
+              this.$router.push('/login');
+            } else {
+              this.$message({
+                type: 'error',
+                message: response.data.data
+              });
+            }
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    }
+  },
+  mounted() {
+    // 获取用户
+    this.user = JSON.parse(localStorage.getItem('user'));
+  },
+};
+</script>
+
+<template>
+  <div class="dashboard">
+    <div class="welcome-container">
+      <span class="welcome-message">🎉欢迎用户🎉<br>{{ user.user_name }}</span>
+      <div class="button-group">
+        <el-button type="primary" @click="changePassword">修改密码</el-button>
+        <el-button type="danger" @click="logout">退出登录</el-button>
+      </div>
+    </div>
+    <el-dialog :visible.sync="changePasswordVisible" title="修改密码" @close="handleClose">
+      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="auto" status-icon>
+        <el-form-item label="新密码" prop="pass">
+          <el-input v-model.trim="ruleForm.pass" autocomplete="off" type="password"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="checkPass">
+          <el-input v-model.trim="ruleForm.checkPass" autocomplete="off" type="password"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="changePasswordVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitChangePassword">确 定</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<style scoped>
+.dashboard {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.welcome-message {
+  font-size: 50px;
+  font-weight: bolder;
+  display: block;
+  text-align: center;
+  color: #000;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  margin-top: 50px;
+}
+</style>
+
+
+
