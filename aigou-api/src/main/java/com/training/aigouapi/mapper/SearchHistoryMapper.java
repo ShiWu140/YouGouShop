@@ -1,6 +1,7 @@
-package com.training.aigouapi.dao;
+package com.training.aigouapi.mapper;
 
 import com.training.aigouapi.entity.SearchHistory;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
@@ -9,7 +10,8 @@ import java.util.List;
  *
  * @author ethan
  */
-public interface SearchHistoryDAO {
+@Mapper
+public interface SearchHistoryMapper {
     /**
      * 查询搜索历史分页信息
      *

@@ -1,6 +1,7 @@
 package com.training.aigouapi;
 
 import org.apache.log4j.Logger;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -10,6 +11,7 @@ import org.springframework.core.env.Environment;
  * @author ethan
  */
 @SpringBootApplication
+@MapperScan("com.training.aigouapi.mapper")
 public class Application {
     private static final Logger logger = Logger.getLogger(Application.class);
 

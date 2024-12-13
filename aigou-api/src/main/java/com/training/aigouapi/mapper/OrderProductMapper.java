@@ -1,6 +1,7 @@
-package com.training.aigouapi.dao;
+package com.training.aigouapi.mapper;
 
 import com.training.aigouapi.entity.OrderProduct;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
@@ -9,7 +10,8 @@ import java.util.List;
  *
  * @author ethan
  */
-public interface OrderProductDAO {
+@Mapper
+public interface OrderProductMapper {
     /**
      * 查询订单商品分页信息
      *

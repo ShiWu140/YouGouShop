@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间是包名+接口-->
+<mapper namespace="com.training.aigouapi.mapper.BrandMapper">
+    <select id="selectAll" resultType="Brand">
+        select * from s_brand;
+    </select>
+
+    <select id="selectLimit" resultType="Brand">
+        select * from s_brand limit #{start}, #{limit};
+    </select>
+
+    <select id="selectCount" resultType="long">
+        select count(*) from s_brand;
+    </select>
+
+    <select id="selectById" resultType="Brand">
+        select * from s_brand where id = #{id};
+    </select>
+
+    <insert id="insert" parameterType="Brand">
+        insert into s_brand(id, brand_name, brand_type, brand_img)
+        values (#{id}, #{brandName}, #{brandType}, #{brandImg});
+    </insert>
+
+    <delete id="delete" parameterType="String">
+        delete from s_brand where id = #{id};
+    </delete>
+
+    <update id="update" parameterType="Brand">
+        update s_brand
+        set brand_name = #{brandName},
+            brand_type = #{brandType},
+            brand_img = #{brandImg}
+        where id = #{id};
+    </update>
+</mapper>

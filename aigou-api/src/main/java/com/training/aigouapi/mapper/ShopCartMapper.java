@@ -1,13 +1,17 @@
-package com.training.aigouapi.dao;
+package com.training.aigouapi.mapper;
 
 import com.training.aigouapi.entity.ShopCart;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 /**
  * 购物车表数据操作接口
+ *
+ * @author ethan
  */
-public interface ShopCartDAO {
+@Mapper
+public interface ShopCartMapper {
     /**
      * 查询购物车分页信息
      *
