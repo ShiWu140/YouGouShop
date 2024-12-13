@@ -1,8 +1,8 @@
 package com.training.aigouapi.service.impl;
 
-import com.training.aigouapi.dao.SalesDAO;
 import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.entity.Sales;
+import com.training.aigouapi.mapper.SalesMapper;
 import com.training.aigouapi.service.SalesService;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class SalesServiceImpl implements SalesService {
      * 调用 dao 层对象
      */
     @Resource
-    private SalesDAO salesDAO;
+    private SalesMapper salesMapper;
 
     /**
      * 查询分页方法
@@ -34,11 +34,11 @@ public class SalesServiceImpl implements SalesService {
     @Override
     public PageEntity<Sales> findPage(Integer current, Integer pageSize) {
         // 分页查询数据
-        List<Sales> sales = salesDAO.selectLimit((current - 1) * pageSize, pageSize);
+        List<Sales> sales = salesMapper.selectLimit((current - 1) * pageSize, pageSize);
         PageEntity<Sales> pageEntity = new PageEntity<>();
         pageEntity.setCurrent(current);
         pageEntity.setPageSize(pageSize);
-        pageEntity.setTotal(salesDAO.selectCount());
+        pageEntity.setTotal(salesMapper.selectCount());
         pageEntity.setRecords(sales);
         return pageEntity;
     }
@@ -50,7 +50,7 @@ public class SalesServiceImpl implements SalesService {
      */
     @Override
     public List<Sales> findAll() {
-        return salesDAO.selectAll();
+        return salesMapper.selectAll();
     }
 
     /**
@@ -61,7 +61,7 @@ public class SalesServiceImpl implements SalesService {
      */
     @Override
     public Sales findId(String salesId) {
-        return salesDAO.selectId(salesId);
+        return salesMapper.selectId(salesId);
     }
 
     /**
@@ -72,7 +72,7 @@ public class SalesServiceImpl implements SalesService {
      */
     @Override
     public boolean save(Sales sales) {
-        return salesDAO.insert(sales);
+        return salesMapper.insert(sales);
     }
 
     /**
@@ -83,7 +83,7 @@ public class SalesServiceImpl implements SalesService {
      */
     @Override
     public boolean remove(String salesId) {
-        return salesDAO.delete(salesId);
+        return salesMapper.delete(salesId);
     }
 
     /**
@@ -94,6 +94,6 @@ public class SalesServiceImpl implements SalesService {
      */
     @Override
     public boolean update(Sales sales) {
-        return salesDAO.update(sales);
+        return salesMapper.update(sales);
     }
 }

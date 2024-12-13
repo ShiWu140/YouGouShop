@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dushiwu.springbootdemo.mapper.SearchHistoryMapper">
+    <select id="selectLimit" resultType="SearchHistory">
+        select *
+        from s_search_history
+        limit #{start},#{limit};
+    </select>
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(*)
+        from s_search_history;
+    </select>
+    <select id="selectAll" resultType="SearchHistory">
+        select *
+        from s_search_history;
+    </select>
+    <select id="selectId" resultType="SearchHistory">
+        select *
+        from s_search_history
+        where id = #{id};
+    </select>
+    <insert id="insert" parameterType="SearchHistory">
+        insert into s_search_history (id, search_words, num, search_time)
+        values (#{id}, #{searchWords}, #{num}, #{searchTime})
+    </insert>
+    <update id="update" parameterType="SearchHistory">
+        update s_search_history
+        set search_words = #{searchWords},
+            num          = #{num},
+            search_time  = #{searchTime}
+        where id = #{id}
+    </update>
+    <delete id="delete" parameterType="String">
+        delete
+        from s_search_history
+        where id = #{id}
+    </delete>
+</mapper>

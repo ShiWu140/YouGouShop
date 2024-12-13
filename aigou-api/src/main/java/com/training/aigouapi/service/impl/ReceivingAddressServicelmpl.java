@@ -1,9 +1,8 @@
 package com.training.aigouapi.service.impl;
 
-import com.training.aigouapi.dao.ReceivingAddressDAO;
-import com.training.aigouapi.dao.impl.ReceivingAddressDAOlmpl;
 import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.entity.ReceivingAddress;
+import com.training.aigouapi.mapper.ReceivingAddressMapper;
 import com.training.aigouapi.service.ReceivingAddressService;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,7 @@ public class ReceivingAddressServicelmpl implements ReceivingAddressService {
      * 调用dao层对象
      */
     @Resource
-    private ReceivingAddressDAO receivingAddressDAO;
+    private ReceivingAddressMapper ReceivingAddressMapper;
 
     /**
      * 查询分页方法
@@ -31,11 +30,11 @@ public class ReceivingAddressServicelmpl implements ReceivingAddressService {
     @Override
     public PageEntity<ReceivingAddress> findPage(Integer current, Integer pageSize) {
         //分页查询数据
-        List<ReceivingAddress> receivingAddresses = receivingAddressDAO.selectLimit((current - 1) * pageSize, pageSize);
+        List<ReceivingAddress> receivingAddresses = ReceivingAddressMapper.selectLimit((current - 1) * pageSize, pageSize);
         PageEntity<ReceivingAddress> pageEntity = new PageEntity<>();
         pageEntity.setCurrent(current);
         pageEntity.setPageSize(pageSize);
-        pageEntity.setTotal(receivingAddressDAO.selectCount());
+        pageEntity.setTotal(ReceivingAddressMapper.selectCount());
         pageEntity.setRecords(receivingAddresses);
         return pageEntity;
     }
@@ -47,7 +46,7 @@ public class ReceivingAddressServicelmpl implements ReceivingAddressService {
      */
     @Override
     public List<ReceivingAddress> findAll() {
-        return receivingAddressDAO.selectAll();
+        return ReceivingAddressMapper.selectAll();
     }
 
     /**
@@ -58,7 +57,7 @@ public class ReceivingAddressServicelmpl implements ReceivingAddressService {
      */
     @Override
     public ReceivingAddress findId(String addressId) {
-        return receivingAddressDAO.selectId(addressId);
+        return ReceivingAddressMapper.selectId(addressId);
     }
 
     /**
@@ -69,7 +68,7 @@ public class ReceivingAddressServicelmpl implements ReceivingAddressService {
      */
     @Override
     public boolean save(ReceivingAddress receivingAddress) {
-        return receivingAddressDAO.insert(receivingAddress);
+        return ReceivingAddressMapper.insert(receivingAddress);
     }
 
     /**
@@ -80,7 +79,7 @@ public class ReceivingAddressServicelmpl implements ReceivingAddressService {
      */
     @Override
     public boolean remove(String addressId) {
-        return receivingAddressDAO.delete(addressId);
+        return ReceivingAddressMapper.delete(addressId);
     }
 
     /**
@@ -91,6 +90,6 @@ public class ReceivingAddressServicelmpl implements ReceivingAddressService {
      */
     @Override
     public boolean update(ReceivingAddress receivingAddress) {
-        return receivingAddressDAO.update(receivingAddress);
+        return ReceivingAddressMapper.update(receivingAddress);
     }
 }

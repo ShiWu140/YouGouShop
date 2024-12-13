@@ -1,21 +1,24 @@
 package com.training.aigouapi.service.impl;
 
 
-import com.training.aigouapi.dao.SearchHistoryDAO;
-import com.training.aigouapi.dao.impl.SearchHistoryDAOImpl;
 import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.entity.SearchHistory;
+import com.training.aigouapi.mapper.SearchHistoryMapper;
 import com.training.aigouapi.service.SearchHistoryService;
 import com.training.aigouapi.util.IDUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * 搜索历史实现类
+ * @author 十五
+ */
 @Service
 public class SearchHistoryServiceImpl implements SearchHistoryService {
 
     // 实例化dao层对象,方便调用dao层方法
-    private final SearchHistoryDAO searchHistoryDAO = new SearchHistoryDAOImpl();
+    private SearchHistoryMapper searchHistoryMapper;
 
     /**
      * 查询分页方法
@@ -27,9 +30,9 @@ public class SearchHistoryServiceImpl implements SearchHistoryService {
     @Override
     public PageEntity<SearchHistory> findPage(Integer current, Integer pageSize) {
         //查询总数
-        long total = searchHistoryDAO.selectCount();
+        long total = searchHistoryMapper.selectCount();
         //分页查询数据
-        List<SearchHistory> searchHistories = searchHistoryDAO.selectLimit((current - 1) * pageSize, pageSize);
+        List<SearchHistory> searchHistories = searchHistoryMapper.selectLimit((current - 1) * pageSize, pageSize);
         PageEntity<SearchHistory> pageEntity = new PageEntity<>();
         pageEntity.setCurrent(current);
         pageEntity.setPageSize(pageSize);
@@ -40,28 +43,28 @@ public class SearchHistoryServiceImpl implements SearchHistoryService {
 
     @Override
     public List<SearchHistory> findAll() {
-        return searchHistoryDAO.selectAll();
+        return searchHistoryMapper.selectAll();
     }
 
     @Override
     public SearchHistory findId(String id) {
-        return searchHistoryDAO.selectId(id);
+        return searchHistoryMapper.selectId(id);
     }
 
     @Override
     public boolean save(SearchHistory searchHistory) {
         // 使用 ID 生成工具类生成新的 ID
         searchHistory.setId(IDUtils.get());
-        return searchHistoryDAO.insert(searchHistory);
+        return searchHistoryMapper.insert(searchHistory);
     }
 
     @Override
     public boolean update(SearchHistory searchHistory) {
-        return searchHistoryDAO.update(searchHistory);
+        return searchHistoryMapper.update(searchHistory);
     }
 
     @Override
     public boolean remove(String id) {
-        return searchHistoryDAO.delete(id);
+        return searchHistoryMapper.delete(id);
     }
 }

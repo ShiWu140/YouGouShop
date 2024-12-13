@@ -1,7 +1,7 @@
 package com.training.aigouapi.service.impl;
-import com.training.aigouapi.dao.ShopCartProductDAO;
 import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.entity.ShopCartProduct;
+import com.training.aigouapi.mapper.ShopCartProductMapper;
 import com.training.aigouapi.service.ShopCartProductService;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,8 @@ import java.util.List;
 @Service
 public class ShopCartProductServicelmpl implements ShopCartProductService {
     @Resource
-    private ShopCartProductDAO shopCartProductDAO;
+    private ShopCartProductMapper shopCartProductMapper;
+
     /**
      * 查询分页方法
      *
@@ -22,37 +23,37 @@ public class ShopCartProductServicelmpl implements ShopCartProductService {
     @Override
     public PageEntity<ShopCartProduct> findPage(Integer current, Integer pageSize) {
         //分页查询数据
-        List<ShopCartProduct> shopCartProducts = shopCartProductDAO.selectLimit((current - 1) * pageSize, pageSize);
+        List<ShopCartProduct> shopCartProducts = shopCartProductMapper.selectLimit((current - 1) * pageSize, pageSize);
         PageEntity<ShopCartProduct> pageEntity = new PageEntity<>();
         pageEntity.setCurrent(current);
         pageEntity.setPageSize(pageSize);
-        pageEntity.setTotal(shopCartProductDAO.selectCount());
+        pageEntity.setTotal(shopCartProductMapper.selectCount());
         pageEntity.setRecords(shopCartProducts);
         return pageEntity;
     }
 
     @Override
     public List<ShopCartProduct> findAll() {
-        return shopCartProductDAO.selectAll();
+        return shopCartProductMapper.selectAll();
     }
 
     @Override
     public ShopCartProduct findId(String id) {
-        return shopCartProductDAO.selectId(id);
+        return shopCartProductMapper.selectId(id);
     }
 
     @Override
     public boolean remove(String id) {
-        return shopCartProductDAO.delete(id);
+        return shopCartProductMapper.delete(id);
     }
 
     @Override
     public boolean update(ShopCartProduct shopCartProduct) {
-        return shopCartProductDAO.update(shopCartProduct);
+        return shopCartProductMapper.update(shopCartProduct);
     }
 
     @Override
     public boolean save(ShopCartProduct shopCartProduct) {
-        return shopCartProductDAO.insert(shopCartProduct);
+        return shopCartProductMapper.insert(shopCartProduct);
     }
 }

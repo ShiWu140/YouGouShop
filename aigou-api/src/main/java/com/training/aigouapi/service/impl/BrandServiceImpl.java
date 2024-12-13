@@ -1,8 +1,8 @@
 package com.training.aigouapi.service.impl;
 
-import com.training.aigouapi.dao.BrandDAO;
 import com.training.aigouapi.entity.Brand;
 import com.training.aigouapi.entity.PageEntity;
+import com.training.aigouapi.mapper.BrandMapper;
 import com.training.aigouapi.service.BrandService;
 import org.springframework.stereotype.Service;
 
@@ -17,42 +17,42 @@ import java.util.List;
 @Service
 public class BrandServiceImpl implements BrandService {
     @Resource
-    private BrandDAO brandDAO;
+    private BrandMapper brandMapper;
 
     @Override
     public PageEntity<Brand> findPage(Integer current, Integer pageSize) {
         //分页查询品牌数据
-        List<Brand> brands = brandDAO.selectLimit((current - 1) * pageSize, pageSize);
+        List<Brand> brands = brandMapper.selectLimit((current - 1) * pageSize, pageSize);
         PageEntity<Brand> pageEntity = new PageEntity<>();
         pageEntity.setCurrent(current);
         pageEntity.setPageSize(pageSize);
-        pageEntity.setTotal(brandDAO.selectCount());
+        pageEntity.setTotal(brandMapper.selectCount());
         pageEntity.setRecords(brands);
         return pageEntity;
     }
 
     @Override
     public List<Brand> findAll() {
-        return brandDAO.selectAll();
+        return brandMapper.selectAll();
     }
 
     @Override
     public Brand findId(String id) {
-        return brandDAO.selectId(id);
+        return brandMapper.selectId(id);
     }
 
     @Override
     public boolean save(Brand brand) {
-        return brandDAO.insert(brand);
+        return brandMapper.insert(brand);
     }
 
     @Override
     public boolean remove(String id) {
-        return brandDAO.delete(id);
+        return brandMapper.delete(id);
     }
 
     @Override
     public boolean update(Brand brand) {
-        return brandDAO.update(brand);
+        return brandMapper.update(brand);
     }
 }

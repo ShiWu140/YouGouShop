@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dushiwu.springbootdemo.mapper.CarouselFigureMapper">
+    <select id="selectLimit" resultType="CarouselFigure">
+        select *
+        from s_carousel_figure
+        limit #{start},#{limit};
+    </select>
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(*)
+        from s_carousel_figure;
+    </select>
+    <select id="selectAll" resultType="CarouselFigure">
+        select *
+        from s_carousel_figure;
+    </select>
+    <select id="selectId" resultType="CarouselFigure">
+        select *
+        from s_carousel_figure
+        where id = #{id};
+    </select>
+    <insert id="insert" parameterType="CarouselFigure">
+        insert into s_carousel_figure (id, url, sequence_num)
+        values (#{id}, #{url}, #{sequenceNum})
+    </insert>
+    <update id="update" parameterType="CarouselFigure">
+        update s_carousel_figure
+        set url          = #{url},
+            sequence_num = #{sequenceNum}
+        where id = #{id}
+    </update>
+    <delete id="delete" parameterType="String">
+        delete
+        from s_carousel_figure
+        where id = #{id}
+    </delete>
+</mapper>

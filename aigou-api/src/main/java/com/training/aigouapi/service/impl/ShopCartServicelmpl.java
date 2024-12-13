@@ -1,7 +1,7 @@
 package com.training.aigouapi.service.impl;
-import com.training.aigouapi.dao.ShopCartDAO;
 import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.entity.ShopCart;
+import com.training.aigouapi.mapper.ShopCartMapper;
 import com.training.aigouapi.service.ShopCartService;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ public class ShopCartServicelmpl implements ShopCartService {
      * 调用dao层对象
      */
     @Resource
-    private ShopCartDAO shopCartDAO ;
+    private ShopCartMapper shopCartMapper;
 
     /**
      * 查询分页方法
@@ -30,11 +30,11 @@ public class ShopCartServicelmpl implements ShopCartService {
     @Override
     public PageEntity<ShopCart> findPage(Integer current, Integer pageSize) {
         //分页查询数据
-        List<ShopCart> shopCarts = shopCartDAO.selectLimit((current - 1) * pageSize, pageSize);
+        List<ShopCart> shopCarts = shopCartMapper.selectLimit((current - 1) * pageSize, pageSize);
         PageEntity<ShopCart> pageEntity = new PageEntity<>();
         pageEntity.setCurrent(current);
         pageEntity.setPageSize(pageSize);
-        pageEntity.setTotal(shopCartDAO.selectCount());
+        pageEntity.setTotal(shopCartMapper.selectCount());
         pageEntity.setRecords(shopCarts);
         return pageEntity;
     }
@@ -46,7 +46,7 @@ public class ShopCartServicelmpl implements ShopCartService {
      */
     @Override
     public List<ShopCart> findAll() {
-        return shopCartDAO.selectAll();
+        return shopCartMapper.selectAll();
     }
 
     /**
@@ -57,7 +57,7 @@ public class ShopCartServicelmpl implements ShopCartService {
      */
     @Override
     public ShopCart findId(String cartId) {
-        return shopCartDAO.selectId(cartId);
+        return shopCartMapper.selectId(cartId);
     }
 
     /**
@@ -68,7 +68,7 @@ public class ShopCartServicelmpl implements ShopCartService {
      */
     @Override
     public boolean save(ShopCart shopCart) {
-        return shopCartDAO.insert(shopCart);
+        return shopCartMapper.insert(shopCart);
     }
 
     /**
@@ -79,7 +79,7 @@ public class ShopCartServicelmpl implements ShopCartService {
      */
     @Override
     public boolean remove(String cartId) {
-        return shopCartDAO.delete(cartId);
+        return shopCartMapper.delete(cartId);
     }
 
     /**
@@ -90,6 +90,6 @@ public class ShopCartServicelmpl implements ShopCartService {
      */
     @Override
     public boolean update(ShopCart shopCart) {
-        return shopCartDAO.update(shopCart);
+        return shopCartMapper.update(shopCart);
     }
 }

@@ -1,9 +1,8 @@
 package com.training.aigouapi.service.impl;
 
-import com.training.aigouapi.dao.CarouselFigureDAO;
-import com.training.aigouapi.dao.impl.CarouselFigureDAOImpl;
 import com.training.aigouapi.entity.CarouselFigure;
 import com.training.aigouapi.entity.PageEntity;
+import com.training.aigouapi.mapper.CarouselFigureMapper;
 import com.training.aigouapi.service.CarouselFigureService;
 import com.training.aigouapi.util.IDUtils;
 import org.springframework.stereotype.Service;
@@ -12,6 +11,8 @@ import java.util.List;
 
 /**
  * 轮播图相关业务逻辑实现类
+ *
+ * @author 十五
  */
 @Service
 public class CarouselFigureServiceImpl implements CarouselFigureService {
@@ -19,7 +20,7 @@ public class CarouselFigureServiceImpl implements CarouselFigureService {
     /**
      * 调用dao层对象
      */
-    private final CarouselFigureDAO carouselFigureDAO = new CarouselFigureDAOImpl();
+    private CarouselFigureMapper carouselFigureMapper;
 
     /**
      * 查询分页方法
@@ -31,9 +32,9 @@ public class CarouselFigureServiceImpl implements CarouselFigureService {
     @Override
     public PageEntity<CarouselFigure> findPage(Integer current, Integer pageSize) {
         //查询总数
-        long total = carouselFigureDAO.selectCount();
+        long total = carouselFigureMapper.selectCount();
         //分页查询数据
-        List<CarouselFigure> brands = carouselFigureDAO.selectLimit((current - 1) * pageSize, pageSize);
+        List<CarouselFigure> brands = carouselFigureMapper.selectLimit((current - 1) * pageSize, pageSize);
         PageEntity<CarouselFigure> pageEntity = new PageEntity<>();
         pageEntity.setCurrent(current);
         pageEntity.setPageSize(pageSize);
@@ -50,7 +51,7 @@ public class CarouselFigureServiceImpl implements CarouselFigureService {
      */
     @Override
     public List<CarouselFigure> findAll() {
-        return carouselFigureDAO.selectAll();
+        return carouselFigureMapper.selectAll();
     }
 
     /**
@@ -61,7 +62,7 @@ public class CarouselFigureServiceImpl implements CarouselFigureService {
      */
     @Override
     public CarouselFigure findId(String figureId) {
-        return carouselFigureDAO.selectId(figureId);
+        return carouselFigureMapper.selectId(figureId);
     }
 
     /**
@@ -74,7 +75,7 @@ public class CarouselFigureServiceImpl implements CarouselFigureService {
     public boolean save(CarouselFigure figure) {
         // 使用 ID 生成工具类生成新的 ID
         figure.setId(IDUtils.get());
-        return carouselFigureDAO.insert(figure);
+        return carouselFigureMapper.insert(figure);
     }
 
     /**
@@ -85,7 +86,7 @@ public class CarouselFigureServiceImpl implements CarouselFigureService {
      */
     @Override
     public boolean remove(String figureId) {
-        return carouselFigureDAO.delete(figureId);
+        return carouselFigureMapper.delete(figureId);
     }
 
     /**
@@ -96,6 +97,6 @@ public class CarouselFigureServiceImpl implements CarouselFigureService {
      */
     @Override
     public boolean update(CarouselFigure figure) {
-        return carouselFigureDAO.update(figure);
+        return carouselFigureMapper.update(figure);
     }
 }
