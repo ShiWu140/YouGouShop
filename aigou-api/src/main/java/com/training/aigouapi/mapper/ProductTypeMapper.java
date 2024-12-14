@@ -1,7 +1,9 @@
 package com.training.aigouapi.mapper;
 
 import com.training.aigouapi.entity.ProductType;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -12,58 +14,17 @@ import java.util.List;
  */
 @Mapper
 public interface ProductTypeMapper {
-    /**
-     * 查询商品类型分页信息
-     *
-     * @param start 起始页，必须大于等于0
-     * @param limit 返回行数，必须大于0
-     * @return 商品类型列表
-     */
-    List<ProductType> selectLimit(int start, int limit);
 
-    /**
-     * 查询商品类型总数
-     *
-     * @return 商品类型总数
-     */
-    long selectCount();
+    List<ProductType> page(String words);
 
-    /**
-     * 查询所有商品类型
-     *
-     * @return 商品类型列表
-     */
-    List<ProductType> selectAll();
+    @Select("select * from s_product_type where id = #{id}")
+    ProductType getId(String id);
 
-    /**
-     * 按id查询商品类型
-     *
-     * @param id 商品类型ID
-     * @return 商品类型对象，如果不存在则返回null
-     */
-    ProductType selectId(String id);
+    void update(ProductType productType);
 
-    /**
-     * 插入商品类型
-     *
-     * @param productType 商品类型对象
-     * @return 是否插入成功 true 成功 false 失败
-     */
-    boolean insert(ProductType productType);
+    void delete(List<String> ids);
 
-    /**
-     * 更新商品类型
-     *
-     * @param productType 商品类型对象
-     * @return 是否更新成功 true 成功 false 失败
-     */
-    boolean update(ProductType productType);
-
-    /**
-     * 删除商品类型
-     *
-     * @param id 商品类型ID
-     * @return 是否删除成功 true 成功 false 失败
-     */
-    boolean delete(String id);
+    @Insert("insert into s_product_type(id, product_type_name, product_type_desc, product_type_icon) " +
+            "values (#{id},#{productTypeName},#{productTypeDesc},#{productTypeIcon})")
+    void save(ProductType productType);
 }
