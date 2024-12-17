@@ -23,10 +23,10 @@ export default {
     return {
       users: [],
       user: {
-        user_id: '',
-        user_name: '',
-        user_pwd: '',
-        user_type: '',
+        userId: '',
+        userName: '',
+        userPwd: '',
+        userType: '',
       },
       userFormVisible: false,
       UserFormVisible: false,
@@ -51,16 +51,16 @@ export default {
         ]
       },
       userRules: {
-        user_id: [
+        userId: [
           {required: true, message: '请输入用户ID', trigger: 'change'}
         ],
-        user_name: [
+        userName: [
           {required: true, message: '请输入用户名', trigger: 'change'}
         ],
-        user_pwd: [
+        userPwd: [
           {required: true, message: '请输入密码', trigger: 'change'}
         ],
-        user_type: [
+        userType: [
           {required: true, message: '请选择用户类型', trigger: 'change'}
         ]
       }
@@ -68,49 +68,56 @@ export default {
   },
   methods: {
     operateUser(user) {
-      this.$http.post("/user/" + this.operate + "/" + this.$qs.stringify(user)).then((response) => {
-        if (response.data.msg === 'success') {
+      this.$http.post("/user/" + this.operate, user).then((response) => {
+        if (response.status === 200) {
           this.$message({
             type: 'success',
             message: '操作成功!'
           });
-          this.loadUsers(this.current)
+          this.loadUsers(this.current);
           this.userFormVisible = false;
           this.changePasswordVisible = false;
         } else {
           this.$message({
             type: 'error',
-            message: response.data.data
+            message: response.data
           });
         }
-      })
+      }).catch((error) => {
+        console.error('There was an error!', error);
+        this.$message({
+          type: 'error',
+          message: '请求失败，请重试!'
+        });
+      });
     },
+
     handleClose() {
-      this.user.user_id = '';
-      this.user.user_name = '';
-      this.user.user_pwd = '';
-      this.user.user_type = '';
+      this.user.userId = '';
+      this.user.userName = '';
+      this.user.userPwd = '';
+      this.user.userType = '';
       this.ruleForm.pass = '';
       this.ruleForm.checkPass = '';
     },
     handleEdit(index, row) {
-      this.operate = 'update';
+      this.operate = 'modify';
       this.user = JSON.parse(JSON.stringify(row));
       this.userFormVisible = true;
     },
     handleChangePassword(index, row) {
-      this.operate = 'update';
+      this.operate = 'modify';
       this.user = JSON.parse(JSON.stringify(row));
       this.changePasswordVisible = true;
     },
     openChangePassword() {
-      this.user.user_pwd = '';
+      this.user.userPwd = '';
       this.ruleForm.checkPass = '';
     },
     changePassword(user) {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
-          this.user.user_pwd = this.ruleForm.pass;
+          this.user.userPwd = this.ruleForm.pass;
           this.operateUser(user);
         } else {
           console.log('error submit!!');
@@ -139,7 +146,7 @@ export default {
     },
     loadUsers(current) {
       this.current = current;
-      this.$http.post(`/user/${this.current}/${this.pageSize}`)
+      this.$http.get(`/user/${this.current}/${this.pageSize}`)
           .then(res => {
             console.log(res.data);
             if (res.data) {
@@ -193,17 +200,17 @@ export default {
 
     <el-dialog :visible.sync="userFormVisible" title="用户" @close="handleClose">
       <el-form :model="user" :rules="userRules" label-width="auto">
-        <el-form-item label="用户ID" prop="user_id">
-          <el-input v-model.trim="user.user_id" :disabled="operate === 'update'" autocomplete="off"></el-input>
+        <el-form-item label="用户ID" prop="userId">
+          <el-input v-model.trim="user.userId" :disabled="operate === 'modify'" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="用户名" prop="user_name">
-          <el-input v-model.trim="user.user_name" autocomplete="off"></el-input>
+        <el-form-item label="用户名" prop="userName">
+          <el-input v-model.trim="user.userName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item v-if="this.operate==='register'" label="密码" prop="user_pwd">
-          <el-input v-model.trim="user.user_pwd" autocomplete="off"></el-input>
+        <el-form-item v-if="this.operate==='register'" label="密码" prop="userPwd">
+          <el-input v-model.trim="user.userPwd" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="用户类型" prop="user_type">
-          <el-select v-model="user.user_type" placeholder="请选择用户类型">
+        <el-form-item label="用户类型" prop="userType">
+          <el-select v-model="user.userType" placeholder="请选择用户类型">
             <el-option :value="0" label="后台用户"></el-option>
             <el-option :value="1" label="前台用户"></el-option>
           </el-select>
@@ -238,20 +245,20 @@ export default {
           fixed
           label="ID"
           min-width="100px"
-          prop="user_id">
+          prop="userId">
       </el-table-column>
       <el-table-column
           label="用户名"
           min-width="100px"
-          prop="user_name">
+          prop="userName">
       </el-table-column>
       <el-table-column
           label="用户类型"
           min-width="100px"
-          prop="user_type">
+          prop="userType">
         <template slot-scope="scope">
-          <span v-if="scope.row.user_type === 0">后台用户</span>
-          <span v-else-if="scope.row.user_type === 1">前台用户</span>
+          <span v-if="scope.row.userType === 0">后台用户</span>
+          <span v-else-if="scope.row.userType === 1">前台用户</span>
           <span v-else>-</span>
         </template>
       </el-table-column>

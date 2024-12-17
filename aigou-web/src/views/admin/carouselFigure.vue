@@ -37,8 +37,8 @@ export default {
     operateCarouselFigure(carouselFigure) {
       // 调试输出提交的数据
       console.log('提交的数据', carouselFigure);
-      this.$http.post("/carouselFigure/" + this.operate + "&" + this.$qs.stringify(carouselFigure)).then((response) => {
-        if (response.data.msg === 'success') {
+      this.$http.post("/carouselFigure/" + this.operate, carouselFigure).then((response) => {
+        if (response.status === 200) {
           this.$message({
             type: 'success',
             message: '操作成功!'
@@ -51,8 +51,15 @@ export default {
             message: response.data.data
           });
         }
-      })
-    },
+      }).catch((error) => {
+        console.error('There was an error!', error);
+        this.$message({
+          type: 'error',
+          message: '请求失败，请重试!'
+        });
+      });
+    }
+    ,
     handleDelete(index, row) {
       this.$confirm('此操作将永久删除该轮播图, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -145,7 +152,7 @@ export default {
     <el-dialog :visible.sync="carouselFigureFormVisible" title="轮播图">
       <el-form :model="carouselFigure" label-width="auto" :rules="rules" ref="carouselFigure">
         <el-form-item label="ID" prop="id">
-          <el-input v-model.trim="carouselFigure.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
+          <el-input v-model.trim="carouselFigure.id" :disabled="operate === 'modify'" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="轮播图" prop="url">
           <el-input v-model.trim="this.imageUrl" autocomplete="off"></el-input>
