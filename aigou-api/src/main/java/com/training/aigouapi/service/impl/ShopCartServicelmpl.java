@@ -5,7 +5,7 @@ import com.training.aigouapi.mapper.ShopCartMapper;
 import com.training.aigouapi.service.ShopCartService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

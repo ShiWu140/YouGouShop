@@ -6,7 +6,7 @@ import com.training.aigouapi.mapper.ReceivingAddressMapper;
 import com.training.aigouapi.service.ReceivingAddressService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

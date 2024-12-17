@@ -7,7 +7,7 @@ import com.training.aigouapi.service.SalesService;
 import com.training.aigouapi.util.IDUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**
