@@ -6,13 +6,13 @@ export default {
       products: [],
       product: {
         id: '',
-        product_name: '',
-        product_image: '',
+        productName: '',
+        productImage: '',
         price: '',
-        product_type: '',
-        product_desc: '',
-        product_brand: '',
-        create_time: '',
+        productType: '',
+        productDesc: '',
+        productBrand: '',
+        createTime: '',
       },
       productFormVisible: false,
       tableHeight: window.innerHeight - 220,
@@ -28,23 +28,23 @@ export default {
         id: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        product_name: [
+        productName: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        product_image: [
+        productImage: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
         price: [
           {required: true, message: '必填项', trigger: 'change'},
           {type: 'number', message: '必须为数字值', trigger: 'change'}
         ],
-        product_type: [
+        productType: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        product_desc: [
+        productDesc: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        product_brand: [
+        productBrand: [
           {required: true, message: '必填项', trigger: 'change'}
         ]
       }
@@ -52,9 +52,9 @@ export default {
   },
   methods: {
     operateProduct(product) {
-      // // 将 create_time 转换为时间戳（毫秒）
-      // if (product.create_time instanceof Date) {
-      //   product.create_time = product.create_time.getTime();
+      // // 将 createTime 转换为时间戳（毫秒）
+      // if (product.createTime instanceof Date) {
+      //   product.createTime = product.createTime.getTime();
       // }
       // 调试输出提交的数据
       console.log('提交的数据', product);
@@ -92,20 +92,20 @@ export default {
     handleEdit(index, row) {
       this.operate = 'update';
       this.product = JSON.parse(JSON.stringify(row));
-      this.imageUrl = this.product.product_image;
+      this.imageUrl = this.product.productImage;
       this.productFormVisible = true;
     },
     addFrom() {
       this.operate = 'save';
       this.product = {
         id: '',
-        product_name: '',
-        product_image: '',
+        productName: '',
+        productImage: '',
         price: '',
-        product_type: '',
-        product_desc: '',
-        product_brand: '',
-        create_time: '',
+        productType: '',
+        productDesc: '',
+        productBrand: '',
+        createTime: '',
       };
       // 清空图片 URL
       this.imageUrl = '';
@@ -116,11 +116,11 @@ export default {
       this.tableHeight = window.innerHeight - 220;
     },
     loadProduct() {
-      this.$http.post("/product?method=page&current=" + this.current + '&pagesize=' + this.pageSize)
+      this.$http.get("/product?page=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             console.log(res.data);
             if (res.data.msg === "success") {
-              this.products = res.data.data.records;
+              this.products = res.data.data.rows;
               this.total = res.data.data.total;
               if (this.products.length === 0 && this.current > 1) {
                 this.current -= 1;
@@ -149,7 +149,7 @@ export default {
     handleAvatarSuccess(res, file) {
       console.log('upload', res)
       this.imageUrl = res
-      this.product.product_image = res;
+      this.product.productImage = res;
     }
   },
   mounted() {
@@ -177,10 +177,10 @@ export default {
         <el-form-item label="商品 ID" prop="id">
           <el-input v-model.trim="product.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="商品名称" prop="product_name">
-          <el-input v-model.trim="product.product_name" autocomplete="off"></el-input>
+        <el-form-item label="商品名称" prop="productName">
+          <el-input v-model.trim="product.productName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="商品图片" prop="product_image">
+        <el-form-item label="商品图片" prop="productImage">
           <el-input v-model.trim="this.imageUrl" autocomplete="off"></el-input>
           <el-upload
               class="avatar-uploader"
@@ -192,20 +192,20 @@ export default {
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="商品详情" prop="product_desc">
-          <el-input v-model.trim="product.product_desc" autocomplete="off"></el-input>
+        <el-form-item label="商品详情" prop="productDesc">
+          <el-input v-model.trim="product.productDesc" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="商品价格" prop="price">
           <el-input v-model.trim.number="product.price" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="所属分类" prop="product_type">
-          <el-input v-model.trim="product.product_type" autocomplete="off"></el-input>
+        <el-form-item label="所属分类" prop="productType">
+          <el-input v-model.trim="product.productType" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="商品品牌" prop="product_brand">
-          <el-input v-model.trim="product.product_brand" autocomplete="off"></el-input>
+        <el-form-item label="商品品牌" prop="productBrand">
+          <el-input v-model.trim="product.productBrand" autocomplete="off"></el-input>
         </el-form-item>
         <!--        <el-form-item label="创建时间">-->
-        <!--          <el-date-picker type="datetime" placeholder="选择时间" v-model="product.create_time"></el-date-picker>-->
+        <!--          <el-date-picker type="datetime" placeholder="选择时间" v-model="product.createTime"></el-date-picker>-->
         <!--          &lt;!&ndash;          <el-input v-model.trim="" autocomplete="off"></el-input>&ndash;&gt;-->
         <!--        </el-form-item>-->
       </el-form>
@@ -228,13 +228,13 @@ export default {
       <el-table-column
           label="商品名称"
           min-width="100px"
-          prop="product_name">
+          prop="productName">
       </el-table-column>
       <el-table-column label="商品图片" min-width="100px" prop="product_image">
         <!-- 图片的显示 -->
         <template slot-scope="scope">
           <el-image
-              :src="scope.row.product_image"
+              :src="scope.row.productImage"
               alt="商品图片"
               style="height: 100px"
           ></el-image>
@@ -243,7 +243,7 @@ export default {
       <el-table-column
           label="商品详情"
           min-width="100px"
-          prop="product_desc">
+          prop="productDesc">
       </el-table-column>
       <el-table-column
           label="价格"
@@ -253,18 +253,18 @@ export default {
       <el-table-column
           label="所属分类"
           min-width="100px"
-          prop="product_type">
+          prop="productType">
       </el-table-column>
       <el-table-column
           label="商品品牌"
           min-width="100px"
-          prop="product_brand">
+          prop="productBrand">
       </el-table-column>
       <el-table-column
           label="创建时间"
           min-width="100px"
           :formatter="formatCreateTime"
-          prop="create_time">
+          prop="createTime">
       </el-table-column>
       <el-table-column
           fixed="right"

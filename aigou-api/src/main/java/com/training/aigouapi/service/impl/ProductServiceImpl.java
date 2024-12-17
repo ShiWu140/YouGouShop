@@ -20,20 +20,22 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * 分页查询
+     *
      * @param page
      * @param size
      * @return
      */
     @Override
-    public PageBean page(Integer page, Integer size,String words) {
-        PageHelper.startPage(page,size);
-        Page<Product> list=(Page<Product>) productMapper.list(words);
-        PageBean p=new PageBean(list.getTotal(),list.getResult());
+    public PageBean page(Integer page, Integer size, String words) {
+        PageHelper.startPage(page, size);
+        Page<Product> list = (Page<Product>) productMapper.list(words);
+        PageBean p = new PageBean(list.getTotal(), list.getResult());
         return p;
     }
 
     /**
      * 根据id查询
+     *
      * @param id
      * @return
      */
@@ -44,6 +46,7 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * 查询全部
+     *
      * @return
      */
     @Override
@@ -53,6 +56,7 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * 修改
+     *
      * @param product
      */
     @Override
@@ -62,6 +66,7 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * 删除
+     *
      * @param ids
      */
     @Override
@@ -71,6 +76,7 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * 添加
+     *
      * @param product
      */
     @Override

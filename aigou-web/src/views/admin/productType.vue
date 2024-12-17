@@ -5,9 +5,9 @@ export default {
       productTypes: [],
       productType: {
         id: '',
-        product_type_name: '',
-        product_type_desc: '',
-        product_type_icon: '',
+        productTypeName: '',
+        productTypeDesc: '',
+        productTypeIcon: '',
       },
       productTypeFormVisible: false,
       tableHeight: window.innerHeight - 220,
@@ -21,13 +21,13 @@ export default {
         id: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        product_type_name: [
+        productTypeName: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        product_type_icon: [
+        productTypeIcon: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        product_type_desc: [
+        productTypeDesc: [
           {required: true, message: '必填项', trigger: 'change'}
         ]
       }
@@ -75,9 +75,9 @@ export default {
       this.operate = 'save';
       this.productType = {
         id: '',
-        product_type_name: '',
-        product_type_desc: '',
-        product_type_icon: '',
+        productTypeName: '',
+        productTypeDesc: '',
+        productTypeIcon: '',
       };
       this.productTypeFormVisible = true;
     },
@@ -86,11 +86,11 @@ export default {
       this.tableHeight = window.innerHeight - 220;
     },
     loadProductType() {
-      this.$http.post("/productType?method=page&current=" + this.current + '&pagesize=' + this.pageSize)
+      this.$http.get("/productType?page=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             console.log(res.data);
             if (res.data.msg === "success") {
-              this.productTypes = res.data.data.records;
+              this.productTypes = res.data.data.rows;
               this.total = res.data.data.total;
               // 如果当前页没有数据且不是第一页，则跳转到上一页
               if (this.productTypes.length === 0 && this.current > 1) {
@@ -136,14 +136,14 @@ export default {
         <el-form-item label="类型 ID" prop="id">
           <el-input v-model.trim="productType.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="分类名称" prop="product_type_name">
-          <el-input v-model.trim="productType.product_type_name" autocomplete="off"></el-input>
+        <el-form-item label="分类名称" prop="productTypeName">
+          <el-input v-model.trim="productType.productTypeName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="分类描述" prop="product_type_desc">
-          <el-input v-model.trim="productType.product_type_desc" autocomplete="off"></el-input>
+        <el-form-item label="分类描述" prop="productTypeDesc">
+          <el-input v-model.trim="productType.productTypeDesc" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="分类图标" prop="product_type_icon">
-          <el-input v-model.trim="productType.product_type_icon" autocomplete="off"></el-input>
+        <el-form-item label="分类图标" prop="productTypeIcon">
+          <el-input v-model.trim="productType.productTypeIcon" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -165,17 +165,17 @@ export default {
       <el-table-column
           label="分类名称"
           min-width="100px"
-          prop="product_type_name">
+          prop="productTypeName">
       </el-table-column>
       <el-table-column
           label="分类描述"
           min-width="100px"
-          prop="product_type_desc">
+          prop="productTypeDesc">
       </el-table-column>
       <el-table-column
           label="分类图标"
           min-width="100px"
-          prop="product_type_icon">
+          prop="productTypeIcon">
       </el-table-column>
       <el-table-column
           fixed="right"

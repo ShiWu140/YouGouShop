@@ -28,7 +28,7 @@ public class ProductController {
      */
     @GetMapping
     public Result page(@RequestParam(defaultValue = "1")Integer page,
-                       @RequestParam(defaultValue = "1")Integer size ,
+                       @RequestParam(defaultValue = "10")Integer size ,
                        String words){
         log.info("页码:{},每页记录数:{},words:{}",page,size,words);
         PageBean pageBean=productService.page(page,size,words);
@@ -93,6 +93,11 @@ public class ProductController {
         return Result.success();
     }
 
+    /**
+     * 新增
+     * @param product
+     * @return
+     */
     @PostMapping
     public Result add(@RequestBody Product product){
         log.info("新增产品:{}",product);
