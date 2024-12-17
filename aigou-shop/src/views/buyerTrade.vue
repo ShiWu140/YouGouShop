@@ -1,5 +1,4 @@
 <script setup>
-
 </script>
 <template>
   <!--头部-->
@@ -137,6 +136,5 @@
   </div>
 </template>
 <style scoped>
-@import "@/assets/css/buyerTrade.css";
 </style>
 

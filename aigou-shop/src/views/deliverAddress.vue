@@ -1,5 +1,4 @@
 <script setup>
-import "@/assets/js/area.js"
 </script>
 <template>
   <!--头部-->
@@ -111,5 +110,4 @@ import "@/assets/js/area.js"
 </template>
 
 <style scoped>
-@import "@/assets/css/deliverAddress.css";
 </style>

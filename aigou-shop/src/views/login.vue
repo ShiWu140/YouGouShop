@@ -1,5 +1,4 @@
 <script setup>
-
 </script>
 	<template>
 		<!--登录/注册的头部-->
@@ -46,5 +45,4 @@
 	</template>
 
 <style scoped>
-@import "@/assets/css/login.css";
 </style>

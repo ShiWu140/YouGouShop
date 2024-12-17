@@ -1,34 +1,4 @@
-<script>
-import "@/assets/js/jquery.js"
-
-$(function () {
-  //增加商品数量
-  $(".add").click(function () {
-    $("#goodsNum").val(parseInt($("#goodsNum").val()) + 1);
-    $(".reduce").css({"backgroundPositionX": "0", "backgroundPositionY": "25px"});
-  });
-  //减少商品数量
-  $(".reduce").click(function () {
-    console.log($("#goodsNum").val());
-    if ($("#goodsNum").val() > 1) {
-      $("#goodsNum").val(parseInt($("#goodsNum").val()) - 1);
-      $(this).css({"backgroundPositionX": "0", "backgroundPositionY": "25px"});
-    }
-    if ($("#goodsNum").val() == 1) {
-      $(this).css({"backgroundPositionX": "-24px", "backgroundPositionY": "25px"});
-    }
-
-  });
-  var timer;
-  //点击添加购物车
-  $("#addCart").click(function () {
-    clearTimeout(timer);
-    $("#tips").css("display", "inline-block");
-    timer = setTimeout(function () {
-      $("#tips").css("display", "none");
-    }, 3000);
-  });
-});
+<script setup>
 </script>
 <template>
   <!--头部-->
@@ -239,5 +209,4 @@ $(function () {
   </div>
 </template>
 <style scoped>
-@import "@/assets/css/goodsDetail.css";
 </style>
