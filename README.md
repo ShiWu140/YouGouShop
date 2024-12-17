@@ -19,14 +19,13 @@
    | 查询全部 | GET    | `/items/all`                     | `getAll`       |
    | 搜索   | GET    | `/items/search?words={words}`    | `search`       |
    | 修改   | PUT    | `/items`                         | `modify`       |
-   | 删除   | DELETE | `/items/{id}`                    | `delete`       |
-   | 添加   | POST   | `/items`                         | `add`          |
+   | 删除   | DELETE | `/is/{id}`                       | `delete`       |
+   | 添加   | POST   | `/itemtems`                      | `add`          |
    | 登录   | POST   | `/auth/login`                    | `login`        |
 
 8. 修改方法
     1. entity不变
-    2. dao
-        1. @Repository
+    2. dao -> mapper
     3. service
         1. @Service
         2. @Resource

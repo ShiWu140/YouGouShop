@@ -1,14 +1,10 @@
 package com.training.aigouapi.controller;
 
-import com.training.aigouapi.entity.Brand;
-import com.training.aigouapi.entity.PageEntity;
+import com.training.aigouapi.common.Result;
 import com.training.aigouapi.entity.Sales;
 import com.training.aigouapi.service.SalesService;
 import jakarta.annotation.Resource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 销量
@@ -17,6 +13,7 @@ import java.util.List;
  * @version 1.0
  * @since 2024/12/12 12:32
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/sales")
 public class SalesController {
@@ -31,8 +28,8 @@ public class SalesController {
      * @return 分页后的销售记录
      */
     @GetMapping
-    public ResponseEntity<PageEntity<Sales>> page(@RequestParam Integer page, @RequestParam Integer size) {
-        return ResponseEntity.ok(salesService.findPage(page, size));
+    public Result page(@RequestParam Integer page, @RequestParam Integer size) {
+        return Result.success(salesService.findPage(page, size));
     }
 
     /**
@@ -41,38 +38,25 @@ public class SalesController {
      * @return 所有销售记录的列表
      */
     @GetMapping("/all")
-    public ResponseEntity<List<Sales>> getAll() {
-        return ResponseEntity.ok(salesService.findAll());
+    public Result getAll() {
+        return Result.success(salesService.findAll());
     }
 
     /**
      * 根据销售记录 id 查询销售记录
      *
      * @param id 销售记录 id
-     * @return 对应的销售记录，如果不存在则返回 404
+     * @return 对应的销售记录，如果不存在则返回错误信息
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Sales> getId(@PathVariable String id) {
+    public Result getId(@PathVariable String id) {
         Sales sales = salesService.findId(id);
         if (sales != null) {
-            return ResponseEntity.ok(sales);
+            return Result.success(sales);
         } else {
-            return ResponseEntity.notFound().build();
+            return Result.error("没有找到{" + id + "}！");
         }
     }
-
-    /**
-     * 搜索销售记录
-     *
-     * @param words 搜索关键词
-     * @return 符合条件的销售记录列表
-     */
-//    @GetMapping("/search")
-//    public ResponseEntity<List<Sales>> search(@RequestParam String words) {
-//        // 假设有一个 search 方法在 SalesService 中
-//        List<Sales> salesList = salesService.search(words);
-//        return ResponseEntity.ok(salesList);
-//    }
 
     /**
      * 添加销售记录
@@ -81,12 +65,12 @@ public class SalesController {
      * @return 添加成功的销售记录
      */
     @PostMapping
-    public ResponseEntity<Sales> add(@RequestBody Sales sales) {
+    public Result add(@RequestBody Sales sales) {
         boolean success = salesService.save(sales);
         if (success) {
-            return ResponseEntity.ok(sales);
+            return Result.success(sales);
         } else {
-            return ResponseEntity.badRequest().build();
+            return Result.error("添加{" + sales.getId() + "}失败！");
         }
     }
 
@@ -97,12 +81,12 @@ public class SalesController {
      * @return 更新后的销售记录
      */
     @PutMapping
-    public ResponseEntity<Sales> modify(@RequestBody Sales sales) {
+    public Result modify(@RequestBody Sales sales) {
         boolean success = salesService.update(sales);
         if (success) {
-            return ResponseEntity.ok(sales);
+            return Result.success(sales);
         } else {
-            return ResponseEntity.badRequest().build();
+            return Result.error("编辑{" + sales.getId() + "}失败！");
         }
     }
 
@@ -113,12 +97,12 @@ public class SalesController {
      * @return 删除结果
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
+    public Result delete(@PathVariable String id) {
         boolean success = salesService.remove(id);
         if (success) {
-            return ResponseEntity.ok().build();
+            return Result.success("删除{" + id + "}成功！");
         } else {
-            return ResponseEntity.badRequest().build();
+            return Result.error("删除{" + id + "}失败！");
         }
     }
 }

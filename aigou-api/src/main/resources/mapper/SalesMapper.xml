@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间是包名+接口-->
+<mapper namespace="com.training.aigouapi.mapper.SalesMapper">
+    <select id="selectAll" resultType="Sales">
+        select * from s_sales;
+    </select>
+
+    <select id="selectLimit" resultType="Sales">
+        select * from s_sales limit #{start}, #{limit};
+    </select>
+
+    <select id="selectCount" resultType="long">
+        select count(*) from s_sales;
+    </select>
+
+    <select id="selectId" resultType="Sales">
+        select * from s_sales where id = #{id};
+    </select>
+
+    <insert id="insert" parameterType="Sales">
+        insert into s_sales(id, product_id, sales_num)
+        values (#{id}, #{productId}, #{salesNum});
+    </insert>
+
+    <delete id="delete" parameterType="String">
+        delete from s_sales where id = #{id};
+    </delete>
+
+    <update id="update" parameterType="Sales">
+        update s_sales
+        set product_id = #{productId},
+            sales_num  = #{salesNum}
+        where id = #{id};
+    </update>
+</mapper>

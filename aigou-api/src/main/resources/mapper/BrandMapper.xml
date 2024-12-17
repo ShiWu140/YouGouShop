@@ -16,7 +16,7 @@
         select count(*) from s_brand;
     </select>
 
-    <select id="selectById" resultType="Brand">
+    <select id="selectId" resultType="Brand">
         select * from s_brand where id = #{id};
     </select>
 
