@@ -39,6 +39,8 @@ export default {
 
       this.$refs.productTypeForm.validate(valid => {
         if (valid) {
+          //验证成功
+          /*更新------------------------------------------*/
           if (this.operate == 'update') {
             console.log("发送更新请求update")
             this.$http.put("/productType", productType).then((res) => {
@@ -58,6 +60,7 @@ export default {
               }
             })
           }
+          /*添加------------------------------------------*/
           if (this.operate == 'save') {
             console.log("发送添加请求insert")
             this.$http.post("/productType", productType).then((res) => {
@@ -84,7 +87,7 @@ export default {
           });
         }
       });
-
+      /*删除------------------------------------------*/
       if (this.operate == 'delete') {
         console.log("发送删除请求delete")
         this.$http.delete("/productType/" + productType.id).then((res) => {
