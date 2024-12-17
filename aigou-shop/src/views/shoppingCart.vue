@@ -1,6 +1,4 @@
 <script setup>
-import "@/assets/js/jquery.js"
-import "@/assets/js/shoppingCart.js"
 </script>
 <template>
   <!--头部-->

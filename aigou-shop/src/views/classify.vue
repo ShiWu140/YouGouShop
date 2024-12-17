@@ -1,12 +1,4 @@
 <script setup>
-$(function () {
-  $("#brands-cancel").click(function () {
-    $(".chk").attr("checked", false);
-  });
-  $("#price-cancel").click(function () {
-    $(".price").attr("value", "");
-  });
-})
 </script>
 <template>
   <!--头部-->
@@ -103,126 +95,126 @@ $(function () {
           <input type="checkbox" class="chk" id="chk1"/>
           <label for="chk1">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>盐津铺子
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk2"/>
           <label for="chk2">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>良品铺子
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk3"/>
           <label for="chk3">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>百草味
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk4"/>
           <label for="chk4">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>大红袍
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk5"/>
           <label for="chk5">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>金龙鱼
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk6"/>
           <label for="chk6">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>芬尼湾
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk7"/>
           <label for="chk7">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>农夫山泉
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk8"/>
           <label for="chk8">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>鲁花
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk9"/>
           <label for="chk9">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>伊利
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk10"/>
           <label for="chk10">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>芦苇微微
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk11"/>
           <label for="chk11">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>天地精华
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk12"/>
           <label for="chk12">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>广州酒家
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk13"/>
           <label for="chk13">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>吾润
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk14"/>
           <label for="chk14">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>雲杉
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk15"/>
           <label for="chk15">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>福芝林
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk16"/>
           <label for="chk16">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>十景斋
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk17"/>
           <label for="chk17">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>美心
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
         <li>
           <input type="checkbox" class="chk" id="chk18"/>
           <label for="chk18">
             <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>购食惠
-            <img src="@/assets/img/choose.PNG" class="choose"/>
+            <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
       </ul>
@@ -332,5 +324,4 @@ $(function () {
   </div>
 </template>
 <style scoped>
-@import "@/assets/css/classify.css";
 </style>

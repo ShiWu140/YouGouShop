@@ -1,5 +1,4 @@
 <script setup>
-import "@/assets/js/banner.js"
 </script>
 <template>
   <!--头部-->
@@ -431,5 +430,4 @@ import "@/assets/js/banner.js"
 </template>
 
 <style scoped>
-@import "@/assets/css/index.css";
 </style>

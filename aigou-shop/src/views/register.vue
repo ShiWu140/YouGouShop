@@ -1,5 +1,4 @@
 <script setup>
-
 </script>
 	<template>
 		<!--登录/注册的头部-->
@@ -46,7 +45,6 @@
 		</div>
 	</template>
 <style scoped>
-@import "@/assets/css/login.css";
 .reg-div input{
   width: 305px;
   padding-left: 10px;
