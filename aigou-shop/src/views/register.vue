@@ -1,29 +1,10 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>爱购注册页面</title>
-		<link rel="icon" type="image/x-icon" href="img/title-icon.jpg"/>
-		<link rel="stylesheet" href="css/reset.css" />
-		<link rel="stylesheet" href="css/footer.css" />
-		<link rel="stylesheet" href="css/login.css" />
-		<style>
-			.reg-div input{
-				width: 305px;
-				padding-left: 10px;
-			}
-			.pro{
-				margin-top: 10px;
-			}
-			.pro a{
-				color: #B41E23;
-			}
-		</style>
-	</head>
-	<body>
+<script setup>
+
+</script>
+	<template>
 		<!--登录/注册的头部-->
 		<div class="lr-top w1230">
-			<a href="index.html"><img src="img/logo.png" width="150px" height="60px"/></a>
+			<a href="index.html"><img src="@/assets/img/logo.png" width="150px" height="60px"/></a>
 			<div class="top-link">
 				<a href="#"class="top-link1"></a>
 				<a href="#" class="top-link2"></a>
@@ -40,7 +21,7 @@
 						<p><input type="text" placeholder="请输入注册的账号"/></p>
 						<p><input type="password" placeholder="请输入密码"/></p>
 						<p><input type="password" placeholder="请确认密码"/></p>
-						<p class="clear-float"><input type="text" placeholder="验证码" class="code"/><img src="img/code.jpg" width="110px" height="42px" class="code-img"/></p>
+						<p class="clear-float"><input type="text" placeholder="验证码" class="code"/><img src="@/assets/img/code.jpg" width="110px" height="42px" class="code-img"/></p>
 						<input type="submit" value="同意并注册协议" class="sum-btn" />
 						<p class="pro"><a href="#">《爱购用户协议》</a></p>
 					</form>
@@ -63,5 +44,17 @@
 				<span>&copy;2018-2020 igo.com 版权所有</span>
 			</p>
 		</div>
-	</body>
-</html>
+	</template>
+<style scoped>
+@import "@/assets/css/login.css";
+.reg-div input{
+  width: 305px;
+  padding-left: 10px;
+}
+.pro{
+  margin-top: 10px;
+}
+.pro a{
+  color: #B41E23;
+}
+</style>

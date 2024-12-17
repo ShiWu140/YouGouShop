@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>爱购登录页面</title>
-		<link rel="icon" type="image/x-icon" href="img/title-icon.jpg"/>
-		<link rel="stylesheet" href="css/reset.css" />
-		<link rel="stylesheet" href="css/footer.css" />
-		<link rel="stylesheet" href="css/login.css" />
-	</head>
-	<body>
+<script setup>
+
+</script>
+	<template>
 		<!--登录/注册的头部-->
 		<div class="lr-top w1230">
-			<a href="index.html"><img src="img/logo.png" width="150px" height="60px"/></a>
+			<a href="index.html"><img src="@/assets/img/logo.png" width="150px" height="60px"/></a>
 			<div class="top-link">
 				<a href="#"class="top-link1"></a>
 				<a href="#" class="top-link2"></a>
@@ -27,7 +20,7 @@
 					<form action="#" method="post">
 						<p><span class="icon-account"></span><input type="text" placeholder="请输入已注册的账号"/></p>
 						<p><span class="icon-pwd"></span><input type="password" placeholder="请输入密码"/></p>
-						<p class="clear-float"><input type="text" placeholder="验证码" class="code"/><img src="img/code.jpg" width="110px" height="42px" class="code-img"/></p>
+						<p class="clear-float"><input type="text" placeholder="验证码" class="code"/><img src="@/assets/img/code.jpg" width="110px" height="42px" class="code-img"/></p>
 						<p><input type="checkbox" class="chk-login"/><span>7天免登录</span></p>
 						<input type="submit" value="登录" class="sum-btn" />
 					</form>
@@ -50,5 +43,8 @@
 				<span>&copy;2018-2020 igo.com 版权所有</span>
 			</p>
 		</div>
-	</body>
-</html>
+	</template>
+
+<style scoped>
+@import "@/assets/css/login.css";
+</style>
