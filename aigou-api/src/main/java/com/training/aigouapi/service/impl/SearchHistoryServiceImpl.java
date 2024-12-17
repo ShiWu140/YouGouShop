@@ -6,18 +6,21 @@ import com.training.aigouapi.entity.SearchHistory;
 import com.training.aigouapi.mapper.SearchHistoryMapper;
 import com.training.aigouapi.service.SearchHistoryService;
 import com.training.aigouapi.util.IDUtils;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * 搜索历史实现类
+ *
  * @author 十五
  */
 @Service
 public class SearchHistoryServiceImpl implements SearchHistoryService {
 
     // 实例化dao层对象,方便调用dao层方法
+    @Resource
     private SearchHistoryMapper searchHistoryMapper;
 
     /**
@@ -30,7 +33,7 @@ public class SearchHistoryServiceImpl implements SearchHistoryService {
     @Override
     public PageEntity<SearchHistory> findPage(Integer current, Integer pageSize) {
         //查询总数
-        long total = searchHistoryMapper.selectCount();
+        Long total = searchHistoryMapper.selectCount();
         //分页查询数据
         List<SearchHistory> searchHistories = searchHistoryMapper.selectLimit((current - 1) * pageSize, pageSize);
         PageEntity<SearchHistory> pageEntity = new PageEntity<>();

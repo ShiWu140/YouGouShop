@@ -3,7 +3,6 @@ package com.training.aigouapi.controller;
 import com.training.aigouapi.entity.CarouselFigure;
 import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.service.CarouselFigureService;
-import com.training.aigouapi.util.IDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +12,7 @@ import java.util.Optional;
 
 /**
  * 轮播图控制器 BY 十五
+ *
  * @author 十五
  */
 @RestController
@@ -95,7 +95,7 @@ public class CarouselFigureController {
      * @param carouselFigure 轮播图对象
      * @return 更新结果的响应实体
      */
-    @PutMapping("/modify")
+    @PostMapping("/modify")
     public ResponseEntity<?> update(@RequestBody CarouselFigure carouselFigure) {
         boolean rs = carouselFigureService.update(carouselFigure);
         if (rs) {
@@ -108,12 +108,12 @@ public class CarouselFigureController {
     /**
      * 删除轮播图
      *
-     * @param id 轮播图ID
+     * @param carouselFigure 轮播图对象
      * @return 删除结果的响应实体
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable(value = "id") String id) {
-        boolean rs = carouselFigureService.remove(id);
+    @PostMapping("/delete")
+    public ResponseEntity<?> delete(@RequestBody CarouselFigure carouselFigure) {
+        boolean rs = carouselFigureService.remove(carouselFigure.getId());
         if (rs) {
             return ResponseEntity.ok().build();
         } else {

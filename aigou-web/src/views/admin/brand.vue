@@ -119,9 +119,9 @@ export default {
     },
     //图片上传方法
     handleAvatarSuccess(res, file) {
-      console.log('upload', res.data)
-      this.imageUrl = res.data
-      this.brand.brand_img = res.data;
+      console.log('upload', res)
+      this.imageUrl = res
+      this.brand.brand_img = res;
     }
   },
   mounted() {

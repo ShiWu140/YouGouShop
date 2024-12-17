@@ -142,9 +142,9 @@ export default {
       this.$http.post(`/user/${this.current}/${this.pageSize}`)
           .then(res => {
             console.log(res.data);
-            if (res.data.msg === "success") {
-              this.users = res.data.data.records;
-              this.total = res.data.data.total;
+            if (res.data) {
+              this.users = res.data.records;
+              this.total = res.data.total;
               if (this.users.length === 0 && this.current > 1) {
                 this.current -= 1;
                 this.loadUsers(this.current);

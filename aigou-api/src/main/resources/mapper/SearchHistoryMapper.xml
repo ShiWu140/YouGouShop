@@ -8,7 +8,7 @@
         from s_search_history
         limit #{start},#{limit};
     </select>
-    <select id="selectCount" resultType="java.lang.Integer">
+    <select id="selectCount" resultType="java.lang.Long">
         select count(*)
         from s_search_history;
     </select>

@@ -5,6 +5,7 @@ import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.mapper.CarouselFigureMapper;
 import com.training.aigouapi.service.CarouselFigureService;
 import com.training.aigouapi.util.IDUtils;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class CarouselFigureServiceImpl implements CarouselFigureService {
     /**
      * 调用dao层对象
      */
+    @Resource
     private CarouselFigureMapper carouselFigureMapper;
 
     /**

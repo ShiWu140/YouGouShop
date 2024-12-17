@@ -3,11 +3,11 @@ package com.training.aigouapi.controller;
 import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.entity.SearchHistory;
 import com.training.aigouapi.service.SearchHistoryService;
-import com.training.aigouapi.util.IDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,6 +77,7 @@ public class SearchHistoryController {
      */
     @PostMapping("/add")
     public ResponseEntity<?> register(@RequestBody SearchHistory searchHistory) {
+        searchHistory.setSearchTime(LocalDateTime.now());
         if (searchHistoryService.findId(searchHistory.getId()) != null) {
             return ResponseEntity.badRequest().build();
         }
@@ -96,6 +97,7 @@ public class SearchHistoryController {
      */
     @PutMapping("/modify")
     public ResponseEntity<?> update(@RequestBody SearchHistory searchHistory) {
+        searchHistory.setSearchTime(LocalDateTime.now());
         boolean rs = searchHistoryService.update(searchHistory);
         if (rs) {
             return ResponseEntity.ok().build();

@@ -6,7 +6,7 @@ export default {
       carouselFigure: {
         id: '',
         url: '',
-        sequence_num: '',
+        sequenceNum: '',
       },
       carouselFigureFormVisible: false,
       tableHeight: window.innerHeight - 220,
@@ -25,7 +25,7 @@ export default {
         url: [{
           required: true, message: '必填项', trigger: 'change'
         }],
-        sequence_num: [{
+        sequenceNum: [{
           required: true, message: '必填项', trigger: 'change'
         }, {
           type: 'number', message: '必须为数字值', trigger: 'change'
@@ -37,7 +37,7 @@ export default {
     operateCarouselFigure(carouselFigure) {
       // 调试输出提交的数据
       console.log('提交的数据', carouselFigure);
-      this.$http.post("/carouselFigure?method=" + this.operate + "&" + this.$qs.stringify(carouselFigure)).then((response) => {
+      this.$http.post("/carouselFigure/" + this.operate + "&" + this.$qs.stringify(carouselFigure)).then((response) => {
         if (response.data.msg === 'success') {
           this.$message({
             type: 'success',
@@ -59,7 +59,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.operate = 'remove';
+        this.operate = 'delete';
         this.operateCarouselFigure(row);
       }).catch(() => {
         this.$message({
@@ -69,17 +69,17 @@ export default {
       });
     },
     handleEdit(index, row) {
-      this.operate = 'update';
+      this.operate = 'modify';
       this.carouselFigure = JSON.parse(JSON.stringify(row));
       this.imageUrl = this.carouselFigure.url;
       this.carouselFigureFormVisible = true;
     },
     addFrom() {
-      this.operate = 'save';
+      this.operate = 'add';
       this.carouselFigure = {
         id: '',
         url: '',
-        sequence_num: '',
+        sequenceNum: '',
       };
       // 清空图片 URL
       this.imageUrl = '';
@@ -91,12 +91,12 @@ export default {
     },
     loadCarouselFigure(current) {
       current = this.current;
-      this.$http.post("/carouselFigure?method=page&current=" + current + '&pagesize=' + this.pageSize)
+      this.$http.get(`/carouselFigure/${this.current}/${this.pageSize}`)
           .then(res => {
             console.log(res.data);
-            if (res.data.msg === "success") {
-              this.carouselFigures = res.data.data.records;
-              this.total = res.data.data.total;
+            if (res.data) {
+              this.carouselFigures = res.data.records;
+              this.total = res.data.total;
               // 如果当前页没有数据且不是第一页，则跳转到上一页
               if (this.carouselFigures.length === 0 && this.current > 1) {
                 this.current -= 1;
@@ -117,9 +117,9 @@ export default {
     },
     //图片上传方法
     handleAvatarSuccess(res, file) {
-      console.log('upload', res.data)
-      this.imageUrl = res.data
-      this.carouselFigure.url = res.data;
+      console.log('upload', res)
+      this.imageUrl = res
+      this.carouselFigure.url = res;
     }
   },
   mounted() {
@@ -159,8 +159,8 @@ export default {
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="轮播图序号" prop="sequence_num">
-          <el-input v-model.trim.number="carouselFigure.sequence_num" autocomplete="off"></el-input>
+        <el-form-item label="轮播图序号" prop="sequenceNum">
+          <el-input v-model.trim.number="carouselFigure.sequenceNum" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -192,7 +192,7 @@ export default {
       <el-table-column
           label="轮播图序号"
           min-width="100px"
-          prop="sequence_num">
+          prop="sequenceNum">
       </el-table-column>
       <el-table-column
           fixed="right"
