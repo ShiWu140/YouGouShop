@@ -58,43 +58,56 @@ export default {
       // }
       // 调试输出提交的数据
       console.log('提交的数据', product);
-      if(this.operate=='update'){
-        console.log("发送更新请求update")
-        this.$http.put("/product",product).then((res)=>{
-          console.log(res.data.code)
-          this.loadProduct()
-          this.productFormVisible = false;
-        })
-      }else if(this.operate=='remove'){
-        console.log("发送删除请求delete")
-        this.$http.delete("/product/"+product.id).then((res)=>{
-          console.log(res.data.code)
-          if(res.data.code==1){
-            this.loadProduct()
-            this.productFormVisible = false;
-            this.$message({
-              type: 'success',
-              message: '操作成功!'
-            });
-          }else{
-            this.$message({
-              type: 'error',
-              message: res.data.msg
-            });
+      this.$refs.productForm.validate(valid => {
+        if (valid) {
+          //验证成功
+          if (this.operate == 'update') {
+            console.log("发送更新请求update")
+            this.$http.put("/product", product).then((res) => {
+              console.log(res.data.code)
+              this.loadProduct()
+              this.productFormVisible = false;
+            })
           }
-        })
-      }else if(this.operate=='save'){
-        console.log("发送添加请求insert")
-        this.$http.post("/product",product).then((res)=>{
+
+          if (this.operate == 'save') {
+            console.log("发送添加请求insert")
+            this.$http.post("/product", product).then((res) => {
+              console.log(res.data.code)
+              if (res.data.code == 1) {
+                this.loadProduct()
+                this.productFormVisible = false;
+                this.$message({
+                  type: 'success',
+                  message: '操作成功!'
+                });
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: res.data.msg
+                });
+              }
+            })
+          }
+        } else {
+          this.$message({
+            message: '请正确填写内容！',
+            type: 'warning'
+          });
+        }
+      });
+      if (this.operate == 'remove') {
+        console.log("发送删除请求delete")
+        this.$http.delete("/product/" + product.id).then((res) => {
           console.log(res.data.code)
-          if(res.data.code==1){
+          if (res.data.code == 1) {
             this.loadProduct()
             this.productFormVisible = false;
             this.$message({
               type: 'success',
               message: '操作成功!'
             });
-          }else{
+          } else {
             this.$message({
               type: 'error',
               message: res.data.msg
@@ -219,12 +232,12 @@ export default {
         <el-button class="add-button" round type="primary" @click="addFrom()">上架商品</el-button>
       </div>
     </div>
-<!--    新增-->
+    <!--    新增-->
     <el-dialog :visible.sync="productFormVisible" title="上架商品">
       <el-form :model="product" label-width="auto" :rules="rules" ref="productForm">
-<!--        <el-form-item label="商品 ID" prop="id">
-          <el-input v-model.trim="product.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
-        </el-form-item>-->
+        <!--        <el-form-item label="商品 ID" prop="id">
+                  <el-input v-model.trim="product.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
+                </el-form-item>-->
         <el-form-item label="商品名称" prop="productName">
           <el-input v-model.trim="product.productName" autocomplete="off"></el-input>
         </el-form-item>
@@ -267,12 +280,12 @@ export default {
         :height="tableHeight"
         border
         style="width: 100%;">
-<!--      <el-table-column
-          fixed
-          label="商品 ID"
-          min-width="100px"
-          prop="id">
-      </el-table-column>-->
+      <!--      <el-table-column
+                fixed
+                label="商品 ID"
+                min-width="100px"
+                prop="id">
+            </el-table-column>-->
       <el-table-column
           label="商品名称"
           min-width="100px"
