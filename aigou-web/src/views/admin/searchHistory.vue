@@ -5,9 +5,9 @@ export default {
       searchHistories: [],
       searchHistory: {
         id: '',
-        search_words: '',
+        searchWords: '',
         num: '',
-        search_time: ''
+        searchTime: ''
       },
       searchHistoryFormVisible: false,
       tableHeight: window.innerHeight - 220,
@@ -18,13 +18,13 @@ export default {
       operate: '',
       //表单验证
       rules: {
-        id:[
+        id: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        search_words:[
+        searchWords: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        num:[
+        num: [
           {required: true, message: '必填项', trigger: 'change'},
           {type: 'number', message: '必须为数字值', trigger: 'change'}
         ]
@@ -34,8 +34,8 @@ export default {
   methods: {
     operateSearchHistory(searchHistory) {
       const {create_time, ...newSearchHistory} = searchHistory;
-      this.$http.post("/searchHistory?method=" + this.operate + "&" + this.$qs.stringify(newSearchHistory)).then((response) => {
-        if (response.data.msg === 'success') {
+      this.$http.post("/searchHistory/" + this.operate, newSearchHistory).then((response) => {
+        if (response.status === 200) {
           this.$message({
             type: 'success',
             message: '操作成功!'
@@ -48,7 +48,13 @@ export default {
             message: response.data.data
           });
         }
-      })
+      }).catch((error) => {
+        console.error('There was an error!', error);
+        this.$message({
+          type: 'error',
+          message: '请求失败，请重试!'
+        });
+      });
     },
     handleDelete(index, row) {
       this.$confirm('此操作将永久删除该搜索历史, 是否继续?', '提示', {
@@ -56,7 +62,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.operate = 'remove';
+        this.operate = 'delete';
         this.operateSearchHistory(row);
       }).catch(() => {
         this.$message({
@@ -66,17 +72,17 @@ export default {
       });
     },
     handleEdit(index, row) {
-      this.operate = 'update';
+      this.operate = 'modify';
       this.searchHistory = JSON.parse(JSON.stringify(row));
       this.searchHistoryFormVisible = true;
     },
     addFrom() {
-      this.operate = 'save';
+      this.operate = 'add';
       this.searchHistory = {
         id: '',
-        search_words: '',
+        searchWords: '',
         num: '',
-        search_time: ''
+        searchTime: ''
       };
       this.searchHistoryFormVisible = true;
     },
@@ -86,12 +92,13 @@ export default {
     },
     loadSearchHistory(current) {
       current = this.current;
-      this.$http.post("/searchHistory?method=page&current=" + current + '&pagesize=' + this.pageSize)
+      this.$http.get(`/searchHistory/page/${this.current}/${this.pageSize}`)
           .then(res => {
             console.log(res.data);
-            if (res.data.msg === "success") {
-              this.searchHistories = res.data.data.records;
-              this.total = res.data.data.total;
+            if (res.data) {
+              this.searchHistories = res.data.records;
+              this.total = res.data.total;
+              // 如果当前页没有数据且不是第一页，则跳转到上一页
               if (this.searchHistories.length === 0 && this.current > 1) {
                 this.current -= 1;
                 this.loadSearchHistory(this.current);
@@ -137,12 +144,12 @@ export default {
       </div>
     </div>
     <el-dialog :visible.sync="searchHistoryFormVisible" title="搜索历史">
-      <el-form :model="searchHistory" label-width="auto" :rules="rules" ref="searchHistory" >
+      <el-form :model="searchHistory" label-width="auto" :rules="rules" ref="searchHistory">
         <el-form-item label="ID" prop="id">
-          <el-input v-model.trim="searchHistory.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
+          <el-input v-model.trim="searchHistory.id" :disabled="operate === 'modify'" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="搜索关键词" prop="search_words">
-          <el-input v-model.trim="searchHistory.search_words" autocomplete="off"></el-input>
+        <el-form-item label="搜索关键词" prop="searchWords">
+          <el-input v-model.trim="searchHistory.searchWords" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="搜索次数" prop="num">
           <el-input v-model.trim.number="searchHistory.num" autocomplete="off"></el-input>
@@ -167,7 +174,7 @@ export default {
       <el-table-column
           label="搜索关键词"
           min-width="100px"
-          prop="search_words">
+          prop="searchWords">
       </el-table-column>
       <el-table-column
           label="搜索次数"
@@ -178,7 +185,7 @@ export default {
           label="搜索时间"
           :formatter="formatCreateTime"
           min-width="100px"
-          prop="search_time">
+          prop="searchTime">
       </el-table-column>
       <el-table-column
           fixed="right"

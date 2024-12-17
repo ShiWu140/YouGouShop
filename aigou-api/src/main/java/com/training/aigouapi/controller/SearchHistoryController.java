@@ -95,7 +95,7 @@ public class SearchHistoryController {
      * @param searchHistory 搜索历史记录对象
      * @return 更新结果的响应实体
      */
-    @PutMapping("/modify")
+    @PostMapping("/modify")
     public ResponseEntity<?> update(@RequestBody SearchHistory searchHistory) {
         searchHistory.setSearchTime(LocalDateTime.now());
         boolean rs = searchHistoryService.update(searchHistory);
@@ -109,12 +109,12 @@ public class SearchHistoryController {
     /**
      * 删除搜索历史记录
      *
-     * @param id 搜索历史记录ID
+     * @param searchHistory 搜索历史记录对象
      * @return 删除结果的响应实体
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable(value = "id") String id) {
-        boolean rs = searchHistoryService.remove(id);
+    @PostMapping("/delete")
+    public ResponseEntity<?> delete(@RequestBody SearchHistory searchHistory) {
+        boolean rs = searchHistoryService.remove(searchHistory.getId());
         if (rs) {
             return ResponseEntity.ok().build();
         } else {

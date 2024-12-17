@@ -3,7 +3,7 @@ package com.training.aigouapi.controller;
 import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.entity.User;
 import com.training.aigouapi.service.UserService;
-import com.training.aigouapi.util.IDUtils;
+import com.training.aigouapi.util.MD5Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -74,8 +74,9 @@ public class UserController {
      * @param user 用户对象
      * @return 更新结果的响应实体
      */
-    @PutMapping("/modify")
+    @PostMapping("/modify")
     public ResponseEntity<?> update(@RequestBody User user) {
+        user.setUserPwd(MD5Utils.md5(user.getUserPwd()));
         boolean rs = userService.update(user);
         if (rs) {
             return ResponseEntity.ok().build();
@@ -87,12 +88,13 @@ public class UserController {
     /**
      * 删除用户
      *
-     * @param userId 用户ID
+     * @param user 用户对象
      * @return 删除结果的响应实体
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable(value = "id") String userId) {
-        boolean rs = userService.remove(userId);
+    @PostMapping("/delete")
+    public ResponseEntity<?> delete(@RequestBody User user) {
+
+        boolean rs = userService.remove(user.getUserId());
         if (rs) {
             return ResponseEntity.ok().build();
         } else {
