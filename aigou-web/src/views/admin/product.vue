@@ -58,7 +58,51 @@ export default {
       // }
       // 调试输出提交的数据
       console.log('提交的数据', product);
-      this.$http.post("/product?method=" + this.operate + "&" + this.$qs.stringify(product)).then((response) => {
+      if(this.operate=='update'){
+        console.log("发送更新请求update")
+        this.$http.put("/product",product).then((res)=>{
+          console.log(res.data.code)
+          this.loadProduct()
+          this.productFormVisible = false;
+        })
+      }else if(this.operate=='remove'){
+        console.log("发送删除请求delete")
+        this.$http.delete("/product/"+product.id).then((res)=>{
+          console.log(res.data.code)
+          if(res.data.code==1){
+            this.loadProduct()
+            this.productFormVisible = false;
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            });
+          }else{
+            this.$message({
+              type: 'error',
+              message: res.data.msg
+            });
+          }
+        })
+      }else if(this.operate=='save'){
+        console.log("发送添加请求insert")
+        this.$http.post("/product",product).then((res)=>{
+          console.log(res.data.code)
+          if(res.data.code==1){
+            this.loadProduct()
+            this.productFormVisible = false;
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            });
+          }else{
+            this.$message({
+              type: 'error',
+              message: res.data.msg
+            });
+          }
+        })
+      }
+      /*this.$http.post("/product?method=" + this.operate + "&" + this.$qs.stringify(product)).then((response) => {
         if (response.data.msg === 'success') {
           this.$message({
             type: 'success',
@@ -72,8 +116,9 @@ export default {
             message: response.data.data
           });
         }
-      })
+      })*/
     },
+    //删除
     handleDelete(index, row) {
       this.$confirm('此操作将永久删除该商品, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -89,12 +134,14 @@ export default {
         });
       });
     },
+    //编辑
     handleEdit(index, row) {
       this.operate = 'update';
       this.product = JSON.parse(JSON.stringify(row));
       this.imageUrl = this.product.productImage;
       this.productFormVisible = true;
     },
+    //添加
     addFrom() {
       this.operate = 'save';
       this.product = {
@@ -172,11 +219,12 @@ export default {
         <el-button class="add-button" round type="primary" @click="addFrom()">上架商品</el-button>
       </div>
     </div>
+<!--    新增-->
     <el-dialog :visible.sync="productFormVisible" title="上架商品">
       <el-form :model="product" label-width="auto" :rules="rules" ref="productForm">
-        <el-form-item label="商品 ID" prop="id">
+<!--        <el-form-item label="商品 ID" prop="id">
           <el-input v-model.trim="product.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="商品名称" prop="productName">
           <el-input v-model.trim="product.productName" autocomplete="off"></el-input>
         </el-form-item>
@@ -219,12 +267,12 @@ export default {
         :height="tableHeight"
         border
         style="width: 100%;">
-      <el-table-column
+<!--      <el-table-column
           fixed
           label="商品 ID"
           min-width="100px"
           prop="id">
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column
           label="商品名称"
           min-width="100px"

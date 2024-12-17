@@ -35,21 +35,51 @@ export default {
   },
   methods: {
     operateProductType(productType) {
-      this.$http.post("/productType?method=" + this.operate + "&" + this.$qs.stringify(productType)).then((response) => {
-        if (response.data.msg === 'success') {
-          this.$message({
-            type: 'success',
-            message: '操作成功!'
-          });
-          this.loadProductType();
+      console.log('提交的数据', productType);
+      if(this.operate=='update'){
+        console.log("发送更新请求update")
+        this.$http.put("/productType",productType).then((res)=>{
+          console.log(res.data.code)
+          this.loadProductType()
           this.productTypeFormVisible = false;
-        } else {
-          this.$message({
-            type: 'error',
-            message: response.data.data
-          });
-        }
-      })
+        })
+      }else if(this.operate=='delete'){
+        console.log("发送删除请求delete")
+        this.$http.delete("/productType/"+productType.id).then((res)=>{
+          console.log(res.data.code)
+          if(res.data.code==1){
+            this.loadProductType()
+            this.productTypeFormVisible = false;
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            });
+          }else{
+            this.$message({
+              type: 'error',
+              message: res.data.msg
+            });
+          }
+        })
+      }else if(this.operate=='save'){
+        console.log("发送添加请求insert")
+        this.$http.post("/productType",productType).then((res)=>{
+          console.log(res.data.code)
+          if(res.data.code==1){
+            this.loadProductType()
+            this.productTypeFormVisible = false;
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            });
+          }else{
+            this.$message({
+              type: 'error',
+              message: res.data.msg
+            });
+          }
+        })
+      }
     },
     handleDelete(index, row) {
       this.$confirm('此操作将永久删除该商品类型, 是否继续?', '提示', {
@@ -133,9 +163,9 @@ export default {
     </div>
     <el-dialog :visible.sync="productTypeFormVisible" title="添加类型">
       <el-form :model="productType" label-width="auto" :rules="rules" ref="productType">
-        <el-form-item label="类型 ID" prop="id">
+<!--        <el-form-item label="类型 ID" prop="id">
           <el-input v-model.trim="productType.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="分类名称" prop="productTypeName">
           <el-input v-model.trim="productType.productTypeName" autocomplete="off"></el-input>
         </el-form-item>
@@ -156,12 +186,12 @@ export default {
         :height="tableHeight"
         border
         style="width: 100%;">
-      <el-table-column
+<!--      <el-table-column
           fixed
           label="分类 ID"
           min-width="100px"
           prop="id">
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column
           label="分类名称"
           min-width="100px"
