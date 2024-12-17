@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.dushiwu.springbootdemo.mapper.SearchHistoryMapper">
+<mapper namespace="com.training.aigouapi.mapper.SearchHistoryMapper">
     <select id="selectLimit" resultType="SearchHistory">
         select *
         from s_search_history

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.dushiwu.springbootdemo.mapper.UserMapper">
+<mapper namespace="com.training.aigouapi.mapper.UserMapper">
     <select id="selectLimit" resultType="User">
         select *
         from s_user
