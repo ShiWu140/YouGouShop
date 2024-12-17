@@ -4,6 +4,7 @@ import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.entity.Sales;
 import com.training.aigouapi.mapper.SalesMapper;
 import com.training.aigouapi.service.SalesService;
+import com.training.aigouapi.util.IDUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -72,6 +73,7 @@ public class SalesServiceImpl implements SalesService {
      */
     @Override
     public boolean save(Sales sales) {
+        sales.setId(IDUtils.get());
         return salesMapper.insert(sales);
     }
 

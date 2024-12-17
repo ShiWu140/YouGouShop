@@ -4,6 +4,7 @@ import com.training.aigouapi.entity.Brand;
 import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.mapper.BrandMapper;
 import com.training.aigouapi.service.BrandService;
+import com.training.aigouapi.util.IDUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -43,6 +44,7 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public boolean save(Brand brand) {
+        brand.setId(IDUtils.get());
         return brandMapper.insert(brand);
     }
 
