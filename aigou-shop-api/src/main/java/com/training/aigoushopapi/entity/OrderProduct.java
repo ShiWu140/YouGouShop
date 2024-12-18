@@ -10,10 +10,6 @@ import lombok.Setter;
 import java.io.Serializable;
 
 /**
- * <p>
- *
- * </p>
- *
  * @author shiwu
  * @since 2024-12-18
  */

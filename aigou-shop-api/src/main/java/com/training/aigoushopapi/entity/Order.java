@@ -1,9 +1,6 @@
 package com.training.aigoushopapi.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,10 +8,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * <p>
- *
- * </p>
- *
  * @author shiwu
  * @since 2024-12-18
  */
@@ -34,7 +27,7 @@ public class Order implements Serializable {
     /**
      * 订单创建时间
      */
-    @TableField("create_time")
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     /**

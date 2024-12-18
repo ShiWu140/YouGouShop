@@ -11,10 +11,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * <p>
- *
- * </p>
- *
  * @author shiwu
  * @since 2024-12-18
  */
