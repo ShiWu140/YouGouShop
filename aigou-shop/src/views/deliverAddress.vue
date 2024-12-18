@@ -110,4 +110,5 @@
 </template>
 
 <style scoped>
+@import "@/assets/css/deliverAddress.css";
 </style>

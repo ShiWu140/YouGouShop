@@ -324,4 +324,5 @@
   </div>
 </template>
 <style scoped>
+@import "@/assets/css/classify.css";
 </style>

@@ -209,4 +209,5 @@
   </div>
 </template>
 <style scoped>
+@import "@/assets/css/goodsDetail.css";
 </style>
