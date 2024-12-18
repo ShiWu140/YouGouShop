@@ -164,4 +164,5 @@
   </div>
 </template>
 <style scoped>
+@import "@/assets/css/shoppingCart.css";
 </style>

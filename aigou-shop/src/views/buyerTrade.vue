@@ -136,5 +136,6 @@
   </div>
 </template>
 <style scoped>
+@import "@/assets/css/buyerTrade.css";
 </style>
 
