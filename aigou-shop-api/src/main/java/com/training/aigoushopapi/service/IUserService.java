@@ -1,16 +1,24 @@
 package com.training.aigoushopapi.service;
 
-import com.training.aigoushopapi.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.training.aigoushopapi.entity.User;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author shiwu
  * @since 2024-12-18
  */
 public interface IUserService extends IService<User> {
+    /**
+     * 登录业务逻辑
+     *
+     * @param userName 用户名
+     * @param password 密码
+     * @return 用户对象，登录成功返回用户对象，否则返回null
+     */
+    User login(String userName, String password);
 
 }

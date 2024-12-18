@@ -1,11 +1,11 @@
 package com.training.aigoushopapi.mapper;
 
-import com.training.aigoushopapi.entity.Brand;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.training.aigoushopapi.entity.Brand;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author shiwu

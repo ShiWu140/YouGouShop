@@ -1,14 +1,14 @@
 package com.training.aigoushopapi.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.training.aigoushopapi.entity.Brand;
 import com.training.aigoushopapi.mapper.BrandMapper;
 import com.training.aigoushopapi.service.IBrandService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author shiwu

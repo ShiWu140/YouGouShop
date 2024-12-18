@@ -1,11 +1,11 @@
 package com.training.aigoushopapi.service;
 
-import com.training.aigoushopapi.entity.ShopCartProduct;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.training.aigoushopapi.entity.ShopCartProduct;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author shiwu

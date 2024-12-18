@@ -32,23 +32,23 @@ public class CodeGenerator {
                         })
                 )
                 .packageConfig(builder ->
-                        // 设置父包名
-                        builder.parent("com.training.aigoushopapi")
-                                // 设置父包模块名
+                                // 设置父包名
+                                builder.parent("com.training.aigoushopapi")
+                                        // 设置父包模块名
 //                                .moduleName("book")
-                                .mapper("mapper")
-                                .service("service")
-                                .serviceImpl("service.impl")
-                                .xml("mappers")
-                                // 设置mapperXml生成路径
-                                .pathInfo(Collections.singletonMap(OutputFile.xml, "aigou-shop-api/src/main/resources/mapper"))
-                                .build()
+                                        .mapper("mapper")
+                                        .service("service")
+                                        .serviceImpl("service.impl")
+                                        .xml("mappers")
+                                        // 设置mapperXml生成路径
+                                        .pathInfo(Collections.singletonMap(OutputFile.xml, "aigou-shop-api/src/main/resources/mapper"))
+                                        .build()
                 )
                 .strategyConfig(builder ->
                         // 设置需要生成的表名
-                        builder.addInclude("s_brand","s_carousel_figure","s_order","s_order_product",
-                                        "s_product","s_product_type","s_receiving_address","s_sales",
-                                        "s_search_history","s_shop_cart","s_shop_cart_product","s_user")
+                        builder.addInclude("s_brand", "s_carousel_figure", "s_order", "s_order_product",
+                                        "s_product", "s_product_type", "s_receiving_address", "s_sales",
+                                        "s_search_history", "s_shop_cart", "s_shop_cart_product", "s_user")
                                 .addTablePrefix("s_").entityBuilder()
                                 // 启用 Lombok
                                 .enableLombok()

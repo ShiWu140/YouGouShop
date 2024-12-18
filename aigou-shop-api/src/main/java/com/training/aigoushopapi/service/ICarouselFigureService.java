@@ -1,11 +1,11 @@
 package com.training.aigoushopapi.service;
 
-import com.training.aigoushopapi.entity.CarouselFigure;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.training.aigoushopapi.entity.CarouselFigure;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author shiwu
