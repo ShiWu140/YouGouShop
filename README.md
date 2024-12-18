@@ -5,6 +5,33 @@ JDK 17
 
 Springboot 3.4.0
 
+# 运行
+
+## 系统接口
+
+端口：8080
+
+
+
+## 后台管理
+
+端口：8081
+
+```
+cd aigou-web
+npm install
+npm run serve
+```
+
+## 前台页面
+
+端口：8082
+
+```
+cd aigou-shop
+npm install
+npm run dev
+```
 
 # 后台
 
