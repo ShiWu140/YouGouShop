@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间是包名+接口-->
+<mapper namespace="com.training.aigouapi.mapper.ShopCartMapper">
+
+
+        <select id="selectAll" resultType="ShopCart">
+            select * from s_shop_cart;
+        </select>
+
+        <select id="selectLimit" resultType="ShopCart">
+            select * from s_shop_cart limit #{start}, #{limit};
+        </select>
+
+        <select id="selectCount" resultType="long">
+            select count(*) from s_shop_cart;
+        </select>
+
+        <select id="selectId" resultType="ShopCart">
+            select * from s_shop_cart where id = #{id};
+        </select>
+
+        <insert id="insert" parameterType="ShopCart">
+            insert into s_shop_cart(id, cart_id, user_id)
+            values (#{id}, #{cartId}, #{userId});
+        </insert>
+
+        <delete id="delete" parameterType="String">
+            delete from s_shop_cart where id = #{id};
+        </delete>
+
+        <update id="update" parameterType="ShopCart">
+            update s_shop_cart
+            set cart_id = #{cartId},
+                user_id = #{userId},
+            where id = #{id};
+        </update>
+    </mapper>

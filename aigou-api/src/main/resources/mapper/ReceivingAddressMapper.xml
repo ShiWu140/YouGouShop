@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间是包名+接口-->
+<mapper namespace="com.training.aigouapi.mapper.ReceivingAddressMapper">
+
+
+    <select id="selectAll" resultType="ReceivingAddress">
+        select * from s_receiving_address;
+    </select>
+
+    <select id="selectLimit" resultType="ReceivingAddress">
+        select * from s_receiving_address limit #{start}, #{limit};
+    </select>
+
+    <select id="selectCount" resultType="long">
+        select count(*) from s_receiving_address;
+    </select>
+
+    <select id="selectId" resultType="ReceivingAddress">
+        select * from s_receiving_address where id = #{id};
+    </select>
+
+    <insert id="insert" parameterType="ReceivingAddress">
+        insert into s_receiving_address(id, receiving_address, receiving_person, mobile_phone, user_id, is_default)
+        values (#{id}, #{receivingAddress}, #{receivingPerson}, #{mobilePhone}, #{userId},  #{isDefault});
+    </insert>
+
+    <delete id="delete" parameterType="String">
+        delete from s_receiving_address where id = #{id};
+    </delete>
+
+    <update id="update" parameterType="ShopCart">
+        update s_receiving_address
+        set receiving_address = #{receivingAddress},
+            receiving_person = #{receivingPerson},
+            mobile_phone = #{mobilePhone},
+            user_id = #{userId},
+            is_default = #{isDefault},
+        where id = #{id};
+    </update>
+</mapper>
