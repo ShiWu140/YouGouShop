@@ -1,6 +1,6 @@
 package com.training.aigouapi.service;
 
-import com.training.aigouapi.entity.PageEntity;
+import com.training.aigouapi.common.PageEntity;
 import com.training.aigouapi.entity.User;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.training.aigouapi.controller;
 
-import com.training.aigouapi.entity.PageEntity;
+import com.training.aigouapi.common.PageEntity;
 import com.training.aigouapi.entity.SearchHistory;
 import com.training.aigouapi.service.SearchHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;

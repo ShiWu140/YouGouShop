@@ -1,7 +1,7 @@
 package com.training.aigouapi.service.impl;
 
 import com.training.aigouapi.entity.CarouselFigure;
-import com.training.aigouapi.entity.PageEntity;
+import com.training.aigouapi.common.PageEntity;
 import com.training.aigouapi.mapper.CarouselFigureMapper;
 import com.training.aigouapi.service.CarouselFigureService;
 import com.training.aigouapi.util.IDUtils;

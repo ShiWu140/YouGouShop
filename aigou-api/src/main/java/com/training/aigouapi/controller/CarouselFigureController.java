@@ -1,7 +1,7 @@
 package com.training.aigouapi.controller;
 
 import com.training.aigouapi.entity.CarouselFigure;
-import com.training.aigouapi.entity.PageEntity;
+import com.training.aigouapi.common.PageEntity;
 import com.training.aigouapi.service.CarouselFigureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

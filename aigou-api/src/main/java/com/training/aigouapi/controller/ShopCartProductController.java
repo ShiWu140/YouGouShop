@@ -1,8 +1,6 @@
 package com.training.aigouapi.controller;
 
-import com.training.aigouapi.entity.Brand;
-import com.training.aigouapi.entity.ShopCart;
-import com.training.aigouapi.entity.PageEntity;
+import com.training.aigouapi.common.PageEntity;
 import com.training.aigouapi.entity.ShopCartProduct;
 import com.training.aigouapi.service.ShopCartProductService;
 import org.springframework.http.ResponseEntity;

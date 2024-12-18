@@ -1,7 +1,7 @@
 package com.training.aigouapi.service;
 
 import com.training.aigouapi.entity.Brand;
-import com.training.aigouapi.entity.PageEntity;
+import com.training.aigouapi.common.PageEntity;
 
 import java.util.List;
 

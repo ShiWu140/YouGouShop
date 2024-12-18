@@ -1,6 +1,6 @@
 package com.training.aigouapi.service.impl;
 
-import com.training.aigouapi.entity.PageEntity;
+import com.training.aigouapi.common.PageEntity;
 import com.training.aigouapi.entity.Sales;
 import com.training.aigouapi.mapper.SalesMapper;
 import com.training.aigouapi.service.SalesService;

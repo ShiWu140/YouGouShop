@@ -1,4 +1,4 @@
-package com.training.aigouapi.entity;
+package com.training.aigouapi.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

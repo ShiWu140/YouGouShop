@@ -1,6 +1,6 @@
 package com.training.aigouapi.controller;
 
-import com.training.aigouapi.entity.PageEntity;
+import com.training.aigouapi.common.PageEntity;
 import com.training.aigouapi.entity.User;
 import com.training.aigouapi.service.UserService;
 import com.training.aigouapi.util.MD5Utils;

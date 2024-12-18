@@ -1,5 +1,5 @@
 package com.training.aigouapi.service.impl;
-import com.training.aigouapi.entity.PageEntity;
+import com.training.aigouapi.common.PageEntity;
 import com.training.aigouapi.entity.ShopCartProduct;
 import com.training.aigouapi.mapper.ShopCartProductMapper;
 import com.training.aigouapi.service.ShopCartProductService;

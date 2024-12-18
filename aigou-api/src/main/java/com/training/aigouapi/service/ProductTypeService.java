@@ -1,7 +1,6 @@
 package com.training.aigouapi.service;
 
 import com.training.aigouapi.common.PageBean;
-import com.training.aigouapi.entity.PageEntity;
 import com.training.aigouapi.entity.ProductType;
 
 import java.util.List;

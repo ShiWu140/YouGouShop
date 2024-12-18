@@ -1,7 +1,7 @@
 package com.training.aigouapi.controller;
 
 import com.training.aigouapi.entity.ShopCart;
-import com.training.aigouapi.entity.PageEntity;
+import com.training.aigouapi.common.PageEntity;
 import com.training.aigouapi.service.ShopCartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
