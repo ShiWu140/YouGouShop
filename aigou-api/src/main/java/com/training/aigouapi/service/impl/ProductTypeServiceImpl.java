@@ -38,7 +38,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
      */
     @Override
     public List<ProductType> getAll() {
-        return productTypeMapper.page(null);
+        return productTypeMapper.selectAll();
     }
 
     /**

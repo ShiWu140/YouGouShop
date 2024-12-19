@@ -27,4 +27,7 @@ public interface ProductTypeMapper {
     @Insert("insert into s_product_type(id, product_type_name, product_type_desc, product_type_icon) " +
             "values (#{id},#{productTypeName},#{productTypeDesc},#{productTypeIcon})")
     void save(ProductType productType);
+
+    @Select("select * from s_product_type")
+    List<ProductType> selectAll();
 }

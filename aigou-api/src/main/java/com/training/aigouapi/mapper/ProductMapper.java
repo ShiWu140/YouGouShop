@@ -29,4 +29,7 @@ public interface ProductMapper {
     @Insert("insert into s_product(id,product_name, product_image, price, product_type, product_desc, create_time, product_brand)" +
             " values (#{id},#{productName}, #{productImage}, #{price}, #{productType}, #{productDesc}, #{createTime}, #{productBrand} )")
     void save(Product product);
+
+    @Select("select * from s_product")
+    List<Product> selectAll();
 }

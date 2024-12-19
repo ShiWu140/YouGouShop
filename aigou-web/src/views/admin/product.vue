@@ -14,6 +14,8 @@ export default {
         productBrand: '',
         createTime: '',
       },
+      brands: [],
+      productTypes: [],
       productFormVisible: false,
       tableHeight: window.innerHeight - 220,
       // 分页属性
@@ -180,7 +182,7 @@ export default {
     loadProduct() {
       this.$http.get("/product?page=" + this.current + '&size=' + this.pageSize)
           .then(res => {
-            console.log(res.data);
+            //console.log(res.data);
             if (res.data.msg === "success") {
               this.products = res.data.data.rows;
               this.total = res.data.data.total;
@@ -188,6 +190,24 @@ export default {
                 this.current -= 1;
                 this.loadProduct(this.current);
               }
+            }
+          }),
+          this.loadBrandsAndTypes();
+    },
+    loadBrandsAndTypes() {
+      this.$http.get("/brand/all")
+          .then(res => {
+            //console.log("响应brand品牌"+res.data.data);
+            if (res.data.msg === "success") {
+              this.brands = res.data.data;
+            }
+          })
+
+      this.$http.get("/productType/all")
+          .then(res => {
+            //console.log("响应type分类"+res.data.data);
+            if (res.data.msg === "success") {
+              this.productTypes = res.data.data;
             }
           })
     },
@@ -262,10 +282,24 @@ export default {
           <el-input v-model.trim.number="product.price" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="所属分类" prop="productType">
-          <el-input v-model.trim="product.productType" autocomplete="off"></el-input>
+          <el-select
+              v-model="product.productType"
+              placeholder="请选择菜品分类"
+          >
+            <el-option v-for="(item,index) in productTypes" :key="index" :label="item.productTypeName" :value="item.id" />
+          </el-select>
         </el-form-item>
+        <!--        <el-form-item label="所属分类" prop="productType">
+                  <el-input v-model.trim="product.productType" autocomplete="off"></el-input>
+                </el-form-item>-->
         <el-form-item label="商品品牌" prop="productBrand">
-          <el-input v-model.trim="product.productBrand" autocomplete="off"></el-input>
+<!--          <el-input v-model.trim="product.productBrand" autocomplete="off"></el-input>-->
+          <el-select
+              v-model="product.productBrand"
+              placeholder="请选择菜品分类"
+          >
+            <el-option v-for="(item,index) in brands" :key="index" :label="item.brandName" :value="item.id" />
+          </el-select>
         </el-form-item>
         <!--        <el-form-item label="创建时间">-->
         <!--          <el-date-picker type="datetime" placeholder="选择时间" v-model="product.createTime"></el-date-picker>-->
