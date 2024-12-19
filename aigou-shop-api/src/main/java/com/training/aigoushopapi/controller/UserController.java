@@ -3,6 +3,7 @@ package com.training.aigoushopapi.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.training.aigoushopapi.annotation.ResponseResult;
 import com.training.aigoushopapi.entity.User;
+import com.training.aigoushopapi.entity.UserVO;
 import com.training.aigoushopapi.service.IUserService;
 import com.training.aigoushopapi.util.MD5Utils;
 import jakarta.annotation.Resource;
@@ -99,7 +100,7 @@ public class UserController {
      * @return Result
      */
     @PostMapping("/login")
-    public User login(@RequestParam String username, @RequestParam String password) {
+    public UserVO login(@RequestParam String username, @RequestParam String password) {
         return userService.login(username, password);
     }
 }
