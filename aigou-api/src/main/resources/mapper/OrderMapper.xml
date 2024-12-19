@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.aigouapi.mapper.OrderMapper">
+    <!--插入-->
+    <insert id="insert" parameterType="Order">
+       insert into s_order (id, create_time, receiving_address, user_id) values (#{id}, #{createTime}, #{receivingAddress}, #{userId});
+    </insert>
+
+    <!--删除-->
+    <delete id="delete">
+        delete from s_product where id = #{id};
+    </delete>
+
+    <!--修改-->
+    <update id="update">
+        update s_order
+        set create_time = #{createTime},
+            receiving_address = #{receivingAddress},
+            user_id = #{userId}
+        where id = #{id}
+    </update>
+
+    <!--分页条件查询-->
+    <select id="selectLimit" resultType="Order">
+        select * from s_order limit #{start}, #{limit};
+    </select>
+
+    <select id="selectCount" resultType="long">
+        select count(*) from s_order;
+    </select>
+
+    <select id="selectAll" resultType="Order">
+        select * from s_order;
+    </select>
+
+    <select id="selectId" resultType="Order">
+        select * from s_order where id = #{id};
+    </select>
+
+</mapper>
