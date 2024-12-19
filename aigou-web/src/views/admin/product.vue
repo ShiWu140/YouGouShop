@@ -288,7 +288,7 @@ export default {
               v-model.trim="product.productType"
               placeholder="请选择分类"
           >
-            <el-option v-for="(item,index) in productTypes" :key="index" :label="item.productTypeName" :value="item.id" />
+            <el-option v-for="(item,index) in productTypes" :key="index" :label="item.productTypeName" :value="item" />
           </el-select>
         </el-form-item>
         <!--        <el-form-item label="所属分类" prop="productType">
@@ -300,7 +300,7 @@ export default {
               v-model.trim="product.productBrand"
               placeholder="请选择品牌"
           >
-            <el-option v-for="(item,index) in brands" :key="index" :label="item.brandName" :value="item.id" />
+            <el-option v-for="(item,index) in brands" :key="index" :label="item.brandName" :value="item" />
           </el-select>
         </el-form-item>
         <!--        <el-form-item label="创建时间">-->
