@@ -201,7 +201,7 @@ export default {
             //console.log("响应brand品牌"+res.data.data);
             if (res.data.msg === "success") {
               this.brands = res.data.data;
-              console.log("===============",this.brands);
+              console.log("响应brand品牌",this.brands);
             }
           })
 
@@ -210,6 +210,7 @@ export default {
             //console.log("响应type分类",res.data.data);
             if (res.data.msg === "success") {
               this.productTypes = res.data.data;
+              console.log("响应brand分类",this.productTypes);
             }
           })
     },
@@ -288,7 +289,7 @@ export default {
               v-model.trim="product.productType"
               placeholder="请选择分类"
           >
-            <el-option v-for="(item,index) in productTypes" :key="index" :label="item.productTypeName" :value="item" />
+            <el-option v-for="(prot,index) in productTypes" :key="index" :label="prot.productTypeName" :value="prot.id" />
           </el-select>
         </el-form-item>
         <!--        <el-form-item label="所属分类" prop="productType">
@@ -300,7 +301,7 @@ export default {
               v-model.trim="product.productBrand"
               placeholder="请选择品牌"
           >
-            <el-option v-for="(item,index) in brands" :key="index" :label="item.brandName" :value="item" />
+            <el-option v-for="(b,index) in brands" :key="index" :label="b.brandName" :value="b.id" />
           </el-select>
         </el-form-item>
         <!--        <el-form-item label="创建时间">-->
