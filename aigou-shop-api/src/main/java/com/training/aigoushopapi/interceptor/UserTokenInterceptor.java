@@ -18,9 +18,9 @@ public class UserTokenInterceptor implements HandlerInterceptor {
         // 获取请求头中的token
         String token = request.getHeader("Authorization");
         // 判断是否为空，为空则抛出异常
-        if (token == null) {
-            throw new UserTokenException("用户未登录");
-        }
+//        if (token == null) {
+//            throw new UserTokenException("用户未登录");
+//        }
         // 校验token是否正确，这里直接返回true，模拟校验通过
         return true;
     }

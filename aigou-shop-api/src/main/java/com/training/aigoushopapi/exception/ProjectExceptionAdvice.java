@@ -21,6 +21,7 @@ public class ProjectExceptionAdvice {
         logger.error(e.getMessage());
         return Result.error("服务器开小差了，请稍后重试！");
     }
+
     @ExceptionHandler(UserTokenException.class)
     public Result handleUserTokenException(UserTokenException e) {
         logger.error(e.getMessage());

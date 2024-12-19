@@ -1,9 +1,9 @@
 package com.training.aigoushopapi.handler;
 
-import com.training.aigoushopapi.annotation.ResponseResult;
-import com.training.aigoushopapi.common.Result ;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.training.aigoushopapi.annotation.ResponseResult;
+import com.training.aigoushopapi.common.Result;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.http.MediaType;

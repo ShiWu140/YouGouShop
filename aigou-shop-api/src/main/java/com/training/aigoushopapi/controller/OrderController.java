@@ -1,11 +1,13 @@
 package com.training.aigoushopapi.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.training.aigoushopapi.common.Result;
+import com.training.aigoushopapi.annotation.ResponseResult;
 import com.training.aigoushopapi.entity.Order;
 import com.training.aigoushopapi.service.IOrderService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 订单
@@ -15,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/order")
+@ResponseResult
 public class OrderController {
+
     @Resource
     private IOrderService orderService;
 
@@ -26,10 +30,10 @@ public class OrderController {
      * @param size    每页大小
      * @return 包含订单数据的分页对象
      */
-    @GetMapping
-    public Result page(@RequestParam Integer current, @RequestParam Integer size) {
+    @GetMapping("/page")
+    public Page<Order> page(@RequestParam Integer current, @RequestParam Integer size) {
         Page<Order> page = new Page<>(current, size);
-        return Result.success(orderService.page(page));
+        return orderService.page(page);
     }
 
     /**
@@ -38,8 +42,8 @@ public class OrderController {
      * @return 所有订单的列表
      */
     @GetMapping("/all")
-    public Result getAll() {
-        return Result.success(orderService.list());
+    public List<Order> getAll() {
+        return orderService.list();
     }
 
     /**
@@ -49,13 +53,8 @@ public class OrderController {
      * @return 订单对象或错误信息
      */
     @GetMapping("/{id}")
-    public Result getId(@PathVariable Long id) {
-        Order order = orderService.getById(id);
-        if (order != null) {
-            return Result.success(order);
-        } else {
-            return Result.error("没有找到ID为 " + id + " 的订单！");
-        }
+    public Order getId(@PathVariable Long id) {
+        return orderService.getById(id);
     }
 
     /**
@@ -64,14 +63,9 @@ public class OrderController {
      * @param order 订单对象
      * @return 成功或失败信息
      */
-    @PostMapping
-    public Result add(@RequestBody Order order) {
-        boolean rs = orderService.save(order);
-        if (rs) {
-            return Result.success(order);
-        } else {
-            return Result.error("添加订单失败！");
-        }
+    @PostMapping("/add")
+    public boolean add(@RequestBody Order order) {
+        return orderService.save(order);
     }
 
     /**
@@ -80,30 +74,19 @@ public class OrderController {
      * @param order 订单对象
      * @return 成功或失败信息
      */
-    @PutMapping
-    public Result modify(@RequestBody Order order) {
-        boolean rs = orderService.updateById(order);
-        if (rs) {
-            return Result.success(order);
-        } else {
-            return Result.error("编辑ID为 " + order.getId() + " 的订单失败！");
-        }
+    @PostMapping("/modify")
+    public boolean modify(@RequestBody Order order) {
+        return orderService.updateById(order);
     }
 
     /**
      * 删除订单
      *
-     * @param id 订单ID
+     * @param order 订单对象
      * @return 成功或失败信息
      */
-    @DeleteMapping("/{id}")
-    public Result delete(@PathVariable Long id) {
-        boolean rs = orderService.removeById(id);
-        if (rs) {
-            return Result.success("删除ID为 " + id + " 的订单成功！");
-        } else {
-            return Result.error("删除ID为 " + id + " 的订单失败！");
-        }
+    @PostMapping("/delete")
+    public boolean delete(@RequestBody Order order) {
+        return orderService.removeById(order.getId());
     }
-
 }

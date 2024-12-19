@@ -1,11 +1,13 @@
 package com.training.aigoushopapi.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.training.aigoushopapi.common.Result;
+import com.training.aigoushopapi.annotation.ResponseResult;
 import com.training.aigoushopapi.entity.ProductType;
 import com.training.aigoushopapi.service.IProductTypeService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 商品类型
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * @since 2024-12-18
  */
 @RestController
+@ResponseResult
 @RequestMapping("/productType")
 public class ProductTypeController {
     @Resource
@@ -26,10 +29,10 @@ public class ProductTypeController {
      * @param size    每页大小
      * @return 包含商品类型数据的分页对象
      */
-    @GetMapping
-    public Result page(@RequestParam Integer current, @RequestParam Integer size) {
+    @GetMapping("/page")
+    public Page<ProductType> page(@RequestParam Integer current, @RequestParam Integer size) {
         Page<ProductType> page = new Page<>(current, size);
-        return Result.success(productTypeService.page(page));
+        return productTypeService.page(page);
     }
 
     /**
@@ -38,8 +41,8 @@ public class ProductTypeController {
      * @return 所有商品类型的列表
      */
     @GetMapping("/all")
-    public Result getAll() {
-        return Result.success(productTypeService.list());
+    public List<ProductType> getAll() {
+        return productTypeService.list();
     }
 
     /**
@@ -49,13 +52,8 @@ public class ProductTypeController {
      * @return 商品类型对象或错误信息
      */
     @GetMapping("/{id}")
-    public Result getId(@PathVariable Long id) {
-        ProductType productType = productTypeService.getById(id);
-        if (productType != null) {
-            return Result.success(productType);
-        } else {
-            return Result.error("没有找到ID为 " + id + " 的商品类型！");
-        }
+    public ProductType getId(@PathVariable Long id) {
+        return productTypeService.getById(id);
     }
 
     /**
@@ -64,14 +62,9 @@ public class ProductTypeController {
      * @param productType 商品类型对象
      * @return 成功或失败信息
      */
-    @PostMapping
-    public Result add(@RequestBody ProductType productType) {
-        boolean rs = productTypeService.save(productType);
-        if (rs) {
-            return Result.success(productType);
-        } else {
-            return Result.error("添加商品类型失败！");
-        }
+    @PostMapping("/add")
+    public boolean add(@RequestBody ProductType productType) {
+        return productTypeService.save(productType);
     }
 
     /**
@@ -80,30 +73,19 @@ public class ProductTypeController {
      * @param productType 商品类型对象
      * @return 成功或失败信息
      */
-    @PutMapping
-    public Result modify(@RequestBody ProductType productType) {
-        boolean rs = productTypeService.updateById(productType);
-        if (rs) {
-            return Result.success(productType);
-        } else {
-            return Result.error("编辑ID为 " + productType.getId() + " 的商品类型失败！");
-        }
+    @PostMapping("/modify")
+    public boolean modify(@RequestBody ProductType productType) {
+        return productTypeService.updateById(productType);
     }
 
     /**
      * 删除商品类型
      *
-     * @param id 商品类型ID
+     * @param productType 商品类型对象
      * @return 成功或失败信息
      */
-    @DeleteMapping("/{id}")
-    public Result delete(@PathVariable Long id) {
-        boolean rs = productTypeService.removeById(id);
-        if (rs) {
-            return Result.success("删除ID为 " + id + " 的商品类型成功！");
-        } else {
-            return Result.error("删除ID为 " + id + " 的商品类型失败！");
-        }
+    @PostMapping("/delete")
+    public boolean delete(@RequestBody ProductType productType) {
+        return productTypeService.removeById(productType.getId());
     }
-
 }

@@ -1,11 +1,13 @@
 package com.training.aigoushopapi.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.training.aigoushopapi.common.Result;
+import com.training.aigoushopapi.annotation.ResponseResult;
 import com.training.aigoushopapi.entity.Brand;
 import com.training.aigoushopapi.service.IBrandService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 品牌
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @author 十五
  */
 @RestController
+@ResponseResult
 @RequestMapping("/brand")
 public class BrandController {
 
@@ -26,10 +29,10 @@ public class BrandController {
      * @param size    每页大小
      * @return 包含品牌数据的分页对象
      */
-    @GetMapping
-    public Result page(@RequestParam Integer current, @RequestParam Integer size) {
+    @GetMapping("/page")
+    public Page<Brand> page(@RequestParam Integer current, @RequestParam Integer size) {
         Page<Brand> page = new Page<>(current, size);
-        return Result.success(brandService.page(page));
+        return brandService.page(page);
     }
 
     /**
@@ -38,8 +41,8 @@ public class BrandController {
      * @return 所有品牌的列表
      */
     @GetMapping("/all")
-    public Result getAll() {
-        return Result.success(brandService.list());
+    public List<Brand> getAll() {
+        return brandService.list();
     }
 
     /**
@@ -49,13 +52,8 @@ public class BrandController {
      * @return 品牌对象或错误信息
      */
     @GetMapping("/{id}")
-    public Result getId(@PathVariable Long id) {
-        Brand brand = brandService.getById(id);
-        if (brand != null) {
-            return Result.success(brand);
-        } else {
-            return Result.error("没有找到ID为 " + id + " 的品牌！");
-        }
+    public Brand getId(@PathVariable String id) {
+        return brandService.getById(id);
     }
 
     /**
@@ -64,14 +62,9 @@ public class BrandController {
      * @param brand 品牌对象
      * @return 成功或失败信息
      */
-    @PostMapping
-    public Result add(@RequestBody Brand brand) {
-        boolean rs = brandService.save(brand);
-        if (rs) {
-            return Result.success(brand);
-        } else {
-            return Result.error("添加品牌失败！");
-        }
+    @PostMapping("/add")
+    public boolean add(@RequestBody Brand brand) {
+        return brandService.save(brand);
     }
 
     /**
@@ -80,29 +73,19 @@ public class BrandController {
      * @param brand 品牌对象
      * @return 成功或失败信息
      */
-    @PutMapping
-    public Result modify(@RequestBody Brand brand) {
-        boolean rs = brandService.updateById(brand);
-        if (rs) {
-            return Result.success(brand);
-        } else {
-            return Result.error("编辑ID为 " + brand.getId() + " 的品牌失败！");
-        }
+    @PostMapping("/modify")
+    public boolean modify(@RequestBody Brand brand) {
+        return brandService.updateById(brand);
     }
 
     /**
      * 删除品牌
      *
-     * @param id 品牌ID
+     * @param brand 品牌
      * @return 成功或失败信息
      */
-    @DeleteMapping("/{id}")
-    public Result delete(@PathVariable Long id) {
-        boolean rs = brandService.removeById(id);
-        if (rs) {
-            return Result.success("删除ID为 " + id + " 的品牌成功！");
-        } else {
-            return Result.error("删除ID为 " + id + " 的品牌失败！");
-        }
+    @PostMapping("/delete")
+    public boolean delete(@RequestBody Brand brand) {
+        return brandService.removeById(brand.getId());
     }
 }
