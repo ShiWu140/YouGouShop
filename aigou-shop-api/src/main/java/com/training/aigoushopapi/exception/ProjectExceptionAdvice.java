@@ -1,4 +1,4 @@
-package com.training.aigoushopapi.advice;
+package com.training.aigoushopapi.exception;
 
 import com.training.aigoushopapi.common.Result;
 import org.apache.log4j.Logger;
@@ -20,5 +20,10 @@ public class ProjectExceptionAdvice {
     public Result handleException(Exception e) {
         logger.error(e.getMessage());
         return Result.error("服务器开小差了，请稍后重试！");
+    }
+    @ExceptionHandler(UserTokenException.class)
+    public Result handleUserTokenException(UserTokenException e) {
+        logger.error(e.getMessage());
+        return Result.error("用户未登录，请先登录！");
     }
 }
