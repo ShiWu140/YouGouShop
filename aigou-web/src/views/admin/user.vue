@@ -83,15 +83,8 @@ export default {
             message: response.data
           });
         }
-      }).catch((error) => {
-        console.error('There was an error!', error);
-        this.$message({
-          type: 'error',
-          message: '请求失败，请重试!'
-        });
-      });
+      })
     },
-
     handleClose() {
       this.user.userId = '';
       this.user.userName = '';
@@ -145,22 +138,20 @@ export default {
       });
     },
     loadUsers(current) {
-      this.current = current;
-      this.$http.get(`/user/${this.current}/${this.pageSize}`)
+      current = this.current;
+      this.$http.get("/user/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
-            console.log(res.data);
             if (res.data) {
-              this.users = res.data.records;
-              this.total = res.data.total;
+              console.log(res.data.data)
+              this.users = res.data.data.records;
+              this.total = res.data.data.total;
+              // 如果当前页没有数据且不是第一页，则跳转到上一页
               if (this.users.length === 0 && this.current > 1) {
                 this.current -= 1;
-                this.loadUsers(this.current);
+                this.loadUsers();
               }
             }
           })
-          .catch(error => {
-            console.error('Error loading users:', error);
-          });
     },
     handleSizeChange(val) {
       this.pageSize = val;

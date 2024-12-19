@@ -7,14 +7,22 @@ export default {
     }
   },
   mounted() {
-    if (localStorage.getItem('user') === null) {
+    const userStr = localStorage.getItem('user');
+    if (userStr === null) {
       this.$router.push('/login');
+      return;
     }
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user.user_name.length > 8) {
-      this.username = user.user_name.substring(0, 8) + '...';
-    } else {
-      this.username = user.user_name;
+
+    try {
+      const user = JSON.parse(userStr);
+      if (user && user.user_name) {
+        this.username = user.user_name.length > 8 ? user.user_name.substring(0, 8) + '...' : user.user_name;
+      } else {
+        this.username = '未知用户';
+      }
+    } catch (error) {
+      console.error('解析用户数据失败:', error);
+      this.$router.push('/login');
     }
   },
   methods: {
@@ -41,6 +49,7 @@ export default {
   }
 };
 </script>
+
 
 <template>
   <div class="admin">

@@ -1,6 +1,5 @@
 <script>
 export default {
-  name: "UploadView",
   data() {
     return {
       products: [],
@@ -14,13 +13,11 @@ export default {
         productBrand: '',
         createTime: '',
       },
-      brands: [],
-      productTypes: [],
       productFormVisible: false,
       tableHeight: window.innerHeight - 220,
       // 分页属性
       total: 0,
-      pageSize: 10,
+      pageSize: 5,
       current: 1,
       operate: '',
       //图片url地址
@@ -54,74 +51,9 @@ export default {
   },
   methods: {
     operateProduct(product) {
-      // // 将 createTime 转换为时间戳（毫秒）
-      // if (product.createTime instanceof Date) {
-      //   product.createTime = product.createTime.getTime();
-      // }
-      // 调试输出提交的数据
       console.log('提交的数据', product);
-      this.$refs.productForm.validate(valid => {
-        if (valid) {
-          //验证成功
-          /*更新------------------------------------------*/
-
-          if (this.operate == 'update') {
-            console.log("发送更新请求update")
-            this.$http.put("/product", product).then((res) => {
-              console.log(res.data.code)
-              this.loadProduct()
-              this.productFormVisible = false;
-            })
-          }
-          /*添加------------------------------------------*/
-          if (this.operate == 'save') {
-            console.log("发送添加请求insert")
-            this.$http.post("/product", product).then((res) => {
-              console.log(res.data.code)
-              if (res.data.code == 1) {
-                this.loadProduct()
-                this.productFormVisible = false;
-                this.$message({
-                  type: 'success',
-                  message: '操作成功!'
-                });
-              } else {
-                this.$message({
-                  type: 'error',
-                  message: res.data.msg
-                });
-              }
-            })
-          }
-        } else {
-          this.$message({
-            message: '请正确填写内容！',
-            type: 'warning'
-          });
-        }
-      });
-      /*删除------------------------------------------*/
-      if (this.operate == 'remove') {
-        console.log("发送删除请求delete")
-        this.$http.delete("/product/" + product.id).then((res) => {
-          console.log(res.data.code)
-          if (res.data.code == 1) {
-            this.loadProduct()
-            this.productFormVisible = false;
-            this.$message({
-              type: 'success',
-              message: '操作成功!'
-            });
-          } else {
-            this.$message({
-              type: 'error',
-              message: res.data.msg
-            });
-          }
-        })
-      }
-      /*this.$http.post("/product?method=" + this.operate + "&" + this.$qs.stringify(product)).then((response) => {
-        if (response.data.msg === 'success') {
+      this.$http.post("/product/" + this.operate, product).then((response) => {
+        if (response) {
           this.$message({
             type: 'success',
             message: '操作成功!'
@@ -134,16 +66,15 @@ export default {
             message: response.data.data
           });
         }
-      })*/
+      })
     },
-    //删除
     handleDelete(index, row) {
       this.$confirm('此操作将永久删除该商品, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.operate = 'remove';
+        this.operate = 'delete';
         this.operateProduct(row);
       }).catch(() => {
         this.$message({
@@ -152,16 +83,14 @@ export default {
         });
       });
     },
-    //编辑
     handleEdit(index, row) {
-      this.operate = 'update';
+      this.operate = 'modify';
       this.product = JSON.parse(JSON.stringify(row));
       this.imageUrl = this.product.productImage;
       this.productFormVisible = true;
     },
-    //添加
     addFrom() {
-      this.operate = 'save';
+      this.operate = 'add';
       this.product = {
         id: '',
         productName: '',
@@ -180,37 +109,19 @@ export default {
       // 动态计算表格高度，
       this.tableHeight = window.innerHeight - 220;
     },
-    loadProduct() {
-      this.$http.get("/product?page=" + this.current + '&size=' + this.pageSize)
+    loadProduct(current) {
+      current = this.current
+      this.$http.get("/product/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
-            //console.log(res.data);
+            console.log(res.data);
             if (res.data.msg === "success") {
-              this.products = res.data.data.rows;
+              this.products = res.data.data.records;
               this.total = res.data.data.total;
+              // 如果当前页没有数据且不是第一页，则跳转到上一页
               if (this.products.length === 0 && this.current > 1) {
                 this.current -= 1;
-                this.loadProduct(this.current);
+                this.loadProduct();
               }
-            }
-          }),
-          this.loadBrandsAndTypes();
-    },
-    loadBrandsAndTypes() {
-      this.$http.get("/brand/all")
-          .then(res => {
-            //console.log("响应brand品牌"+res.data.data);
-            if (res.data.msg === "success") {
-              this.brands = res.data.data;
-              console.log("响应brand品牌",this.brands);
-            }
-          })
-
-      this.$http.get("/productType/all")
-          .then(res => {
-            //console.log("响应type分类",res.data.data);
-            if (res.data.msg === "success") {
-              this.productTypes = res.data.data;
-              console.log("响应brand分类",this.productTypes);
             }
           })
     },
@@ -232,9 +143,9 @@ export default {
     },
     //图片上传方法
     handleAvatarSuccess(res, file) {
-      console.log('upload', res)
-      this.imageUrl = res
-      this.product.productImage = res;
+      console.log('upload', res.data)
+      this.imageUrl = res.data
+      this.product.productImage = res.data;
     }
   },
   mounted() {
@@ -257,12 +168,11 @@ export default {
         <el-button class="add-button" round type="primary" @click="addFrom()">上架商品</el-button>
       </div>
     </div>
-    <!--    新增-->
     <el-dialog :visible.sync="productFormVisible" title="上架商品">
       <el-form :model="product" label-width="auto" :rules="rules" ref="productForm">
-        <!--        <el-form-item label="商品 ID" prop="id">
-                  <el-input v-model.trim="product.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
-                </el-form-item>-->
+        <el-form-item label="商品 ID" prop="id">
+          <el-input v-model.trim="product.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
+        </el-form-item>
         <el-form-item label="商品名称" prop="productName">
           <el-input v-model.trim="product.productName" autocomplete="off"></el-input>
         </el-form-item>
@@ -285,29 +195,11 @@ export default {
           <el-input v-model.trim.number="product.price" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="所属分类" prop="productType">
-          <el-select
-              v-model.trim="product.productType"
-              placeholder="请选择分类"
-          >
-            <el-option v-for="(prot,index) in productTypes" :key="index" :label="prot.productTypeName" :value="prot.id" />
-          </el-select>
+          <el-input v-model.trim="product.productType" autocomplete="off"></el-input>
         </el-form-item>
-        <!--        <el-form-item label="所属分类" prop="productType">
-                  <el-input v-model.trim="product.productType" autocomplete="off"></el-input>
-                </el-form-item>-->
         <el-form-item label="商品品牌" prop="productBrand">
-<!--          <el-input v-model.trim="product.productBrand" autocomplete="off"></el-input>-->
-          <el-select
-              v-model.trim="product.productBrand"
-              placeholder="请选择品牌"
-          >
-            <el-option v-for="(b,index) in brands" :key="index" :label="b.brandName" :value="b.id" />
-          </el-select>
+          <el-input v-model.trim="product.productBrand" autocomplete="off"></el-input>
         </el-form-item>
-        <!--        <el-form-item label="创建时间">-->
-        <!--          <el-date-picker type="datetime" placeholder="选择时间" v-model="product.createTime"></el-date-picker>-->
-        <!--          &lt;!&ndash;          <el-input v-model.trim="" autocomplete="off"></el-input>&ndash;&gt;-->
-        <!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="productFormVisible = false">取 消</el-button>
@@ -319,18 +211,18 @@ export default {
         :height="tableHeight"
         border
         style="width: 100%;">
-      <!--      <el-table-column
-                fixed
-                label="商品 ID"
-                min-width="100px"
-                prop="id">
-            </el-table-column>-->
+      <el-table-column
+          fixed
+          label="商品 ID"
+          min-width="100px"
+          prop="id">
+      </el-table-column>
       <el-table-column
           label="商品名称"
           min-width="100px"
           prop="productName">
       </el-table-column>
-      <el-table-column label="商品图片" min-width="100px" prop="product_image">
+      <el-table-column label="商品图片" min-width="100px" prop="productImage">
         <!-- 图片的显示 -->
         <template slot-scope="scope">
           <el-image

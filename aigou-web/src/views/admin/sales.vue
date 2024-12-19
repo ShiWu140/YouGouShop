@@ -17,6 +17,9 @@ export default {
       operate: '',
       //表单验证
       rules: {
+        id: [
+          {required: true, message: '必填项', trigger: 'change'}
+        ],
         productId: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
@@ -28,8 +31,45 @@ export default {
     }
   },
   methods: {
-    handleAdd() {
-      this.operate = 'save';
+    operateSales(sales) {
+      this.$http.post("/sales/" + this.operate, sales).then((response) => {
+        if (response.data.msg === 'success') {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          });
+          this.loadSales();
+          this.salesFormVisible = false;
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.data.data
+          });
+        }
+      })
+    },
+    handleDelete(index, row) {
+      this.$confirm('此操作将永久删除该销量记录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.operate = 'delete';
+        this.operateSales(row);
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+    },
+    handleEdit(index, row) {
+      this.operate = 'modify';
+      this.sales = JSON.parse(JSON.stringify(row));
+      this.salesFormVisible = true;
+    },
+    addFrom() {
+      this.operate = 'add';
       this.sales = {
         id: '',
         productId: '',
@@ -37,18 +77,12 @@ export default {
       };
       this.salesFormVisible = true;
     },
-    handleDelete(index, row) {
-      this.operate = 'remove';
-      this.sales = JSON.parse(JSON.stringify(row));
-      this.operateApi();
-    },
-    handleEdit(index, row) {
-      this.operate = 'update';
-      this.sales = JSON.parse(JSON.stringify(row));
-      this.salesFormVisible = true;
+    calculateTableHeight() {
+      // 动态计算表格高度，
+      this.tableHeight = window.innerHeight - 220;
     },
     loadSales() {
-      this.$http.get("/sales?page=" + this.current + '&size=' + this.pageSize)
+      this.$http.get("/sales/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             console.log(res.data);
             if (res.data.msg === "success") {
@@ -61,88 +95,6 @@ export default {
             }
           })
     },
-    operateApi() {
-      console.log('提交的数据', this.sales);
-      if (this.operate === 'save') {
-        this.$refs.salesForm.validate(valid => {
-          if (valid) {
-            // 表单验证通过，提交数据
-            this.$http.post("/sales", this.sales)
-                .then(res => {
-                  if (res.data.code === 1) {
-                    this.$message({
-                      message: '添加成功',
-                      type: 'success'
-                    });
-                    this.salesFormVisible = false;
-                    this.loadSales();
-                  } else {
-                    this.$message({
-                      message: '添加失败',
-                      type: 'error'
-                    });
-                  }
-                })
-          } else {
-            this.$message({
-              message: '请正确填写内容！',
-              type: 'warning'
-            });
-          }
-        })
-      }
-      if (this.operate === 'update') {
-        this.$refs.salesForm.validate(valid => {
-          if (valid) {
-            // 表单验证通过，提交数据
-            this.$http.put("/sales", this.sales)
-                .then(res => {
-                  if (res.data.code === 1) {
-                    this.$message({
-                      message: '修改成功',
-                      type: 'success'
-                    });
-                    this.salesFormVisible = false;
-                    this.loadSales();
-                  } else {
-                    this.$message({
-                      message: '修改失败',
-                      type: 'error'
-                    });
-                  }
-                })
-          } else {
-            this.$message({
-              message: '请正确填写内容！',
-              type: 'warning'
-            });
-          }
-        })
-      }
-      if (this.operate === 'remove') {
-        this.$http.delete("/sales/" + this.sales.id)
-            .then(res => {
-              if (res.data.code === 1) {
-                this.$message({
-                  message: '删除成功',
-                  type: 'success'
-                });
-                this.salesFormVisible = false;
-                this.loadSales();
-              } else {
-                this.$message({
-                  message: '删除失败',
-                  type: 'error'
-                });
-              }
-            })
-      }
-    },
-    calculateTableHeight() {
-      // 动态计算表格高度，
-      this.tableHeight = window.innerHeight - 220;
-    },
-
     handleSizeChange(val) {
       this.pageSize = val;
       console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
@@ -171,15 +123,15 @@ export default {
     <div style="position: relative;">
       <h1 style="position: absolute;margin-top: 0">商品销量管理</h1>
       <div style="text-align: right;">
-        <el-button class="add-button" round type="primary" @click="handleAdd()">添加销量记录</el-button>
+        <el-button class="add-button" round type="primary" @click="addFrom()">添加销量记录</el-button>
       </div>
     </div>
     <el-dialog :visible.sync="salesFormVisible" title="添加销量记录">
       <el-form :model="sales" label-width="auto" :rules="rules" ref="salesForm">
-        <!--        <el-form-item label="销量 ID" prop="id">-->
-        <!--          <el-input v-model.trim="sales.id" :disabled="operate === 'update'" autocomplete="off"></el-input>-->
-        <!--        </el-form-item>-->
-        <el-form-item label="商品" prop="productId">
+        <el-form-item label="销量 ID" prop="id">
+          <el-input v-model.trim="sales.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="商品 ID" prop="productId">
           <el-input v-model.trim="sales.productId" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="售出数量" prop="salesNum">
@@ -188,7 +140,7 @@ export default {
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="salesFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="operateApi(sales)">确 定</el-button>
+        <el-button type="primary" @click="operateSales(sales)">确 定</el-button>
       </div>
     </el-dialog>
     <el-table
@@ -196,14 +148,14 @@ export default {
         :height="tableHeight"
         border
         style="width: 100%;">
-      <!--      <el-table-column-->
-      <!--          fixed-->
-      <!--          label="ID"-->
-      <!--          min-width="100px"-->
-      <!--          prop="id">-->
-      <!--      </el-table-column>-->
       <el-table-column
-          label="商品"
+          fixed
+          label="ID"
+          min-width="100px"
+          prop="id">
+      </el-table-column>
+      <el-table-column
+          label="商品 ID"
           min-width="100px"
           prop="productId">
       </el-table-column>
@@ -245,3 +197,6 @@ export default {
     </div>
   </div>
 </template>
+
+
+

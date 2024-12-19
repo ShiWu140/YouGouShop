@@ -5,9 +5,9 @@ export default {
       shopCarts: [],
       shopCart: {
         id: '',
-        shop_cart_id: '',
-        product_id: '',
-        product_num: '',
+        shopCartId: '',
+        productId: '',
+        productNum: '',
       },
       shopCartFormVisible: false,
       tableHeight: window.innerHeight - 220,
@@ -21,13 +21,13 @@ export default {
         id: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        shop_cart_id: [
+        shopCartId: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        product_id: [
+        productId: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        product_num: [
+        productNum: [
           {required: true, message: '必填项', trigger: 'change'},
           {type: 'number', message: '必须为数字值', trigger: 'change'}
         ]
@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     operateShopCartProduct(shopCart) {
-      this.$http.post("/shopCartProduct?method=" + this.operate + "&" + this.$qs.stringify(shopCart)).then((response) => {
+      this.$http.post("/shopCartProduct/" + this.operate, shopCart).then((response) => {
         if (response.data.msg === 'success') {
           this.$message({
             type: 'success',
@@ -68,17 +68,17 @@ export default {
       });
     },
     handleEdit(index, row) {
-      this.operate = 'update';
+      this.operate = 'modify';
       this.shopCart = JSON.parse(JSON.stringify(row));
       this.shopCartFormVisible = true;
     },
     addFrom() {
-      this.operate = 'save';
+      this.operate = 'add';
       this.shopCart = {
         id: '',
-        shop_cart_id: '',
-        product_id: '',
-        product_num: '',
+        shopCartId: '',
+        productId: '',
+        productNum: '',
       };
       this.shopCartFormVisible = true;
     },
@@ -86,16 +86,18 @@ export default {
       // 动态计算表格高度，
       this.tableHeight = window.innerHeight - 220;
     },
-    loadShopCart() {
-      this.$http.post("/shopCartProduct?method=page&current=" + this.current + '&pagesize=' + this.pageSize)
+    loadShopCart(current) {
+      current = this.current;
+      this.$http.get("/shopCartProduct/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
-            console.log(res.data);
-            if (res.data.msg === "success") {
+            if (res.data) {
+              console.log(res.data.data)
               this.shopCarts = res.data.data.records;
               this.total = res.data.data.total;
+              // 如果当前页没有数据且不是第一页，则跳转到上一页
               if (this.shopCarts.length === 0 && this.current > 1) {
                 this.current -= 1;
-                this.loadShopCart(this.current);
+                this.loadShopCart();
               }
             }
           })
@@ -136,14 +138,14 @@ export default {
         <el-form-item label="ID" prop="id">
           <el-input v-model.trim="shopCart.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="购物车 ID" prop="shop_cart_id">
-          <el-input v-model.trim="shopCart.shop_cart_id" autocomplete="off"></el-input>
+        <el-form-item label="购物车 ID" prop="shopCartId">
+          <el-input v-model.trim="shopCart.shopCartId" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="商品 ID" prop="product_id">
-          <el-input v-model.trim="shopCart.product_id" autocomplete="off"></el-input>
+        <el-form-item label="商品 ID" prop="productId">
+          <el-input v-model.trim="shopCart.productId" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="商品数量" prop="product_num">
-          <el-input v-model.trim.number="shopCart.product_num" autocomplete="off"></el-input>
+        <el-form-item label="商品数量" prop="productNum">
+          <el-input v-model.trim.number="shopCart.productNum" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -165,17 +167,17 @@ export default {
       <el-table-column
           label="购物车 ID"
           min-width="100px"
-          prop="shop_cart_id">
+          prop="shopCartId">
       </el-table-column>
       <el-table-column
           label="商品 ID"
           min-width="100px"
-          prop="product_id">
+          prop="productId">
       </el-table-column>
       <el-table-column
           label="商品数量"
           min-width="100px"
-          prop="product_num">
+          prop="productNum">
       </el-table-column>
       <el-table-column
           fixed="right"

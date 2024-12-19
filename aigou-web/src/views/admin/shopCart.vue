@@ -5,8 +5,8 @@ export default {
       shopCarts: [],
       shopCart: {
         id: '',
-        cart_id: '',
-        user_id: '',
+        cartId: '',
+        userId: '',
       },
       shopCartFormVisible: false,
       tableHeight: window.innerHeight - 220,
@@ -20,10 +20,10 @@ export default {
         id: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        cart_id: [
+        cartId: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        user_id: [
+        userId: [
           {required: true, message: '必填项', trigger: 'change'}
         ]
       }
@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     operateShopCart(shopCart) {
-      this.$http.post("/shopCart?method=" + this.operate + "&" + this.$qs.stringify(shopCart)).then((response) => {
+      this.$http.post("/shopCart/" + this.operate, shopCart).then((response) => {
         if (response.data.msg === 'success') {
           this.$message({
             type: 'success',
@@ -53,7 +53,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.operate = 'remove';
+        this.operate = 'delete';
         this.operateShopCart(row);
       }).catch(() => {
         this.$message({
@@ -63,16 +63,16 @@ export default {
       });
     },
     handleEdit(index, row) {
-      this.operate = 'update';
+      this.operate = 'modify';
       this.shopCart = JSON.parse(JSON.stringify(row));
       this.shopCartFormVisible = true;
     },
     addFrom() {
-      this.operate = 'save';
+      this.operate = 'add';
       this.shopCart = {
         id: '',
-        cart_id: '',
-        user_id: '',
+        cartId: '',
+        userId: '',
       };
       this.shopCartFormVisible = true;
     },
@@ -80,8 +80,9 @@ export default {
       // 动态计算表格高度，
       this.tableHeight = window.innerHeight - 220;
     },
-    loadShopCart() {
-      this.$http.post("/shopCart?method=page&current=" + this.current + '&pagesize=' + this.pageSize)
+    loadShopCart(current) {
+      current = this.current
+      this.$http.get("/shopCart/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             console.log(res.data);
             if (res.data.msg === "success") {
@@ -130,11 +131,11 @@ export default {
         <el-form-item label="ID" prop="id">
           <el-input v-model.trim="shopCart.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="购物车 ID" prop="cart_id">
-          <el-input v-model.trim="shopCart.cart_id" autocomplete="off"></el-input>
+        <el-form-item label="购物车 ID" prop="cartId">
+          <el-input v-model.trim="shopCart.cartId" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="用户 ID" prop="user_id">
-          <el-input v-model.trim="shopCart.user_id" autocomplete="off"></el-input>
+        <el-form-item label="用户 ID" prop="userId">
+          <el-input v-model.trim="shopCart.userId" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -156,12 +157,12 @@ export default {
       <el-table-column
           label="购物车 ID"
           min-width="100px"
-          prop="cart_id">
+          prop="cartId">
       </el-table-column>
       <el-table-column
           label="用户 ID"
           min-width="100px"
-          prop="user_id">
+          prop="userId">
       </el-table-column>
       <el-table-column
           fixed="right"

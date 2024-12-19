@@ -35,67 +35,36 @@ export default {
   },
   methods: {
     operateOrder(order) {
-      const {createTime, ...newOrder} = order;
-      if (this.operate === 'save') {
-        this.$http.post("/order", newOrder).then((response) => {
-          if (response.data.msg === 'success') {
-            this.$message({
-              type: 'success',
-              message: '操作成功!'
-            });
-            this.loadOrder(this.current)
-            this.orderFormVisible = false;
-          } else {
-            this.$message({
-              type: 'error',
-              message: response.data.data
-            });
-          }
-        })
-      }
-      if (this.operate === 'update') {
-        this.$http.put("/order/" + newOrder.id, newOrder).then((response) => {
-          if (response.data.msg === 'success') {
-            this.$message({
-              type: 'success',
-              message: '操作成功!'
-            });
-            this.loadOrder(this.current)
-            this.orderFormVisible = false;
-          } else {
-            this.$message({
-              type: 'error',
-              message: response.data.data
-            });
-          }
-        })
-      }
-      if (this.operate === 'remove') {
-        this.$http.delete("/order/" + newOrder.id).then((response) => {
-          if (response.data.msg === 'success') {
-            this.$message({
-              type: 'success',
-              message: '操作成功!'
-            });
-            this.loadOrder(this.current)
-            this.orderFormVisible = false;
-          } else {
-            this.$message({
-              type: 'error',
-              message: response.data.data
-            });
-          }
-        })
-      }
+      this.$http.post("/order/" + this.operate, order).then((response) => {
+        if (response.status === 200) {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          });
+          this.loadOrder(this.current);
+          this.orderFormVisible = false;
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.data
+          });
+        }
+      })
+    },
+    handleClose() {
+      this.order.id = '';
+      this.order.createTime = '';
+      this.order.receivingAddress = '';
+      this.order.userId = '';
     },
     handleDelete(index, row) {
-      this.$confirm('此操作将永久该订单, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该订单, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.operate = 'remove'
-        this.operateOrder(row)
+        this.operate = 'delete';
+        this.operateOrder(row);
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -104,12 +73,12 @@ export default {
       });
     },
     handleEdit(index, row) {
-      this.operate = 'update';
+      this.operate = 'modify';
       this.order = JSON.parse(JSON.stringify(row));
       this.orderFormVisible = true;
     },
     addFrom() {
-      this.operate = 'save'
+      this.operate = 'add';
       this.order = {
         id: '',
         receivingAddress: '',
@@ -121,17 +90,19 @@ export default {
       // 动态计算表格高度，
       this.tableHeight = window.innerHeight - 220;
     },
-    loadOrder() {
-      this.$http.get("/order?page=" + this.current + '&size=' + this.pageSize)
+    loadOrder(current) {
+      current = this.current;
+      this.$http.get("/order/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
-            console.log(res.data);
-            if (res.data.msg === "success") {
+            if (res.data) {
+              console.log(res.data.data)
               this.orders = res.data.data.records;
               this.total = res.data.data.total;
+              // 如果当前页没有数据且不是第一页，则跳转到上一页
               if (this.orders.length === 0 && this.current > 1) {
                 this.current -= 1;
-                this.loadOrder(this.current);
-               }
+                this.loadOrder();
+              }
             }
           })
     },
@@ -145,8 +116,7 @@ export default {
       this.pageSize = val;
       console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
       this.loadOrder(this.current);
-    }
-    ,
+    },
     handleCurrentChange(val) {
       this.current = val;
       console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
@@ -173,15 +143,15 @@ export default {
         <el-button class="add-button" round type="primary" @click="addFrom()">添加订单</el-button>
       </div>
     </div>
-    <el-dialog :visible.sync="orderFormVisible" title="订单">
+    <el-dialog :visible.sync="orderFormVisible" title="订单" @close="handleClose">
       <el-form :model="order" label-width="auto" :rules="rules" ref="orderForm">
-        <el-form-item label="订单 ID" prop="id">
+        <el-form-item label="订单ID" prop="id">
           <el-input v-model.trim="order.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="收货地址 ID" prop="receivingAddress">
+        <el-form-item label="收货地址" prop="receivingAddress">
           <el-input v-model.trim="order.receivingAddress" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="用户 ID" prop="userId">
+        <el-form-item label="用户ID" prop="userId">
           <el-input v-model.trim="order.userId" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>

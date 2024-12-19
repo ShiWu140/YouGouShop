@@ -98,16 +98,16 @@ export default {
     },
     loadCarouselFigure(current) {
       current = this.current;
-      this.$http.get(`/carouselFigure/${this.current}/${this.pageSize}`)
+      this.$http.get("/carouselFigure/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
-            console.log(res.data);
             if (res.data) {
-              this.carouselFigures = res.data.records;
-              this.total = res.data.total;
+              console.log(res.data.data)
+              this.carouselFigures = res.data.data.records;
+              this.total = res.data.data.total;
               // 如果当前页没有数据且不是第一页，则跳转到上一页
               if (this.carouselFigures.length === 0 && this.current > 1) {
                 this.current -= 1;
-                this.loadCarouselFigure(this.current);
+                this.loadBrand();
               }
             }
           })

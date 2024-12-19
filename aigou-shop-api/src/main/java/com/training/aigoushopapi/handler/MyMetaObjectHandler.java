@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author 十五
+ */
 @Slf4j
 @Component
 public class MyMetaObjectHandler implements MetaObjectHandler {
@@ -14,6 +17,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         log.info("开始插入填充...");
         this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
+        this.strictInsertFill(metaObject, "searchTime", LocalDateTime.class, LocalDateTime.now());
     }
 
     @Override

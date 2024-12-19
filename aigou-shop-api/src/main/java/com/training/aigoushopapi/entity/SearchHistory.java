@@ -1,9 +1,6 @@
 package com.training.aigoushopapi.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,6 +41,6 @@ public class SearchHistory implements Serializable {
      * 搜索时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @TableField("search_time")
+    @TableField(value = "search_time" ,fill = FieldFill.INSERT)
     private LocalDateTime searchTime;
 }

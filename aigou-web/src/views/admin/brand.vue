@@ -20,6 +20,9 @@ export default {
       imageUrl: '',
       //表单验证
       rules: {
+        id: [
+          {required: true, message: '必填项', trigger: 'change'}
+        ],
         brandName: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
@@ -33,30 +36,65 @@ export default {
     }
   },
   methods: {
-    handleAdd() {
-      this.operate = 'save';
+    operateBrand(brand) {
+      // 调试输出提交的数据
+      console.log('提交的数据', brand);
+      this.$http.post("/brand/" + this.operate, brand).then((response) => {
+        if (response.data.msg === 'success') {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          });
+          this.loadBrand();
+          this.brandFormVisible = false;
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.data.data
+          });
+        }
+      })
+    },
+    handleDelete(index, row) {
+      this.$confirm('此操作将永久删除该品牌, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.operate = 'delete';
+        this.operateBrand(row);  // 添加这一行以确保调用删除操作
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+    },
+    handleEdit(index, row) {
+      this.operate = 'modify';
+      this.brand = JSON.parse(JSON.stringify(row));
+      this.imageUrl = this.brand.brandImg;
+      this.brandFormVisible = true;
+    },
+    addFrom() {
+      this.operate = 'add';
       this.brand = {
         id: '',
         brandName: '',
         brandImg: '',
         brandType: '',
       };
+      // 清空图片 URL
       this.imageUrl = '';
       this.brandFormVisible = true;
     },
-    handleDelete(index, row) {
-      this.operate = 'remove';
-      this.brand = JSON.parse(JSON.stringify(row));
-      this.operateApi();
+    calculateTableHeight() {
+      // 动态计算表格高度，
+      this.tableHeight = window.innerHeight - 220;
     },
-    handleEdit(index, row) {
-      this.operate = 'update';
-      this.brand = JSON.parse(JSON.stringify(row));
-      this.imageUrl = this.brand.brandImg;
-      this.brandFormVisible = true;
-    },
-    loadBrand() {
-      this.$http.get("/brand?page=" + this.current + '&size=' + this.pageSize)
+    loadBrand(current) {
+      current = this.current
+      this.$http.get("/brand/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             console.log(res.data);
             if (res.data.msg === "success") {
@@ -70,89 +108,6 @@ export default {
             }
           })
     },
-    operateApi() {
-      console.log('提交的数据', this.brand);
-      if (this.operate === 'save') {
-        this.$refs.brandForm.validate(valid => {
-          if (valid) {
-            // 表单验证通过，提交数据
-            if (this.operate === 'save') {
-              this.$http.post("/brand", this.brand)
-                  .then(res => {
-                    if (res.data.code === 1) {
-                      this.$message({
-                        message: '添加成功',
-                        type: 'success'
-                      });
-                      this.brandFormVisible = false;
-                      this.loadBrand();
-                    } else {
-                      this.$message({
-                        message: '添加失败',
-                        type: 'error'
-                      });
-                    }
-                  })
-            }
-          } else {
-            this.$message({
-              message: '请正确填写内容！',
-              type: 'warning'
-            });
-          }
-        })
-      }
-      if (this.operate === 'update') {
-        this.$refs.brandForm.validate(valid => {
-          if (valid) {
-            // 表单验证通过，提交数据
-            this.$http.put("/brand", this.brand)
-                .then(res => {
-                  if (res.data.code === 1) {
-                    this.$message({
-                      message: '修改成功',
-                      type: 'success'
-                    });
-                    this.brandFormVisible = false;
-                    this.loadBrand();
-                  } else {
-                    this.$message({
-                      message: '修改失败',
-                      type: 'error'
-                    })
-                  }
-                })
-          } else {
-            this.$message({
-              message: '请正确填写内容！',
-              type: 'warning'
-            });
-          }
-        })
-      }
-      if (this.operate === 'remove') {
-        this.$http.delete("/brand/" + this.brand.id)
-            .then(res => {
-              if (res.data.code === 1) {
-                this.$message({
-                  message: '删除成功',
-                  type: 'success'
-                });
-                this.brandFormVisible = false;
-                this.loadBrand();
-              } else {
-                this.$message({
-                  message: '删除失败',
-                  type: 'error'
-                })
-              }
-            })
-      }
-    },
-    calculateTableHeight() {
-      // 动态计算表格高度，
-      this.tableHeight = window.innerHeight - 220;
-    },
     handleSizeChange(val) {
       this.pageSize = val;
       console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
@@ -165,10 +120,10 @@ export default {
     },
     //图片上传方法
     handleAvatarSuccess(res, file) {
-      console.log('upload', res)
-      this.imageUrl = res
-      this.brand.brandImg = res;
-    },
+      console.log('upload', res.data)
+      this.imageUrl = res.data
+      this.brand.brandImg = res.data;
+    }
   },
   mounted() {
     this.loadBrand();
@@ -187,14 +142,14 @@ export default {
     <div style="position: relative;">
       <h1 style="position: absolute;margin-top: 0">商品品牌管理</h1>
       <div style="text-align: right;">
-        <el-button class="add-button" round type="primary" @click="handleAdd()">添加品牌</el-button>
+        <el-button class="add-button" round type="primary" @click="addFrom()">添加品牌</el-button>
       </div>
     </div>
     <el-dialog :visible.sync="brandFormVisible" title="添加品牌">
       <el-form :model="brand" label-width="auto" :rules="rules" ref="brandForm">
-        <!--        <el-form-item label="品牌 ID" prop="id">-->
-        <!--          <el-input v-model.trim="brand.id" :disabled="operate === 'update'" autocomplete="off"></el-input>-->
-        <!--        </el-form-item>-->
+        <el-form-item label="品牌 ID" prop="id">
+          <el-input v-model.trim="brand.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
+        </el-form-item>
         <el-form-item label="品牌名称" prop="brandName">
           <el-input v-model.trim="brand.brandName" autocomplete="off"></el-input>
         </el-form-item>
@@ -216,7 +171,7 @@ export default {
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="brandFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="operateApi(brand)">确 定</el-button>
+        <el-button type="primary" @click="operateBrand(brand)">确 定</el-button>
       </div>
     </el-dialog>
     <el-table
@@ -224,12 +179,12 @@ export default {
         :height="tableHeight"
         border
         style="width: 100%;">
-      <!--      <el-table-column-->
-      <!--          fixed-->
-      <!--          label="品牌 ID"-->
-      <!--          min-width="100px"-->
-      <!--          prop="id">-->
-      <!--      </el-table-column>-->
+      <el-table-column
+          fixed
+          label="品牌 ID"
+          min-width="100px"
+          prop="id">
+      </el-table-column>
       <el-table-column
           label="品牌名称"
           min-width="100px"

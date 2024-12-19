@@ -5,9 +5,9 @@ export default {
       orderProducts: [],
       orderProduct: {
         id: '',
-        order_id: '',
-        product_id: '',
-        product_num: '',
+        orderId: '',
+        productId: '',
+        productNum: '',
       },
       orderProductFormVisible: false,
       tableHeight: window.innerHeight - 220,
@@ -21,13 +21,13 @@ export default {
         id: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        order_id: [
+        orderId: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        product_id: [
+        productId: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        product_num: [
+        productNum: [
           {required: true, message: '必填项', trigger: 'change'},
           {type: 'number', message: '必须为数字值', trigger: 'change'}
         ]
@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     operateOrderProduct(orderProduct) {
-      this.$http.post("/orderProduct?method=" + this.operate + "&" + this.$qs.stringify(orderProduct)).then((response) => {
+      this.$http.post("/orderProduct/" + this.operate, orderProduct).then((response) => {
         if (response.data.msg === 'success') {
           this.$message({
             type: 'success',
@@ -68,17 +68,17 @@ export default {
       });
     },
     handleEdit(index, row) {
-      this.operate = 'update';
+      this.operate = 'modify';
       this.orderProduct = JSON.parse(JSON.stringify(row));
       this.orderProductFormVisible = true;
     },
     addFrom() {
-      this.operate = 'save';
+      this.operate = 'add';
       this.orderProduct = {
         id: '',
-        order_id: '',
-        product_id: '',
-        product_num: '',
+        orderId: '',
+        productId: '',
+        productNum: '',
       };
       this.orderProductFormVisible = true;
     },
@@ -88,16 +88,16 @@ export default {
     },
     loadOrderProduct(current) {
       current = this.current;
-      this.$http.post("/orderProduct?method=page&current=" + current + '&pagesize=' + this.pageSize)
+      this.$http.get("/orderProduct/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
-            console.log(res.data);
-            if (res.data.msg === "success") {
+            if (res.data) {
+              console.log(res.data.data)
               this.orderProducts = res.data.data.records;
               this.total = res.data.data.total;
               // 如果当前页没有数据且不是第一页，则跳转到上一页
               if (this.orderProducts.length === 0 && this.current > 1) {
                 this.current -= 1;
-                this.loadOrderProduct(this.current);
+                this.loadOrder();
               }
             }
           })
@@ -138,14 +138,14 @@ export default {
         <el-form-item label="ID" prop="id">
           <el-input v-model.trim="orderProduct.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="订单 ID" prop="order_id">
-          <el-input v-model.trim="orderProduct.order_id" autocomplete="off"></el-input>
+        <el-form-item label="订单 ID" prop="orderId">
+          <el-input v-model.trim="orderProduct.orderId" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="商品 ID" prop="product_id">
-          <el-input v-model.trim="orderProduct.product_id" autocomplete="off"></el-input>
+        <el-form-item label="商品 ID" prop="productId">
+          <el-input v-model.trim="orderProduct.productId" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="商品数量" prop="product_num">
-          <el-input v-model.trim.number="orderProduct.product_num" autocomplete="off"></el-input>
+        <el-form-item label="商品数量" prop="productNum">
+          <el-input v-model.trim.number="orderProduct.productNum" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -167,17 +167,17 @@ export default {
       <el-table-column
           label="订单 ID"
           min-width="100px"
-          prop="order_id">
+          prop="orderId">
       </el-table-column>
       <el-table-column
           label="商品 ID"
           min-width="100px"
-          prop="product_id">
+          prop="productId">
       </el-table-column>
       <el-table-column
           label="商品数量"
           min-width="100px"
-          prop="product_num">
+          prop="productNum">
       </el-table-column>
       <el-table-column
           fixed="right"

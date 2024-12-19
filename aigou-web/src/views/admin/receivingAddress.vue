@@ -5,11 +5,11 @@ export default {
       receivingAddresss: [],
       receivingAddress: {
         id: '',
-        receiving_address: '',
-        receiving_person: '',
-        mobile_phone: '',
-        user_id: '',
-        is_default: ''
+        receivingAddress: '',
+        receivingPerson: '',
+        mobilePhone: '',
+        userId: '',
+        isDefault: ''
       },
       receivingAddressFormVisible: false,
       tableHeight: window.innerHeight - 220,
@@ -23,19 +23,19 @@ export default {
         id: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        receiving_address: [
+        receivingAddress: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        receiving_person: [
+        receivingPerson: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        mobile_phone: [
+        mobilePhone: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        user_id: [
+        userId: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        is_default: [
+        isDefault: [
           {required: true, message: '必填项', trigger: 'change'}
         ]
       }
@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     operateReceivingAddress(receivingAddress) {
-      this.$http.post("/receivingAddress?method=" + this.operate + "&" + this.$qs.stringify(receivingAddress)).then((response) => {
+      this.$http.post("/receivingAddress/" + this.operate, receivingAddress).then((response) => {
         if (response.data.msg === 'success') {
           this.$message({
             type: 'success',
@@ -65,7 +65,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.operate = 'remove';
+        this.operate = 'delete';
         this.operateReceivingAddress(row);
       }).catch(() => {
         this.$message({
@@ -75,19 +75,19 @@ export default {
       });
     },
     handleEdit(index, row) {
-      this.operate = 'update';
+      this.operate = 'modify';
       this.receivingAddress = JSON.parse(JSON.stringify(row));
       this.receivingAddressFormVisible = true;
     },
     addFrom() {
-      this.operate = 'save';
+      this.operate = 'add';
       this.receivingAddress = {
         id: '',
-        receiving_address: '',
-        receiving_person: '',
-        mobile_phone: '',
-        user_id: '',
-        is_default: ''
+        receivingAddress: '',
+        receivingPerson: '',
+        mobilePhone: '',
+        userId: '',
+        isDefault: ''
       };
       this.receivingAddressFormVisible = true;
     },
@@ -95,16 +95,18 @@ export default {
       // 动态计算表格高度，
       this.tableHeight = window.innerHeight - 220;
     },
-    loadReceivingAddress() {
-      this.$http.post("/receivingAddress?method=page&current=" + this.current + '&pagesize=' + this.pageSize)
+    loadReceivingAddress(current) {
+      current = this.current;
+      this.$http.get("/receivingAddress/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
-            console.log(res.data);
-            if (res.data.msg === "success") {
+            if (res.data) {
+              console.log(res.data.data)
               this.receivingAddresss = res.data.data.records;
               this.total = res.data.data.total;
+              // 如果当前页没有数据且不是第一页，则跳转到上一页
               if (this.receivingAddresss.length === 0 && this.current > 1) {
                 this.current -= 1;
-                this.loadReceivingAddress(this.current);
+                this.loadReceivingAddress();
               }
             }
           })
@@ -143,22 +145,22 @@ export default {
     <el-dialog :visible.sync="receivingAddressFormVisible" title="收货地址">
       <el-form :model="receivingAddress" label-width="auto" :rules="rules" ref="receivingAddressForm">
         <el-form-item label="ID" prop="id">
-          <el-input v-model.trim="receivingAddress.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
+          <el-input v-model.trim="receivingAddress.id" :disabled="operate === 'modify'" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="收货地址" prop="receiving_address">
-          <el-input v-model.trim="receivingAddress.receiving_address" autocomplete="off"></el-input>
+        <el-form-item label="收货地址" prop="receivingAddress">
+          <el-input v-model.trim="receivingAddress.receivingAddress" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="收件人" prop="receiving_person">
-          <el-input v-model.trim="receivingAddress.receiving_person" autocomplete="off"></el-input>
+        <el-form-item label="收件人" prop="receivingPerson">
+          <el-input v-model.trim="receivingAddress.receivingPerson" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" prop="mobile_phone">
-          <el-input v-model.trim="receivingAddress.mobile_phone" autocomplete="off"></el-input>
+        <el-form-item label="手机号" prop="mobilePhone">
+          <el-input v-model.trim="receivingAddress.mobilePhone" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="账号" prop="user_id">
-          <el-input v-model.trim="receivingAddress.user_id" autocomplete="off"></el-input>
+        <el-form-item label="账号" prop="userId">
+          <el-input v-model.trim="receivingAddress.userId" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="默认收货地址" prop="is_default">
-          <el-select v-model="receivingAddress.is_default" placeholder="是否默认收货地址">
+        <el-form-item label="默认收货地址" prop="isDefault">
+          <el-select v-model="receivingAddress.isDefault" placeholder="是否默认收货地址">
             <el-option :value="-1" label="否"></el-option>
             <el-option :value="1" label="是"></el-option>
           </el-select>
@@ -183,30 +185,30 @@ export default {
       <el-table-column
           label="收货地址"
           min-width="100px"
-          prop="receiving_address">
+          prop="receivingAddress">
       </el-table-column>
       <el-table-column
           label="收件人"
           min-width="100px"
-          prop="receiving_person">
+          prop="receivingPerson">
       </el-table-column>
       <el-table-column
           label="手机号"
           min-width="100px"
-          prop="mobile_phone">
+          prop="mobilePhone">
       </el-table-column>
       <el-table-column
           label="用户 ID"
           min-width="100px"
-          prop="user_id">
+          prop="userId">
       </el-table-column>
       <el-table-column
           label="默认收货地址"
           min-width="100px"
-          prop="is_default">
+          prop="isDefault">
         <template slot-scope="scope">
-          <span v-if="scope.row.is_default === -1">否</span>
-          <span v-else-if="scope.row.is_default === 1">是</span>
+          <span v-if="scope.row.isDefault === -1">否</span>
+          <span v-else-if="scope.row.isDefault === 1">是</span>
           <span v-else>-</span>
         </template>
       </el-table-column>

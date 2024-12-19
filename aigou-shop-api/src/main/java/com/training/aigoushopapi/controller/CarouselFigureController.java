@@ -74,8 +74,8 @@ public class CarouselFigureController {
      * @param carouselFigure 轮播图对象
      * @return 成功或失败信息
      */
-    @PostMapping("/update")
-    public boolean update(@RequestBody CarouselFigure carouselFigure) {
+    @PostMapping("/modify")
+    public boolean modify(@RequestBody CarouselFigure carouselFigure) {
         return carouselFigureService.updateById(carouselFigure);
     }
 
