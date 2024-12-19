@@ -38,17 +38,8 @@
             where id = #{id}
     </update>
 
-    <resultMap id="andType" type="Product">
-        <association property="productType"
-                     javaType="String"
-                     column="product_type"
-                     select="com.training.aigouapi.mapper.ProductTypeMapper.getId">
-
-        </association>
-    </resultMap>
     <!--分页条件查询-->
-    <!--<select id="list" resultType="com.training.aigouapi.entity.Product">-->
-    <select id="list" resultMap="andType">
+    <select id="list" resultType="com.training.aigouapi.entity.Product">
         select * from s_product
         <where>
             <if test="words != null and words !='' ">
