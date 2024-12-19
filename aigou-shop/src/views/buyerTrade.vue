@@ -1,4 +1,11 @@
 <script setup>
+
+import http from '@/utils/axios.js';
+
+http.get("/order/all")
+    .then(res => {
+      console.log(res.data);
+    })
 </script>
 <template>
   <!--头部-->
