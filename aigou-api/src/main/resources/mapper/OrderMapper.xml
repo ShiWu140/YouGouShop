@@ -10,7 +10,7 @@
 
     <!--删除-->
     <delete id="delete">
-        delete from s_product where id = #{id};
+        delete from s_order where id = #{orderId};
     </delete>
 
     <!--修改-->
@@ -36,7 +36,7 @@
     </select>
 
     <select id="selectId" resultType="Order">
-        select * from s_order where id = #{id};
+        select * from s_order where id = #{orderId};
     </select>
 
 </mapper>

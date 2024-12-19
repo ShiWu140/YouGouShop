@@ -8,6 +8,7 @@ import com.training.aigouapi.service.OrderService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -65,6 +66,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public boolean save(Order order) {
+        order.setCreateTime(LocalDateTime.now());
         return orderMapper.insert(order);
     }
 
@@ -87,6 +89,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public boolean update(Order order) {
+        order.setCreateTime(LocalDateTime.now());
         return orderMapper.update(order);
     }
 }
