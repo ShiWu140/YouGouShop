@@ -45,13 +45,9 @@ public class ProductServiceImpl implements ProductService {
             Brand brand = brandMapper.selectId(item.getProductBrand());
             if (productType != null) {
                 item.setProductType(productType.getProductTypeName());
-            }else{
-                item.setProductType(null);
             }
             if (brand != null) {
                 item.setProductBrand(brand.getBrandName());
-            }else{
-                item.setProductBrand(null);
             }
             return item;
         }).collect(Collectors.toList());

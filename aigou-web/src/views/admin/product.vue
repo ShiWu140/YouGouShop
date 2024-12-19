@@ -64,6 +64,7 @@ export default {
         if (valid) {
           //验证成功
           /*更新------------------------------------------*/
+
           if (this.operate == 'update') {
             console.log("发送更新请求update")
             this.$http.put("/product", product).then((res) => {
@@ -200,6 +201,7 @@ export default {
             //console.log("响应brand品牌"+res.data.data);
             if (res.data.msg === "success") {
               this.brands = res.data.data;
+              console.log("===============",this.brands);
             }
           })
 
@@ -283,7 +285,7 @@ export default {
         </el-form-item>
         <el-form-item label="所属分类" prop="productType">
           <el-select
-              v-model="product.productType"
+              v-model.trim="product.productType"
               placeholder="请选择菜品分类"
           >
             <el-option v-for="(item,index) in productTypes" :key="index" :label="item.productTypeName" :value="item.id" />
@@ -295,7 +297,7 @@ export default {
         <el-form-item label="商品品牌" prop="productBrand">
 <!--          <el-input v-model.trim="product.productBrand" autocomplete="off"></el-input>-->
           <el-select
-              v-model="product.productBrand"
+              v-model.trim="product.productBrand"
               placeholder="请选择菜品分类"
           >
             <el-option v-for="(item,index) in brands" :key="index" :label="item.brandName" :value="item.id" />
