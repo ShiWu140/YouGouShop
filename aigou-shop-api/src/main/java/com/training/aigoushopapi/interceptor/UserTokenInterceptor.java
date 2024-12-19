@@ -1,7 +1,6 @@
 package com.training.aigoushopapi.interceptor;
 
 import com.training.aigoushopapi.exception.UserTokenException;
-import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -15,7 +14,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
  */
 public class UserTokenInterceptor implements HandlerInterceptor {
     @Override
-    public boolean preHandle(HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull Object handler) throws UserTokenException {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws UserTokenException {
         // 获取请求头中的token
         String token = request.getHeader("Authorization");
         // 判断是否为空，为空则抛出异常

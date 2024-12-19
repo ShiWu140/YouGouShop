@@ -1,5 +1,6 @@
 package com.training.aigoushopapi.config;
 
+import com.training.aigoushopapi.exception.UserTokenException;
 import com.training.aigoushopapi.interceptor.UserTokenInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -35,4 +36,5 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new UserTokenInterceptor()).addPathPatterns("/**");
     }
+    
 }
