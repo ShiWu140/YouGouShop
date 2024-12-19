@@ -5,9 +5,9 @@ export default {
       orders: [],
       order: {
         id: '',
-        create_time: '',
-        receiving_address: '',
-        user_id: '',
+        createTime: '',
+        receivingAddress: '',
+        userId: '',
       },
       orderFormVisible: false,
       tableHeight: window.innerHeight - 220,
@@ -21,13 +21,13 @@ export default {
         id: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        create_time: [
+        createTime: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        receiving_address: [
+        receivingAddress: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
-        user_id: [
+        userId: [
           {required: true, message: '必填项', trigger: 'change'}
         ]
       }
@@ -35,22 +35,58 @@ export default {
   },
   methods: {
     operateOrder(order) {
-      const {create_time, ...newOrder} = order;
-      this.$http.post("/order?method=" + this.operate + "&" + this.$qs.stringify(newOrder)).then((response) => {
-        if (response.data.msg === 'success') {
-          this.$message({
-            type: 'success',
-            message: '操作成功!'
-          });
-          this.loadOrder(this.current)
-          this.orderFormVisible = false;
-        } else {
-          this.$message({
-            type: 'error',
-            message: response.data.data
-          });
-        }
-      })
+      const {createTime, ...newOrder} = order;
+      if (this.operate === 'save') {
+        this.$http.post("/order", newOrder).then((response) => {
+          if (response.data.msg === 'success') {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            });
+            this.loadOrder(this.current)
+            this.orderFormVisible = false;
+          } else {
+            this.$message({
+              type: 'error',
+              message: response.data.data
+            });
+          }
+        })
+      }
+      if (this.operate === 'update') {
+        this.$http.put("/order/" + newOrder.id, newOrder).then((response) => {
+          if (response.data.msg === 'success') {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            });
+            this.loadOrder(this.current)
+            this.orderFormVisible = false;
+          } else {
+            this.$message({
+              type: 'error',
+              message: response.data.data
+            });
+          }
+        })
+      }
+      if (this.operate === 'remove') {
+        this.$http.delete("/order/" + newOrder.id).then((response) => {
+          if (response.data.msg === 'success') {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            });
+            this.loadOrder(this.current)
+            this.orderFormVisible = false;
+          } else {
+            this.$message({
+              type: 'error',
+              message: response.data.data
+            });
+          }
+        })
+      }
     },
     handleDelete(index, row) {
       this.$confirm('此操作将永久该订单, 是否继续?', '提示', {
@@ -76,8 +112,8 @@ export default {
       this.operate = 'save'
       this.order = {
         id: '',
-        receiving_address: '',
-        user_id: '',
+        receivingAddress: '',
+        userId: '',
       };
       this.orderFormVisible = true;
     },
@@ -85,9 +121,8 @@ export default {
       // 动态计算表格高度，
       this.tableHeight = window.innerHeight - 220;
     },
-    loadOrder(current) {
-      current = this.current
-      this.$http.post("/order?method=page&current=" + current + '&pagesize=' + this.pageSize)
+    loadOrder() {
+      this.$http.get("/order?page=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             console.log(res.data);
             if (res.data.msg === "success") {
@@ -96,7 +131,7 @@ export default {
               if (this.orders.length === 0 && this.current > 1) {
                 this.current -= 1;
                 this.loadOrder(this.current);
-              }
+               }
             }
           })
     },
@@ -143,11 +178,11 @@ export default {
         <el-form-item label="订单 ID" prop="id">
           <el-input v-model.trim="order.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="收货地址 ID" prop="receiving_address">
-          <el-input v-model.trim="order.receiving_address" autocomplete="off"></el-input>
+        <el-form-item label="收货地址 ID" prop="receivingAddress">
+          <el-input v-model.trim="order.receivingAddress" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="用户 ID" prop="user_id">
-          <el-input v-model.trim="order.user_id" autocomplete="off"></el-input>
+        <el-form-item label="用户 ID" prop="userId">
+          <el-input v-model.trim="order.userId" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -170,17 +205,17 @@ export default {
           label="创建时间"
           min-width="100px"
           :formatter="formatCreateTime"
-          prop="create_time">
+          prop="createTime">
       </el-table-column>
       <el-table-column
           label="收货地址"
           min-width="100px"
-          prop="receiving_address">
+          prop="receivingAddress">
       </el-table-column>
       <el-table-column
           label="用户 ID"
           min-width="100px"
-          prop="user_id">
+          prop="userId">
       </el-table-column>
       <el-table-column
           fixed="right"
