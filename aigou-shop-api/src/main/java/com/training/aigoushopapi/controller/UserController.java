@@ -78,6 +78,7 @@ public class UserController {
      */
     @PostMapping("/modify")
     public boolean modify(@RequestBody User user) {
+        user.setUserPwd(MD5Utils.md5(user.getUserPwd()));
         return userService.updateById(user);
     }
 
@@ -95,12 +96,12 @@ public class UserController {
     /**
      * 用户登录接口
      *
-     * @param username 用户名
+     * @param userName 用户名
      * @param password 密码
      * @return Result
      */
     @PostMapping("/login")
-    public UserVO login(@RequestParam String username, @RequestParam String password) {
-        return userService.login(username, password);
+    public UserVO login(@RequestParam String userName, @RequestParam String password) {
+        return userService.login(userName, password);
     }
 }

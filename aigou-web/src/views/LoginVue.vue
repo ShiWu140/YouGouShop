@@ -4,31 +4,30 @@ export default {
     return {
       form: {
         userName: '',
-        userPwd: ''
+        password: ''
       },
       rules: {
         userName: [
           {required: true, message: '请输入用户名', trigger: 'change'}
         ],
-        userPwd: [
+        password: [
           {required: true, message: '请输入密码', trigger: 'change'}
         ]
       }
     };
   },
   mounted() {
-    if (localStorage.getItem('user') != null) {
-      this.$router.push('/admin');
-    }
   },
   methods: {
     login() {
       console.log('login:' + this.$qs.stringify(this.form))
       this.$http.post('/user/login', this.$qs.stringify(this.form)).then(resp => {
         console.log(resp.data)
-        if (resp.status === 200) {
+        if (resp.data.code === 1) {
+          //保存JWT令牌
+          localStorage.setItem("userId", resp.data.data.userId)
+          localStorage.setItem("token", resp.data.data.token)
           //登录成功后跳转管理页面
-          localStorage.setItem('user', JSON.stringify(resp.data));
           this.$router.push({path: '/admin'})
         } else {
           this.$alert('Error', {
@@ -77,8 +76,8 @@ export default {
               <el-form-item label="用户名" prop="userName">
                 <el-input v-model.trim="form.userName" placeholder="请输入内容" @keyup.enter.native="login"></el-input>
               </el-form-item>
-              <el-form-item label="密码" prop="userPwd">
-                <el-input v-model.trim="form.userPwd" placeholder="请输入密码" show-password
+              <el-form-item label="密码" prop="password">
+                <el-input v-model.trim="form.password" placeholder="请输入密码" show-password
                           @keyup.enter.native="login"></el-input>
               </el-form-item>
               <el-form-item>

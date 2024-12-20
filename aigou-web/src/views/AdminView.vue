@@ -7,16 +7,10 @@ export default {
     }
   },
   mounted() {
-    const userStr = localStorage.getItem('user');
-    if (userStr === null) {
-      this.$router.push('/login');
-      return;
-    }
-
+    const userStr = localStorage.getItem('userId');
     try {
-      const user = JSON.parse(userStr);
-      if (user && user.user_name) {
-        this.username = user.user_name.length > 8 ? user.user_name.substring(0, 8) + '...' : user.user_name;
+      if (userStr) {
+        this.username = userStr;
       } else {
         this.username = '未知用户';
       }
@@ -33,7 +27,8 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          localStorage.removeItem('user');
+          localStorage.removeItem('token');
+          localStorage.removeItem('userId');
           this.$router.push('/login');
         }).catch(() => {
           this.$message.info('已取消退出');
