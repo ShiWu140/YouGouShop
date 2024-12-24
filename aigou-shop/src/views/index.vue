@@ -1,4 +1,52 @@
 <script setup>
+import {onMounted, ref} from 'vue';
+import axios from 'axios';
+
+const carouselFigures = ref([]);
+const currentIndex = ref(0);
+
+const fetchCarouselFigures = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/carouselFigure/all');
+    // 对获取的轮播图数据根据 sequenceNum 进行排序，并截取前五个
+    carouselFigures.value = response.data.data.sort((a, b) => a.sequenceNum - b.sequenceNum);
+    console.log('Carousel figures fetched:', carouselFigures.value)
+  } catch (error) {
+    console.error('Error fetching carousel figures:', error);
+  }
+};
+const productTypes = ref([]);
+
+const fetchProductTypes = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/productType/all');
+    productTypes.value = response.data.data;
+    console.log('Product types fetched:', productTypes.value)
+  } catch (error) {
+    console.error('Error fetching product types:', error);
+  }
+};
+const searchHistory = ref([]);
+
+const fetchSearchHistory = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/searchHistory/page', {
+      params: {
+        current: 1, // 当前页码
+        size: 10    // 每页大小
+      }
+    });
+    searchHistory.value = response.data.data.records;
+    console.log('Search history fetched:', searchHistory.value)
+  } catch (error) {
+    console.error('Error fetching search history:', error);
+  }
+};
+onMounted(() => {
+  fetchProductTypes();
+  fetchSearchHistory();
+  fetchCarouselFigures();
+});
 </script>
 <template>
   <!--头部-->
@@ -27,16 +75,9 @@
         </div>
         <!--热搜-->
         <p class="hotkey">
-          <a href="#">牛奶</a>
-          <a href="#">牛仔裤</a>
-          <a href="#">巧克力</a>
-          <a href="#">月饼</a>
-          <a href="#">抽纸</a>
-          <a href="#">狗粮</a>
-          <a href="#">奶粉</a>
-          <a href="#">护发素</a>
-          <a href="#">进口食品</a>
-          <a href="#">良品铺子</a>
+          <a v-for="history in searchHistory" :key="history.id" :href="`#${history.searchWords}`">{{
+              history.searchWords
+            }}</a>
         </p>
       </div>
     </div>
@@ -46,52 +87,23 @@
     <!--商品分类-->
     <div class="classify">
       <ul>
-        <li>
-          <h3><a href="#"><i class="fa fa-globe"></i>全球进口</a></h3>
-        </li>
-        <li>
-          <h3><a href="#"><i class="fa fa-cutlery"></i>国产食品</a></h3>
-        </li>
-        <li>
-          <h3><a href="#"><i class="fa fa-diamond"></i>服装服饰</a></h3>
-        </li>
-        <li>
-          <h3><a href="#"><i class="fa fa-magic"></i>护肤美妆</a></h3>
-        </li>
-        <li>
-          <h3><a href="#"><i class="fa fa-bath"></i>家居用品</a></h3>
-        </li>
-        <li>
-          <h3><a href="#"><i class="fa fa-futbol-o"></i>儿童玩具</a></h3>
-        </li>
-        <li>
-          <h3><a href="#"><i class="fa fa-television"></i>电子产品</a></h3>
-        </li>
-        <li>
-          <h3><a href="#"><i class="fa fa-medkit"></i>医药保健</a></h3>
-        </li>
-        <li>
-          <h3><a href="#"><i class="fa fa-book"></i>图书学习</a></h3>
+        <li v-for="type in productTypes" :key="type.id">
+          <h3>
+            <a href="#" class="icon-center">
+              <el-icon :size="20">
+                <component :is="type.productTypeIcon"></component>
+              </el-icon>
+              {{ type.productTypeName }}</a>
+          </h3>
         </li>
       </ul>
     </div>
     <!--轮播-->
-    <div class="banner" id="main">
-      <ul id="pic">
-        <li><a href="#"><img src="@/assets/img/banner03.jpg" alt="" width="1020px" height="360px"/></a></li>
-        <li><a href="#"><img src="@/assets/img/banner02.jpg" alt="" width="1020px" height="360px"/></a></li>
-        <li><a href="#"><img src="@/assets/img/banner04.jpg" alt="" width="1020px" height="360px"/></a></li>
-        <li><a href="#"><img src="@/assets/img/banner01.jpg" alt="" width="1020px" height="360px"/></a></li>
-        <li><a href="#"><img src="@/assets/img/banner05.jpg" alt="" width="1020px" height="360px"/></a></li>
-      </ul>
-      <ul class="banner-btn" id="list">
-        <li class="on"></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-      </ul>
-    </div>
+    <el-carousel width="1020px" height="360px">
+      <el-carousel-item v-for="item in carouselFigures" :key="item">
+        <el-image :src="item.url" alt="" fit="fill" style="width: 1020px;height: 360px"/>
+      </el-carousel-item>
+    </el-carousel>
   </div>
   <!--新品+排行榜-->
   <div class="new-rank w1230 clear-float">
@@ -430,4 +442,12 @@
 </template>
 
 <style scoped>
+.icon-center {
+  display: inline-flex;
+  align-items: center;
+}
+
+.banner-btn {
+  width: auto;
+}
 </style>

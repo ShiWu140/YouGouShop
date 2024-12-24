@@ -1,5 +1,6 @@
 package com.training.aigoushopapi.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.training.aigoushopapi.annotation.ResponseResult;
 import com.training.aigoushopapi.entity.SearchHistory;
@@ -29,11 +30,14 @@ public class SearchHistoryController {
      * @param size    每页大小
      * @return 包含 搜索历史信息数据的分页对象
      */
-    @GetMapping("/page")
-    public Page<SearchHistory> page(@RequestParam Integer current, @RequestParam Integer size) {
-        Page<SearchHistory> page = new Page<>(current, size);
-        return searchHistoryService.page(page);
-    }
+@GetMapping("/page")
+public Page<SearchHistory> page(@RequestParam Integer current, @RequestParam Integer size) {
+    Page<SearchHistory> page = new Page<>(current, size);
+    QueryWrapper<SearchHistory> queryWrapper = new QueryWrapper<>();
+    queryWrapper.orderByDesc("search_time");
+    return searchHistoryService.page(page, queryWrapper);
+}
+
 
     /**
      * 查询所有 搜索历史信息
