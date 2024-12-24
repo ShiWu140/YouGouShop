@@ -29,7 +29,7 @@ export default {
         if (resp.data.code === 1) {
           //保存JWT令牌
           localStorage.setItem("userId", resp.data.data.userId)
-          localStorage.setItem("token", resp.data.data.token)n
+          localStorage.setItem("token", resp.data.data.token)
           //登录成功后跳转管理页面
           this.$router.push({path: '/admin'})
         } else {
