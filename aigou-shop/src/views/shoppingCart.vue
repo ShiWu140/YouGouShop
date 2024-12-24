@@ -1,5 +1,5 @@
 <script lang="js" setup>
-import {ElTable} from 'element-plus';
+import {ElMessage, ElTable} from 'element-plus';
 import {onMounted, ref} from 'vue';
 import axios from "axios";
 
@@ -16,15 +16,25 @@ const dialogVisible = ref(false);
 const multipleTableRef = ref(null)
 const multipleSelection = ref([])
 // 全选
-const toggleSelection = (rows) => {
+const toggleSelection = (rows, ignoreSelectable) => {
   if (rows) {
     rows.forEach((row) => {
-      multipleTableRef.value.toggleAllSelection(row)
-    })
+      multipleTableRef.value.toggleRowSelection(
+          row,
+          undefined,
+          ignoreSelectable
+      );
+    });
   } else {
-    multipleTableRef.value.clearSelection()
+    multipleTableRef.value.clearSelection();
   }
-}
+};
+const clearSelection = () => {
+  // 调用 clearSelection 清除所有选中的项
+  if (multipleTableRef.value) {
+    multipleTableRef.value.clearSelection();
+  }
+};
 const handleSelectionChange = (val) => {
   multipleSelection.value = val
 }
@@ -36,6 +46,14 @@ const handleChange = (row) => {
 const handleClick = (row) => {
   tableData.value = tableData.value.filter(item => item !== row);
   console.log('删除商品：', row);
+};
+// 批量删除选中商品
+const batchDelete = () => {
+  if (multipleSelection.value.length) {
+    tableData.value = tableData.value.filter(item => !multipleSelection.value.includes(item));
+    clearSelection(); // 删除后清空选中状态
+    console.log('批量删除商品：', multipleSelection.value);
+  }
 };
 // 提取省市信息
 const extractProvinceOrCity = (address) => {
@@ -52,6 +70,7 @@ const fetchProducts = async () => {
       // 接收产品列表
       const products = response.data.data || [];
       tableData.value = products.map(product => ({
+        productId: product.productId,
         productImage: product.productImage,
         productPrice: product.productPrice,
         productNum: product.productNum,
@@ -88,6 +107,50 @@ const fetchAddress = async () => {
     console.error('获取收获地址失败:', error);
   }
 };
+
+// 提交订单逻辑
+const submitForm = async () => {
+  if (!multipleSelection.value.length) {
+    ElMessage.warning("请先选择商品再结算！");
+    return;
+  }
+  if (!addressData.value.id) {
+    ElMessage.warning("请先设置收货地址！");
+    return;
+  }
+
+  // 准备提交的数据
+  const orderData = {
+    id: "",
+    userId: userId,
+    createTime: "",
+    state: 0,
+    receivingAddress: addressData.value.id, // 收货地址 ID
+    products: multipleSelection.value.map(item => ({
+      productId: item.productId, // 假设你的商品数据包含 `id` 字段
+      productNum: item.productNum,
+    })),
+  };
+
+  try {
+    // 调用后端接口
+    console.log("准备提交的数据:", orderData);
+    const response = await axios.post('/order/add', orderData);
+    console.log(response.data.data)
+    if (response.data.code === 1) {
+      ElMessage.success("订单提交成功！");
+      console.log("订单 ID:", response.data.data);
+      // 清空选中项
+      clearSelection();
+    } else {
+      ElMessage.error(`订单提交失败：${response.data.msg}`);
+    }
+  } catch (error) {
+    console.error("订单提交失败：", error);
+    ElMessage.error("订单提交失败，请稍后重试！");
+  }
+};
+
 // 切换地址
 const selectAddress = (address) => {
   addressData.value = address
@@ -210,8 +273,9 @@ onMounted(() => {
       </el-table>
       <div style="margin: 2px">
         <el-button @click="toggleSelection(tableData)">全选</el-button>
-        <el-button @click="toggleSelection(tableData)">批量删除</el-button>
-        <el-button @click="toggleSelection(tableData)">清除</el-button>
+        <el-button @click="batchDelete()">批量删除</el-button>
+        <el-button @click="clearSelection()">清除</el-button>
+        <el-button @click="submitForm()">结算</el-button>
       </div>
     </div>
 

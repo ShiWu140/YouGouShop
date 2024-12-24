@@ -49,5 +49,7 @@ public class ShopCart implements Serializable {
     private double productPrice;
     @TableField(exist = false)
     private int productNum;
+    @TableField(exist = false)
+    private String productId;
 
 }

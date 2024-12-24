@@ -14,7 +14,8 @@
         SELECT sc.id           AS id,
                sc.cart_id      AS cartId,
                sc.user_id      AS userId,
-               p.product_image  AS productImage,
+               p.product_image AS productImage,
+               p.id            As productId,
                p.price         AS productPrice,
                scp.product_num AS productNum
         FROM s_user u

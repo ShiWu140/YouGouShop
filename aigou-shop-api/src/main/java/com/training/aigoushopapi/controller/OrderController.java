@@ -3,6 +3,10 @@ package com.training.aigoushopapi.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.training.aigoushopapi.annotation.ResponseResult;
 import com.training.aigoushopapi.entity.Order;
+import com.training.aigoushopapi.entity.OrderProduct;
+import com.training.aigoushopapi.entity.request.OrderRequest;
+import com.training.aigoushopapi.entity.request.ProductRequest;
+import com.training.aigoushopapi.service.IOrderProductService;
 import com.training.aigoushopapi.service.IOrderService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +26,8 @@ public class OrderController {
 
     @Resource
     private IOrderService orderService;
+    @Resource
+    private IOrderProductService orderProductService;
 
     /**
      * 分页查询订单信息
@@ -60,12 +66,28 @@ public class OrderController {
     /**
      * 添加订单
      *
-     * @param order 订单对象
+     * @param orderRequest 订单对象
      * @return 成功或失败信息
      */
     @PostMapping("/add")
-    public boolean add(@RequestBody Order order) {
-        return orderService.save(order);
+    public void add(@RequestBody OrderRequest orderRequest) {
+        // 创建订单对象并保存
+        Order order = new Order();
+        order.setReceivingAddress(orderRequest.getReceivingAddress());
+        order.setUserId(orderRequest.getUserId());
+        order.setState(0);
+        orderService.save(order);
+        // 获取自动生成的订单 ID
+        String orderId = order.getId();
+        // 创建订单商品信息并保存
+        for (ProductRequest product : orderRequest.getProducts()) {
+            OrderProduct orderProduct = new OrderProduct();
+            orderProduct.setOrderId(orderId);
+            orderProduct.setProductId(product.getProductId());
+            orderProduct.setProductNum(product.getProductNum());
+            orderProductService.save(orderProduct);
+            System.out.println("数据：" + orderProduct);
+        }
     }
 
     /**
