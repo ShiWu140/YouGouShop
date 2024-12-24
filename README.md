@@ -90,14 +90,9 @@ npm run dev
 
 - [ ] shoppingCart.html
 
-
-### 李科
-
 - [ ] login.html
 
 - [ ] register.html
-
-- [ ] deliverAddress.html
 
 
 ### 王熙
@@ -106,5 +101,7 @@ npm run dev
 
 
 ### 熊诗怡
+
+- [ ] deliverAddress.html
 
 - [ ] classify.html

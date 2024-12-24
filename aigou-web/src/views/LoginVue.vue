@@ -17,6 +17,9 @@ export default {
     };
   },
   mounted() {
+    if (localStorage.getItem("token")){
+      this.$router.push({path: '/admin'})
+    }
   },
   methods: {
     login() {
@@ -48,7 +51,7 @@ export default {
           });
         } else {
           // 在设置请求时发生了一些事情，触发了错误
-          this.$alert('登录失败,请检查配置', {
+          this.$alert('登录失败', {
             confirmButtonText: '确定', type: 'warning'
           });
         }
