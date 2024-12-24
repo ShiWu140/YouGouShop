@@ -3,7 +3,7 @@ export default {
   data() {
     return {
       username: "",
-      isCollapse: false
+      isCollapse: true
     }
   },
   mounted() {
