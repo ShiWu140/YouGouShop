@@ -88,11 +88,11 @@ npm run dev
 
 ### 杜杰龙
 
-- [ ] shoppingCart.html
+- [X] shoppingCart.html
 
-- [ ] login.html
+- [X] login.html
 
-- [ ] register.html
+- [X] register.html
 
 
 ### 王熙

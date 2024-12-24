@@ -1,4 +1,5 @@
 import {createRouter, createWebHistory} from 'vue-router';
+import {ElMessage} from "element-plus";
 
 import IndexView from '@/views/index.vue';
 import LoginView from '@/views/login.vue';
@@ -31,31 +32,31 @@ const routes = [
     {
         path: '/shoppingCart',
         name: 'shoppingCart',
-        meta: {noRequireAuth: true},
+        meta: {noRequireAuth: false},
         component: ShoppingCartView,
     },
     {
         path: '/buyerTrade',
         name: 'buyerTrade',
-        meta: {noRequireAuth: true},
+        meta: {noRequireAuth: false},
         component: BuyerTradeView,
     },
     {
         path: '/classify',
         name: 'classify',
-        meta: {noRequireAuth: true},
+        meta: {noRequireAuth: false},
         component: ClassifyView,
     },
     {
         path: '/goodsDetail',
         name: 'goodsDetail',
-        meta: {noRequireAuth: true},
+        meta: {noRequireAuth: false},
         component: GoodsDetailView,
     },
     {
         path: '/deliverAddress',
         name: 'deliverAddress',
-        meta: {noRequireAuth: true},
+        meta: {noRequireAuth: false},
         component: DeliverAddressView,
     }
 ];
@@ -65,24 +66,26 @@ const router = createRouter({
     routes,
 });
 
-// 检查用户是否已登录
-const isAuthenticated = () => {
-    const user = localStorage.getItem("userId");
-    const token = localStorage.getItem("token");
-    return user && token;
-};
-
 router.beforeEach((to, from, next) => {
+    // 检查用户是否已登录
+    const isAuthenticated = () => {
+        const user = localStorage.getItem("userId");
+        const token = localStorage.getItem("token");
+        return user && token;
+    };
+
     // 如果路由不需要认证，直接放行
     if (to.meta.noRequireAuth) {
         return next();
     }
+
     // 如果用户已登录，放行
     if (isAuthenticated()) {
         return next();
     }
-    // 如果用户未登录，重定向到首页
-    next({path: '/'});
+    // 如果用户未登录，提示用户登录并重定向到登录页面
+    ElMessage.warning('请先登录');
+    next({path: '/login'});
 });
 
 export default router;

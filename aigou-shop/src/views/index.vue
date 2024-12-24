@@ -61,8 +61,8 @@ onMounted(() => {
           <li>
             <router-link to="/register" class="register">注册</router-link>
           </li>
-          <li><a href="#"><i class="fa fa-file-text-o"></i>我的订单</a></li>
-          <li><a href="#"><i class="fa fa-shopping-cart"></i>购物车</a></li>
+          <li><router-link to="/"><i class="fa fa-file-text-o"></i>我的订单</router-link></li>
+          <li><router-link to="/shoppingCart"><i class="fa fa-shopping-cart"></i>购物车</router-link></li>
         </ul>
       </div>
     </div>

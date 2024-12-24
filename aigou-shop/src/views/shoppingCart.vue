@@ -3,7 +3,7 @@ import {ElMessage, ElTable} from 'element-plus';
 import {onMounted, ref} from 'vue';
 import axios from "axios";
 
-const userId = 0
+const userId = localStorage.getItem('userId')
 // 存储购物车数据
 const tableData = ref([])
 // 存储收货地址数据
@@ -150,7 +150,16 @@ const submitForm = async () => {
     ElMessage.error("订单提交失败，请稍后重试！");
   }
 };
-
+// 退出登录
+const logout = () => {
+  // 清除 localStorage 中的 token 和 userId
+  localStorage.removeItem('token');
+  localStorage.removeItem('userId');
+  localStorage.removeItem('rememberMe')
+  ElMessage.info('已退出登录')
+  // 重定向到登录页面或其他页面
+  window.location.href = '/';
+};
 // 切换地址
 const selectAddress = (address) => {
   addressData.value = address
@@ -176,18 +185,24 @@ onMounted(() => {
     <!--头部bar-->
     <div class="top-bar">
       <div class="w1230 top-main">
-        <a href="index.html" class="toIndex">
+        <router-link to="/" class="toIndex">
           <i class="fa fa-home"></i>
           <span>爱购网首页</span>
-        </a>
+        </router-link>
         <div class="account">
-          <span>zhanghao<i class="fa fa-caret-down"></i></span>
+          <span>{{ userId }}<i class="fa fa-caret-down"></i></span>
           <div class="manage">
             <ul>
-              <li><a href="#">收货地址</a></li>
-              <li><a href="#">购物车</a></li>
-              <li><a href="#">我的订单</a></li>
-              <li><a href="#">退出</a></li>
+              <li>
+                <router-link to="/deliverAddress" href="#">收货地址</router-link>
+              </li>
+              <li>
+                <router-link to="/shoppingCart" href="#">购物车</router-link>
+              </li>
+              <li>
+                <router-link to="/classify" href="#">我的订单</router-link>
+              </li>
+              <li><a href="#" @click.prevent="logout">退出</a></li>
             </ul>
           </div>
         </div>
@@ -280,7 +295,6 @@ onMounted(() => {
     </div>
 
   </div>
-
 
   <!--脚注-->
   <div class="footer">
