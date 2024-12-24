@@ -55,8 +55,12 @@ onMounted(() => {
     <div class="top-bar">
       <div class="w1230 top-bar-main">
         <ul>
-          <li><a href="login.html" class="login">登录</a></li>
-          <li><a href="register.html" class="register">注册</a></li>
+          <li>
+            <router-link to="/login" class="login">登录</router-link>
+          </li>
+          <li>
+            <router-link to="/register" class="register">注册</router-link>
+          </li>
           <li><a href="#"><i class="fa fa-file-text-o"></i>我的订单</a></li>
           <li><a href="#"><i class="fa fa-shopping-cart"></i>购物车</a></li>
         </ul>
@@ -64,9 +68,9 @@ onMounted(() => {
     </div>
     <!--logo+搜索-->
     <div class="top-header w1230 clear-float">
-      <a href="index.html" target="_blank" class="logo">
+      <router-link to="/" target="_blank" class="logo">
         <img src="@/assets/img/logo.png"/>
-      </a>
+      </router-link>
       <div class="top-header-right">
         <!--搜索框-->
         <div class="search clear-float">
