@@ -2,4 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.training.aigoushopapi.mapper.ShopCartMapper">
 
+    <!-- 定义结果映射 -->
+<!--    <resultMap id="BaseResultMap" type="com.training.aigoushopapi.entity.ShopCart">-->
+<!--        <id column="id" property="id" />-->
+<!--        <result column="cart_id" property="cartId" />-->
+<!--        <result column="user_id" property="userId" />-->
+<!--    </resultMap>-->
+
+    <!-- 根据用户ID查询购物车商品信息 -->
+    <select id="getProductsByUserId" resultType="ShopCart">
+        SELECT sc.id           AS id,
+               sc.cart_id      AS cartId,
+               sc.user_id      AS userId,
+               p.product_name  AS productName,
+               p.price         AS productPrice,
+               scp.product_num AS productNum
+        FROM s_user u
+                 JOIN
+             s_shop_cart sc ON u.user_id = sc.user_id
+                 JOIN
+             s_shop_cart_product scp ON sc.cart_id = scp.shop_cart_id
+                 JOIN
+             s_product p ON scp.product_id = p.id
+        WHERE u.user_id = #{userId}
+    </select>
+
 </mapper>

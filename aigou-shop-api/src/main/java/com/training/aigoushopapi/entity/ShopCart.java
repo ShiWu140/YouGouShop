@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -15,6 +16,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
+@ToString
 @TableName("s_shop_cart")
 public class ShopCart implements Serializable {
 
@@ -37,4 +39,15 @@ public class ShopCart implements Serializable {
      */
     @TableField("user_id")
     private String userId;
+
+    /**
+     * 前端商品信息{/shoppingCart}
+     */
+    @TableField(exist = false)
+    private String productName;
+    @TableField(exist = false)
+    private double productPrice;
+    @TableField(exist = false)
+    private int productNum;
+
 }
