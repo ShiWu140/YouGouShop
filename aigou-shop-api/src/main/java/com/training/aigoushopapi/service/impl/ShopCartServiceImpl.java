@@ -32,7 +32,7 @@ public class ShopCartServiceImpl extends ServiceImpl<ShopCartMapper, ShopCart> i
      * @param userId 用户id
      */
     @Override
-    public ShopCart getProductsByUserId(Long userId) {
+    public List<ShopCart> getProductsByUserId(Long userId) {
         return shopCartMapper.getProductsByUserId(userId);
     }
 }

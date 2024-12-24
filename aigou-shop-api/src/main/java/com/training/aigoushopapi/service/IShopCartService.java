@@ -20,6 +20,6 @@ public interface IShopCartService extends IService<ShopCart> {
      * 2.根据购物车id查询购物车商品id信息 (cart_id === shop_cart_id)
      * 3.根据商品id查询商品信息 (product_id ===  id )
      */
-    ShopCart getProductsByUserId(Long userId);
+    List<ShopCart> getProductsByUserId(Long userId);
 
 }

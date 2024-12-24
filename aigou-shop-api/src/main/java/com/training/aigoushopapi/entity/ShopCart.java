@@ -44,7 +44,7 @@ public class ShopCart implements Serializable {
      * 前端商品信息{/shoppingCart}
      */
     @TableField(exist = false)
-    private String productName;
+    private String productImage;
     @TableField(exist = false)
     private double productPrice;
     @TableField(exist = false)

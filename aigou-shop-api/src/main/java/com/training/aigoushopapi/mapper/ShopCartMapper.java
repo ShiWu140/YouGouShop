@@ -16,6 +16,6 @@ import java.util.List;
  */
 @Mapper
 public interface ShopCartMapper extends BaseMapper<ShopCart> {
-    ShopCart getProductsByUserId(Long userId);
+    List<ShopCart> getProductsByUserId(Long userId);
 
 }

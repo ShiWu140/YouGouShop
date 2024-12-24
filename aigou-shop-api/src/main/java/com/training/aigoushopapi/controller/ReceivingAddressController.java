@@ -88,4 +88,12 @@ public class ReceivingAddressController {
     public boolean delete(@RequestBody ReceivingAddress receivingAddress) {
         return receivingAddressService.removeById(receivingAddress.getId());
     }
+
+    /**
+     * 根据用户ID获取收货地址
+     */
+    @GetMapping("/getReceivingAddressByUserId")
+    public List<ReceivingAddress> getReceivingAddressByUserId(Long userId) {
+        return receivingAddressService.getReceivingAddressByUserId(userId);
+    }
 }

@@ -2,4 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.training.aigoushopapi.mapper.ReceivingAddressMapper">
 
+    <select id="getReceivingAddressByUserId" resultType="ReceivingAddress">
+        select *
+        from s_receiving_address
+        where user_id = #{userId}
+    </select>
 </mapper>

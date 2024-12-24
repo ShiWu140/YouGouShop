@@ -91,11 +91,12 @@ public class ShopCartController {
 
     /**
      * 按用户ID查询购物车信息
+     *
      * @param userId 用户ID
      * @return 购物车信息对象或错误信息
      */
     @GetMapping("/getProductsByUserId")
-    public ShopCart getProductsByUserId(@RequestParam Long userId) {
+    public List<ShopCart> getProductsByUserId(@RequestParam Long userId) {
         return shopCartService.getProductsByUserId(userId);
     }
 }
