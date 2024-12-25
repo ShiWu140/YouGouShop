@@ -44,8 +44,8 @@ public class UserTokenInterceptor implements HandlerInterceptor {
         //获得请求头中token
         String token = request.getHeader("Authorization");
         if (StringUtils.isEmpty(token)) {
-            return true;
-//            throw new UserTokenException("token为空");
+//            return true;
+            throw new UserTokenException("token为空");
         }
         //验证token
         try {
