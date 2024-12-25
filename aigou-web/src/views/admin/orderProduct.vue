@@ -18,9 +18,6 @@ export default {
       operate: '',
       //表单验证
       rules: {
-        id: [
-          {required: true, message: '必填项', trigger: 'change'}
-        ],
         orderId: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
@@ -135,9 +132,6 @@ export default {
     </div>
     <el-dialog :visible.sync="orderProductFormVisible" title="订单商品">
       <el-form :model="orderProduct" label-width="auto" :rules="rules" ref="orderProductForm">
-        <el-form-item label="ID" prop="id">
-          <el-input v-model.trim="orderProduct.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
-        </el-form-item>
         <el-form-item label="订单 ID" prop="orderId">
           <el-input v-model.trim="orderProduct.orderId" autocomplete="off"></el-input>
         </el-form-item>
@@ -158,12 +152,6 @@ export default {
         :height="tableHeight"
         border
         style="width: 100%;">
-      <el-table-column
-          fixed
-          label="ID"
-          min-width="100px"
-          prop="id">
-      </el-table-column>
       <el-table-column
           label="订单 ID"
           min-width="100px"

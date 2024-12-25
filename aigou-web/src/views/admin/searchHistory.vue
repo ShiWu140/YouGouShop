@@ -18,9 +18,6 @@ export default {
       operate: '',
       //表单验证
       rules: {
-        id: [
-          {required: true, message: '必填项', trigger: 'change'}
-        ],
         searchWords: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
@@ -144,9 +141,6 @@ export default {
     </div>
     <el-dialog :visible.sync="searchHistoryFormVisible" title="搜索历史">
       <el-form :model="searchHistory" label-width="auto" :rules="rules" ref="searchHistory">
-        <el-form-item label="ID" prop="id">
-          <el-input v-model.trim="searchHistory.id" :disabled="operate === 'modify'" autocomplete="off"></el-input>
-        </el-form-item>
         <el-form-item label="搜索关键词" prop="searchWords">
           <el-input v-model.trim="searchHistory.searchWords" autocomplete="off"></el-input>
         </el-form-item>
@@ -164,12 +158,6 @@ export default {
         :height="tableHeight"
         border
         style="width: 100%;">
-      <el-table-column
-          fixed
-          label="ID"
-          min-width="100px"
-          prop="id">
-      </el-table-column>
       <el-table-column
           label="搜索关键词"
           min-width="100px"

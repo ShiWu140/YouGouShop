@@ -19,9 +19,6 @@ export default {
       imageUrl: '',
       //表单验证
       rules: {
-        id: [{
-          required: true, message: '必填项', trigger: 'change'
-        }],
         url: [{
           required: true, message: '必填项', trigger: 'change'
         }],
@@ -151,9 +148,6 @@ export default {
     </div>
     <el-dialog :visible.sync="carouselFigureFormVisible" title="轮播图">
       <el-form :model="carouselFigure" label-width="auto" :rules="rules" ref="carouselFigure">
-        <el-form-item label="ID" prop="id">
-          <el-input v-model.trim="carouselFigure.id" :disabled="operate === 'modify'" autocomplete="off"></el-input>
-        </el-form-item>
         <el-form-item label="轮播图" prop="url">
           <el-input v-model.trim="this.imageUrl" autocomplete="off"></el-input>
           <el-upload
@@ -180,12 +174,6 @@ export default {
         :height="tableHeight"
         border
         style="width: 100%;">
-      <el-table-column
-          fixed
-          label="ID"
-          min-width="100px"
-          prop="id">
-      </el-table-column>
       <el-table-column label="轮播图" min-width="100px" prop="url">
         <!-- 图片的显示 -->
         <template slot-scope="scope">

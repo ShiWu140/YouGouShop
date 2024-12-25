@@ -20,9 +20,6 @@ export default {
       operate: '',
       //表单验证
       rules: {
-        id: [
-          {required: true, message: '必填项', trigger: 'change'}
-        ],
         receivingAddress: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
@@ -144,9 +141,6 @@ export default {
     </div>
     <el-dialog :visible.sync="receivingAddressFormVisible" title="收货地址">
       <el-form :model="receivingAddress" label-width="auto" :rules="rules" ref="receivingAddressForm">
-        <el-form-item label="ID" prop="id">
-          <el-input v-model.trim="receivingAddress.id" :disabled="operate === 'modify'" autocomplete="off"></el-input>
-        </el-form-item>
         <el-form-item label="收货地址" prop="receivingAddress">
           <el-input v-model.trim="receivingAddress.receivingAddress" autocomplete="off"></el-input>
         </el-form-item>
@@ -176,12 +170,6 @@ export default {
         :height="tableHeight"
         border
         style="width: 100%;">
-      <el-table-column
-          fixed
-          label="ID"
-          min-width="100px"
-          prop="id">
-      </el-table-column>
       <el-table-column
           label="收货地址"
           min-width="100px"

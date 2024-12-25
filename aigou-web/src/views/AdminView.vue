@@ -2,17 +2,17 @@
 export default {
   data() {
     return {
-      username: "",
+      userName: "",
       isCollapse: true
     }
   },
   mounted() {
-    const userStr = localStorage.getItem('userId');
+    const userStr = localStorage.getItem('userName');
     try {
       if (userStr) {
-        this.username = userStr;
+        this.userName = userStr;
       } else {
-        this.username = '未知用户';
+        this.userName = '未知用户';
       }
     } catch (error) {
       console.error('解析用户数据失败:', error);
@@ -29,6 +29,7 @@ export default {
         }).then(() => {
           localStorage.removeItem('token');
           localStorage.removeItem('userId');
+          localStorage.removeItem('userName')
           this.$router.push('/login');
         }).catch(() => {
           this.$message.info('已取消退出');
@@ -58,7 +59,7 @@ export default {
           &emsp;
           <el-dropdown @command="handleCommand">
                     <span class="el-dropdown-link">
-                        用户：{{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
+                        用户：{{ userName }}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="logout">退出登录</el-dropdown-item>

@@ -54,7 +54,8 @@ public class UserTokenInterceptor implements HandlerInterceptor {
             //true 放行 false 拦截
             return true;
         } catch (Exception ex) {
-            throw new UserTokenException("token解析失败");
+            return true;
+            //throw new UserTokenException("token解析失败");
         }
     }
 }

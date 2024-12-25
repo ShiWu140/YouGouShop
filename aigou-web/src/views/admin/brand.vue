@@ -20,9 +20,6 @@ export default {
       imageUrl: '',
       //表单验证
       rules: {
-        id: [
-          {required: true, message: '必填项', trigger: 'change'}
-        ],
         brandName: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
@@ -147,9 +144,6 @@ export default {
     </div>
     <el-dialog :visible.sync="brandFormVisible" title="添加品牌">
       <el-form :model="brand" label-width="auto" :rules="rules" ref="brandForm">
-        <el-form-item label="品牌 ID" prop="id">
-          <el-input v-model.trim="brand.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
-        </el-form-item>
         <el-form-item label="品牌名称" prop="brandName">
           <el-input v-model.trim="brand.brandName" autocomplete="off"></el-input>
         </el-form-item>
@@ -179,12 +173,6 @@ export default {
         :height="tableHeight"
         border
         style="width: 100%;">
-      <el-table-column
-          fixed
-          label="品牌 ID"
-          min-width="100px"
-          prop="id">
-      </el-table-column>
       <el-table-column
           label="品牌名称"
           min-width="100px"

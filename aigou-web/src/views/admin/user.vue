@@ -51,9 +51,6 @@ export default {
         ]
       },
       userRules: {
-        userId: [
-          {required: true, message: '请输入用户ID', trigger: 'change'}
-        ],
         userName: [
           {required: true, message: '请输入用户名', trigger: 'change'}
         ],
@@ -191,9 +188,6 @@ export default {
 
     <el-dialog :visible.sync="userFormVisible" title="用户" @close="handleClose">
       <el-form :model="user" :rules="userRules" label-width="auto">
-        <el-form-item label="用户ID" prop="userId">
-          <el-input v-model.trim="user.userId" :disabled="operate === 'modify'" autocomplete="off"></el-input>
-        </el-form-item>
         <el-form-item label="用户名" prop="userName">
           <el-input v-model.trim="user.userName" autocomplete="off"></el-input>
         </el-form-item>
@@ -232,12 +226,6 @@ export default {
         :height="tableHeight"
         border
         style="width: 100%;">
-      <el-table-column
-          fixed
-          label="ID"
-          min-width="100px"
-          prop="userId">
-      </el-table-column>
       <el-table-column
           label="用户名"
           min-width="100px"

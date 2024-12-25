@@ -18,9 +18,6 @@ export default {
       operate: '',
       //表单验证
       rules: {
-        id: [
-          {required: true, message: '必填项', trigger: 'change'}
-        ],
         shopCartId: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
@@ -135,9 +132,6 @@ export default {
     </div>
     <el-dialog :visible.sync="shopCartFormVisible" title="购物车商品">
       <el-form :model="shopCart" label-width="auto" :rules="rules" ref="shopCartForm">
-        <el-form-item label="ID" prop="id">
-          <el-input v-model.trim="shopCart.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
-        </el-form-item>
         <el-form-item label="购物车 ID" prop="shopCartId">
           <el-input v-model.trim="shopCart.shopCartId" autocomplete="off"></el-input>
         </el-form-item>
@@ -158,12 +152,6 @@ export default {
         :height="tableHeight"
         border
         style="width: 100%;">
-      <el-table-column
-          fixed
-          label="ID"
-          min-width="100px"
-          prop="id">
-      </el-table-column>
       <el-table-column
           label="购物车 ID"
           min-width="100px"

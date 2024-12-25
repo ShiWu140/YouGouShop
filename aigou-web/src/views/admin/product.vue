@@ -170,9 +170,6 @@ export default {
     </div>
     <el-dialog :visible.sync="productFormVisible" title="上架商品">
       <el-form :model="product" label-width="auto" :rules="rules" ref="productForm">
-        <el-form-item label="商品 ID" prop="id">
-          <el-input v-model.trim="product.id" :disabled="operate === 'update'" autocomplete="off"></el-input>
-        </el-form-item>
         <el-form-item label="商品名称" prop="productName">
           <el-input v-model.trim="product.productName" autocomplete="off"></el-input>
         </el-form-item>
@@ -211,12 +208,6 @@ export default {
         :height="tableHeight"
         border
         style="width: 100%;">
-      <el-table-column
-          fixed
-          label="商品 ID"
-          min-width="100px"
-          prop="id">
-      </el-table-column>
       <el-table-column
           label="商品名称"
           min-width="100px"
