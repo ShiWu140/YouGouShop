@@ -39,7 +39,7 @@ export default {
             type: 'success',
             message: '操作成功!'
           });
-          this.loadOrderProduct(this.current);
+          this.loadData();
           this.orderProductFormVisible = false;
         } else {
           this.$message({
@@ -79,12 +79,8 @@ export default {
       };
       this.orderProductFormVisible = true;
     },
-    calculateTableHeight() {
-      // 动态计算表格高度，
-      this.tableHeight = window.innerHeight - 220;
-    },
-    loadOrderProduct(current) {
-      current = this.current;
+    loadData() {
+      ;
       this.$http.get("/orderProduct/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             if (res.data) {
@@ -94,31 +90,12 @@ export default {
               // 如果当前页没有数据且不是第一页，则跳转到上一页
               if (this.orderProducts.length === 0 && this.current > 1) {
                 this.current -= 1;
-                this.loadOrder();
+                this.loadData();
               }
             }
           })
     },
-    handleSizeChange(val) {
-      this.pageSize = val;
-      console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
-      this.loadOrderProduct(this.current);
-    },
-    handleCurrentChange(val) {
-      this.current = val;
-      console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
-      this.loadOrderProduct(this.current);
-    },
-  },
-  mounted() {
-    this.loadOrderProduct(this.current);
-    // 窗口大小变化事件的监听器
-    window.addEventListener('resize', this.calculateTableHeight);
-  },
-  beforeDestroy() {
-    // 组件销毁前移除窗口大小变化事件的监听器
-    window.removeEventListener('resize', this.calculateTableHeight);
-  },
+  }
 }
 </script>
 

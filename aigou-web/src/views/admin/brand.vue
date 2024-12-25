@@ -9,13 +9,13 @@ export default {
         brandImg: '',
         brandType: '',
       },
-      brandFormVisible: false,
-      tableHeight: window.innerHeight - 220,
       // 分页属性
       total: 0,
       pageSize: 10,
       current: 1,
       operate: '',
+      brandFormVisible: false,
+      tableHeight: window.innerHeight - 220,
       //图片url地址
       imageUrl: '',
       //表单验证
@@ -42,7 +42,7 @@ export default {
             type: 'success',
             message: '操作成功!'
           });
-          this.loadBrand();
+          this.loadData();
           this.brandFormVisible = false;
         } else {
           this.$message({
@@ -85,12 +85,7 @@ export default {
       this.imageUrl = '';
       this.brandFormVisible = true;
     },
-    calculateTableHeight() {
-      // 动态计算表格高度，
-      this.tableHeight = window.innerHeight - 220;
-    },
-    loadBrand(current) {
-      current = this.current
+    loadData() {
       this.$http.get("/brand/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             console.log(res.data);
@@ -100,37 +95,12 @@ export default {
               // 如果当前页没有数据且不是第一页，则跳转到上一页
               if (this.brands.length === 0 && this.current > 1) {
                 this.current -= 1;
-                this.loadBrand();
+                this.loadData();
               }
             }
           })
     },
-    handleSizeChange(val) {
-      this.pageSize = val;
-      console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
-      this.loadBrand(this.current);
-    },
-    handleCurrentChange(val) {
-      this.current = val;
-      console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
-      this.loadBrand(this.current);
-    },
-    //图片上传方法
-    handleAvatarSuccess(res, file) {
-      console.log('upload', res.data)
-      this.imageUrl = res.data
-      this.brand.brandImg = res.data;
-    }
   },
-  mounted() {
-    this.loadBrand();
-    // 窗口大小变化事件的监听器
-    window.addEventListener('resize', this.calculateTableHeight);
-  },
-  beforeDestroy() {
-    // 组件销毁前移除窗口大小变化事件的监听器
-    window.removeEventListener('resize', this.calculateTableHeight);
-  }
 }
 </script>
 

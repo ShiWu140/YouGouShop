@@ -34,7 +34,7 @@ export default {
             type: 'success',
             message: '操作成功!'
           });
-          this.loadShopCart();
+          this.loadData();
           this.shopCartFormVisible = false;
         } else {
           this.$message({
@@ -77,8 +77,8 @@ export default {
       // 动态计算表格高度，
       this.tableHeight = window.innerHeight - 220;
     },
-    loadShopCart(current) {
-      current = this.current
+    loadData() {
+
       this.$http.get("/shopCart/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             console.log(res.data);
@@ -87,30 +87,11 @@ export default {
               this.total = res.data.data.total;
               if (this.shopCarts.length === 0 && this.current > 1) {
                 this.current -= 1;
-                this.loadShopCart(this.current);
+                this.loadData();
               }
             }
           })
     },
-    handleSizeChange(val) {
-      this.pageSize = val;
-      console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
-      this.loadShopCart(this.current);
-    },
-    handleCurrentChange(val) {
-      this.current = val;
-      console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
-      this.loadShopCart(this.current);
-    },
-  },
-  mounted() {
-    this.loadShopCart();
-    // 窗口大小变化事件的监听器
-    window.addEventListener('resize', this.calculateTableHeight);
-  },
-  beforeDestroy() {
-    // 组件销毁前移除窗口大小变化事件的监听器
-    window.removeEventListener('resize', this.calculateTableHeight);
   }
 }
 </script>

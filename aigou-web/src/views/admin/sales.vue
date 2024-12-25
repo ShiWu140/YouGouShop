@@ -2,7 +2,7 @@
 export default {
   data() {
     return {
-      saless: [],
+      salesList: [],
       sales: {
         id: '',
         productId: '',
@@ -35,7 +35,7 @@ export default {
             type: 'success',
             message: '操作成功!'
           });
-          this.loadSales();
+          this.loadData();
           this.salesFormVisible = false;
         } else {
           this.$message({
@@ -74,44 +74,21 @@ export default {
       };
       this.salesFormVisible = true;
     },
-    calculateTableHeight() {
-      // 动态计算表格高度，
-      this.tableHeight = window.innerHeight - 220;
-    },
-    loadSales() {
+    loadData() {
       this.$http.get("/sales/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             console.log(res.data);
             if (res.data.msg === "success") {
-              this.saless = res.data.data.records;
+              this.salesList = res.data.data.records;
               this.total = res.data.data.total;
-              if (this.saless.length === 0 && this.current > 1) {
+              if (this.salesList.length === 0 && this.current > 1) {
                 this.current -= 1;
-                this.loadSales(this.current);
+                this.loadData();
               }
             }
           })
     },
-    handleSizeChange(val) {
-      this.pageSize = val;
-      console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
-      this.loadSales(this.current);
-    },
-    handleCurrentChange(val) {
-      this.current = val;
-      console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
-      this.loadSales(this.current);
-    },
   },
-  mounted() {
-    this.loadSales();
-    // 窗口大小变化事件的监听器
-    window.addEventListener('resize', this.calculateTableHeight);
-  },
-  beforeDestroy() {
-    // 组件销毁前移除窗口大小变化事件的监听器
-    window.removeEventListener('resize', this.calculateTableHeight);
-  }
 }
 </script>
 
@@ -138,7 +115,7 @@ export default {
       </div>
     </el-dialog>
     <el-table
-        :data="saless"
+        :data="salesList"
         :height="tableHeight"
         border
         style="width: 100%;">

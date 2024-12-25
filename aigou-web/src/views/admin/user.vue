@@ -71,7 +71,7 @@ export default {
             type: 'success',
             message: '操作成功!'
           });
-          this.loadUsers(this.current);
+          this.loadData();
           this.userFormVisible = false;
           this.changePasswordVisible = false;
         } else {
@@ -134,8 +134,8 @@ export default {
         });
       });
     },
-    loadUsers(current) {
-      current = this.current;
+    loadData() {
+      ;
       this.$http.get("/user/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             if (res.data) {
@@ -145,35 +145,12 @@ export default {
               // 如果当前页没有数据且不是第一页，则跳转到上一页
               if (this.users.length === 0 && this.current > 1) {
                 this.current -= 1;
-                this.loadUsers();
+                this.loadData();
               }
             }
           })
     },
-    handleSizeChange(val) {
-      this.pageSize = val;
-      console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
-      this.loadUsers(this.current);
-    },
-    handleCurrentChange(val) {
-      this.current = val;
-      console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
-      this.loadUsers(this.current);
-    },
-    calculateTableHeight() {
-      // 动态计算表格高度，
-      this.tableHeight = window.innerHeight - 220;
-    },
-  },
-  mounted() {
-    this.loadUsers(this.current);
-    // 窗口大小变化事件的监听器
-    window.addEventListener('resize', this.calculateTableHeight);
-  },
-  beforeDestroy() {
-    // 组件销毁前移除窗口大小变化事件的监听器
-    window.removeEventListener('resize', this.calculateTableHeight);
-  },
+  }
 }
 </script>
 

@@ -40,7 +40,7 @@ export default {
             type: 'success',
             message: '操作成功!'
           });
-          this.loadCarouselFigure(this.current);
+          this.loadData();
           this.carouselFigureFormVisible = false;
         } else {
           this.$message({
@@ -89,12 +89,8 @@ export default {
       this.imageUrl = '';
       this.carouselFigureFormVisible = true;
     },
-    calculateTableHeight() {
-      // 动态计算表格高度，
-      this.tableHeight = window.innerHeight - 220;
-    },
-    loadCarouselFigure(current) {
-      current = this.current;
+    loadData() {
+      ;
       this.$http.get("/carouselFigure/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             if (res.data) {
@@ -104,36 +100,11 @@ export default {
               // 如果当前页没有数据且不是第一页，则跳转到上一页
               if (this.carouselFigures.length === 0 && this.current > 1) {
                 this.current -= 1;
-                this.loadBrand();
+                this.loadData();
               }
             }
           })
     },
-    handleSizeChange(val) {
-      this.pageSize = val;
-      console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
-      this.loadCarouselFigure(this.current);
-    },
-    handleCurrentChange(val) {
-      this.current = val;
-      console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
-      this.loadCarouselFigure(this.current);
-    },
-    //图片上传方法
-    handleAvatarSuccess(res, file) {
-      console.log('upload', res)
-      this.imageUrl = res
-      this.carouselFigure.url = res;
-    }
-  },
-  mounted() {
-    this.loadCarouselFigure(this.current);
-    // 窗口大小变化事件的监听器
-    window.addEventListener('resize', this.calculateTableHeight);
-  },
-  beforeDestroy() {
-    // 组件销毁前移除窗口大小变化事件的监听器
-    window.removeEventListener('resize', this.calculateTableHeight);
   },
 }
 </script>
