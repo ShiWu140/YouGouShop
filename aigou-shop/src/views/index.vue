@@ -4,12 +4,12 @@ import axios from 'axios';
 import Header from "@/components/Header.vue";
 import Search from "@/components/Search.vue";
 import Footer from "@/components/Footer.vue";
+
 const carouselFigures = ref([]);
-const currentIndex = ref(0);
 
 const fetchCarouselFigures = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/carouselFigure/all');
+    const response = await axios.get('/carouselFigure/all');
     // 对获取的轮播图数据根据 sequenceNum 进行排序，并截取前五个
     carouselFigures.value = response.data.data.sort((a, b) => a.sequenceNum - b.sequenceNum);
     console.log('Carousel figures fetched:', carouselFigures.value)
@@ -21,16 +21,49 @@ const productTypes = ref([]);
 
 const fetchProductTypes = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/productType/all');
+    const response = await axios.get('/productType/all');
     productTypes.value = response.data.data;
     console.log('Product types fetched:', productTypes.value)
   } catch (error) {
     console.error('Error fetching product types:', error);
   }
 };
+const productNews = ref([]);
+const fetchProductNews = async () => {
+  try {
+    const response = await axios.get('/product/page?current=1&size=6');
+    productNews.value = response.data.data.records;
+    console.log('Product news fetched:', productNews.value)
+  } catch (error) {
+    console.error('Error fetching product news:', error);
+  }
+};
+const productSales = ref([]);
+const fetchProductSales = async () => {
+  try {
+    const response = await axios.get('/product/getProductSalesList');
+    productSales.value = response.data.data;
+    console.log('Product sales fetched:', productSales.value)
+  } catch (error) {
+    console.error('Error fetching product sales:', error);
+  }
+};
+const allCategoryProduct = ref([]);
+const fetchAllCategoryProduct = async () => {
+  try {
+    const response = await axios.get(`/product/allCategoryProduct`);
+    allCategoryProduct.value = response.data.data;
+    console.log('allCategoryProduct fetched:', allCategoryProduct.value)
+  } catch (error) {
+    console.error('Error allCategoryProduct:', error);
+  }
+};
 onMounted(() => {
   fetchProductTypes();
   fetchCarouselFigures();
+  fetchProductNews();
+  fetchProductSales();
+  fetchAllCategoryProduct();
 });
 </script>
 <template>
@@ -66,41 +99,11 @@ onMounted(() => {
     <div class="new">
       <h3 class="title">新品</h3>
       <div class="new-list">
-        <ul>
+        <ul v-for="product in productNews">
           <li>
             <a href="#">
-              <img src="@/assets/img/new01.jpg" alt="" width="90px" height="90px"/>
-              <p>洗发护发会场</p>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <img src="@/assets/img/new02.jpg" alt="" width="90px" height="90px"/>
-              <p>身体沐浴会场</p>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <img src="@/assets/img/new03.jpg" alt="" width="90px" height="90px"/>
-              <p>家用实用抽纸</p>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <img src="@/assets/img/new04.jpg" alt="" width="90px" height="90px"/>
-              <p>国产零食会场</p>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <img src="@/assets/img/new05.jpg" alt="" width="90px" height="90px"/>
-              <p>粮油米面会场</p>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <img src="@/assets/img/new06.jpg" alt="" width="90px" height="90px"/>
-              <p>奶粉大牌</p>
+              <img :src="product.productImage" alt="" width="90px" height="90px"/>
+              <p>{{ product.productName }}</p>
             </a>
           </li>
         </ul>
@@ -110,44 +113,11 @@ onMounted(() => {
     <div class="rank">
       <h3 class="title">排行榜</h3>
       <div class="rank-list">
-        <ul>
+        <ul v-for="product in productSales">
           <li>
             <a href="#">
-              <span class="rank-icon1">1</span>
-              <img src="@/assets/img/rank01.jpg" alt="" width="90px" height="90px"/>
-              <p>口水族 休闲零食</p>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span class="rank-icon2">2</span>
-              <img src="@/assets/img/rank02.jpg" alt="" width="90px" height="90px"/>
-              <p>欢乐家 生榨椰子汁</p>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span class="rank-icon3">3</span>
-              <img src="@/assets/img/rank03.jpg" alt="" width="90px" height="90px"/>
-              <p>红棉 红枣枸杞黑糖 </p>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <img src="@/assets/img/rank04.jpg" alt="" width="90px" height="90px"/>
-              <p>满199减120三只松鼠</p>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <img src="@/assets/img/rank05.jpg" alt="" width="90px" height="90px"/>
-              <p>满199减120_百草味</p>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <img src="@/assets/img/rank06.jpg" alt="" width="90px" height="90px"/>
-              <p>三只松鼠方便食品</p>
+              <img :src="product.productImage" alt="" width="90px" height="90px"/>
+              <p>{{ product.productName }}</p>
             </a>
           </li>
         </ul>
@@ -155,229 +125,32 @@ onMounted(() => {
     </div>
   </div>
   <!--侧导航栏-->
-  <div class="c-nav">
+  <div class="nav-side">
     <ul>
-      <li><a href="#global-foot" class="nav-g">全球进口</a></li>
-      <li><a href="#cloth" class="nav-c">服装服饰</a></li>
-      <li><a href="#mod" class="nav-m">护肤美妆</a></li>
-      <li><a href="#book" class="nav-b">图书学习</a></li>
-      <li><a href="#top" class="nav-top">返回顶部</a></li>
+      <li v-for="type in allCategoryProduct" :key="type.id">
+        <a :href="'#' + type.id" class="nav-button">{{ type.typeName }}</a>
+      </li><li><a href="#top" class="nav-top">返回顶部</a></li>
     </ul>
+
   </div>
-  <!--全球进口-->
-  <div class="global-foot w1230" id="global-foot">
-    <h3 class="h-title">全球进口</h3>
-    <div class="global-list">
-      <ul class="clear-float">
-        <li><a href="#">
-          <p>UCC-满99减50</p>
-          <img src="@/assets/img/global01.jpg" alt="" width="150px" height="150px"/></a>
-        </li>
-        <li><a href="#">
-          <p>进口粮油米面-满99减50</p>
-          <img src="@/assets/img/global02.jpg" alt="" width="150px" height="150px"/>
-        </a></li>
-        <li><a href="#">
-          <p>进口水饮冲调-满99减50</p>
-          <img src="@/assets/img/global03.jpg" alt="" width="150px" height="150px"/>
-        </a></li>
-        <li><a href="#">
-          <p>孕妇坚果-满99减50</p>
-          <img src="@/assets/img/global04.jpg" alt="" width="150px" height="150px"/>
-        </a></li>
-        <li class="last"><a href="#">
-          <p>进口休闲零食-满99减50</p>
-          <img src="@/assets/img/global05.jpg" alt="" width="150px" height="150px"/>
-        </a></li>
-      </ul>
+  <!--分类商品-->
+  <div v-for="type in allCategoryProduct" :key="type.id">
+    <div class="foot w1230" :id="type.id">
+      <h3 class="h-title">{{ type.typeName }}</h3>
+      <div class="global-list">
+        <ul class="clear-float">
+          <li v-for="product in type.product" :key="product.id" class="last">
+            <a href="#">
+              <p>{{ product.productName }}</p>
+              <img :src="product.productImage" alt="" width="150px" height="150px"/>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
-  <!--服装服饰-->
-  <div class="cloth w1230" id="cloth">
-    <h3 class="h-title">服装服饰</h3>
-    <div class="cloth-list">
-      <ul class="clear-float">
-        <li><a href="#">
-          <div class="c-img"><img src="@/assets/img/cloth01.jpg" alt="" width="180px" height="180px"/></div>
-          <p class="c-title">2018秋冬新款女装减龄慵懒风V领毛衣女宽松套头显瘦长袖针织衫潮</p>
-          <span class="c-price">￥300.00</span>
-        </a></li>
-        <li><a href="#">
-          <div class="c-img"><img src="@/assets/img/cloth02.jpg" alt="" width="180px" height="180px"/></div>
-          <p class="c-title">【OSL高端定制】600070双面尼</p>
-          <span class="c-price">￥580.00</span>
-        </a></li>
-        <li><a href="#">
-          <div class="c-img"><img src="@/assets/img/cloth03.jpg" alt="" width="180px" height="180px"/></div>
-          <p class="c-title">早秋装卫衣女2018新款chic上衣慵懒春原宿风长袖韩版宽松松垮垮薄</p>
-          <span class="c-price">￥870.00</span>
-        </a></li>
-        <li><a href="#">
-          <div class="c-img"><img src="@/assets/img/cloth04.jpg" alt="" width="180px" height="180px"/></div>
-          <p class="c-title">旗袍外搭外套 开衫 小披肩女夏[逸红颜 楚菲儿]新款配旗袍的外套</p>
-          <span class="c-price">￥180.00</span>
-        </a></li>
-        <li><a href="#">
-          <div class="c-img"><img src="@/assets/img/cloth05.jpg" alt="" width="180px" height="180px"/></div>
-          <p class="c-title">2018秋季新款韩范高腰阔腿裤女侧边斜条纹宽松显瘦休闲直筒长裤潮</p>
-          <span class="c-price">￥149.00</span>
-        </a></li>
-        <li><a href="#">
-          <div class="c-img"><img src="@/assets/img/cloth06.jpg" alt="" width="180px" height="180px"/></div>
-          <p class="c-title">2018秋季新款韩版高腰阔腿裤拖地西装长裤休闲裤女直筒显瘦时尚垂</p>
-          <span class="c-price">￥380.00</span>
-        </a></li>
-        <li><a href="#">
-          <div class="c-img"><img src="@/assets/img/cloth07.jpg" alt="" width="180px" height="180px"/></div>
-          <p class="c-title">裤子女2018新款潮宽松长袖拼接polo领工装裤假两件收腰西装连体裤</p>
-          <span class="c-price">￥147.00</span>
-        </a></li>
-        <li><a href="#">
-          <div class="c-img"><img src="@/assets/img/cloth08.jpg" alt="" width="180px" height="180px"/></div>
-          <p class="c-title">早秋卫衣少女2018新款chic慵懒bf风韩版宽松长袖怪味春秋装薄上衣</p>
-          <span class="c-price">￥880.00</span>
-        </a></li>
-        <li><a href="#">
-          <div class="c-img"><img src="@/assets/img/cloth09.jpg" alt="" width="180px" height="180px"/></div>
-          <p class="c-title">早秋卫衣少女2018新款chic慵懒bf风韩版宽松长袖怪味春秋装薄上衣</p>
-          <span class="c-price">￥258.00</span>
-        </a></li>
-        <li><a href="#">
-          <div class="c-img"><img src="@/assets/img/cloth10.jpg" alt="" width="180px" height="180px"/></div>
-          <p class="c-title">复古名媛秋装新款女装2018波点长袖高腰裙子修身拼接中长款连衣裙</p>
-          <span class="c-price">￥297.00</span>
-        </a></li>
-        <li><a href="#">
-          <div class="c-img"><img src="@/assets/img/cloth11.jpg" alt="" width="180px" height="180px"/></div>
-          <p class="c-title">时尚套装2018秋季新款长袖针织衫毛衣套装女洋气百搭牛仔裤两件套</p>
-          <span class="c-price">￥239.00</span>
-        </a></li>
-        <li><a href="#">
-          <div class="c-img"><img src="@/assets/img/cloth12.jpg" alt="" width="180px" height="180px"/></div>
-          <p class="c-title">商商sunny私人定制887226</p>
-          <span class="c-price">￥980.00</span>
-        </a></li>
-      </ul>
-    </div>
-  </div>
-  <!--护肤美妆-->
-  <div class="mod w1230" id="mod">
-    <h3 class="h-title">护肤美妆</h3>
-    <div class="mod-list">
-      <ul class="clear-float">
-        <li><a href="#">
-          <img src="@/assets/img/mod01.jpg" alt="" width="100px" height="100px"/>
-          <div class="mod-info">
-            <p class="m-title">日本正品代购 资生堂心机2014年新款 润彩唇膏/口红 保湿滋润持久</p>
-            <span class="m-price">￥198.00</span>
-          </div>
-        </a></li>
-        <li><a href="#">
-          <img src="@/assets/img/mod02.jpg" alt="" width="100px" height="100px"/>
-          <div class="mod-info">
-            <p class="m-title">日本代购资生堂CPB肌肤之钥新双生玫瑰口红润唇膏4g带壳直邮包邮</p>
-            <span class="m-price">￥390.00</span>
-          </div>
-        </a></li>
-        <li><a href="#">
-          <img src="@/assets/img/mod03.jpg" alt="" width="100px" height="100px"/>
-          <div class="mod-info">
-            <p class="m-title">直邮韩国代购TONYMOLY魔法森林shocking lip超持久不掉色纹身唇彩</p>
-            <span class="m-price">￥98.00</span>
-          </div>
-        </a></li>
-        <li><a href="#">
-          <img src="@/assets/img/mod04.jpg" alt="" width="100px" height="100px"/>
-          <div class="mod-info">
-            <p class="m-title">日本代购直邮 SUQQU 2014春季 双色腮红新色 2色选</p>
-            <span class="m-price">￥432.00</span>
-          </div>
-        </a></li>
-        <li class="last"><a href="#">
-          <img src="@/assets/img/mod05.jpg" alt="" width="100px" height="100px"/>
-          <div class="mod-info">
-            <p class="m-title">Benefit贝玲妃完美无瑕粉饼/你好无暇遮瑕蜜粉防晒控油</p>
-            <span class="m-price">￥288.00</span>
-          </div>
-        </a></li>
-      </ul>
-    </div>
-  </div>
-  <!--图书学习-->
-  <div class="book w1230" id="book">
-    <h3 class="h-title">图书学习</h3>
-    <div class="book-list">
-      <ul class="clear-float">
-        <li><a href="#">
-          <img src="@/assets/img/book01.jpg" alt="" width="180px" height="180px"/>
-          <p class="c-title">七年级7册包邮
-            西游记原著正版朝花夕拾鲁迅初中生呐喊猎人笔记湘行散记镜花缘白洋淀纪事世界经典名著青少学版初一课外阅读书籍</p>
-          <span class="c-price">￥55.80</span>
-        </a></li>
-        <li><a href="#">
-          <img src="@/assets/img/book02.jpg" alt="" width="180px" height="180px"/>
-          <p class="c-title">龙应台人生三书：目送+亲爱的安德烈+孩子你慢慢来 全3册经典套装 龙应台的书籍 畅销</p>
-          <span class="c-price">￥59.80</span>
-        </a></li>
-        <li><a href="#">
-          <img src="@/assets/img/book03.jpg" alt="" width="180px" height="180px"/>
-          <p class="c-title">
-            ✅✅西游记朝花夕拾鲁迅包邮正版初中生白洋淀纪事猎人笔记镜花缘湘行散记原著正七年级指定阅读课外书中学生必读的名著读物书籍套</p>
-          <span class="c-price">￥57.80</span>
-        </a></li>
-        <li><a href="#">
-          <img src="@/assets/img/book04.jpg" alt="" width="180px" height="180px"/>
-          <p class="c-title">
-            朗读者董卿正版书籍全套(1-3辑)全3册现当代文学随笔中国诗词大会见字如面平凡的世界畅销书籍排行榜正版</p>
-          <span class="c-price">￥88.00</span>
-        </a></li>
-        <li><a href="#">
-          <img src="@/assets/img/book05.jpg" alt="" width="180px" height="180px"/>
-          <p class="c-title">全5册 城南旧事正版包邮 林海音 小学生版五六年级 呼兰河传 萧红著 骆驼祥子老舍初中必读原著阅读的课外书
-            繁星春水冰心课外书籍</p>
-          <span class="c-price">￥39.80</span>
-        </a></li>
-        <li><a href="#">
-          <img src="@/assets/img/book06.jpg" alt="" width="180px" height="180px"/>
-          <p class="c-title">平凡的世界(共3册)全三册3册 完整版 路遥原著 全套全集 茅盾文学奖经典文学小说书籍 畅销书排行榜
-            八年级下册书籍</p>
-          <span class="c-price">￥47.50</span>
-        </a></li>
-        <li><a href="#">
-          <img src="@/assets/img/book07.jpg" alt="" width="180px" height="180px"/>
-          <p class="c-title">正版包邮 HTML5权威指南 弗里曼 html5+css3 从入门到精通 网页源码 web应用开发 </p>
-          <span class="c-price">￥87.60</span>
-        </a></li>
-        <li><a href="#">
-          <img src="@/assets/img/book08.jpg" alt="" width="180px" height="180px"/>
-          <p class="c-title">javascript高级程序设计+JavaScript权威指南 全2册 javascript入门基础 网页设计 编程艺术</p>
-          <span class="c-price">￥166.00</span>
-        </a></li>
-        <li><a href="#">
-          <img src="@/assets/img/book09.jpg" alt="" width="180px" height="180px"/>
-          <p class="c-title"> 曹文轩系列全套7册</p>
-          <span class="c-price">￥59.80</span>
-        </a></li>
-        <li><a href="#">
-          <img src="@/assets/img/book10.jpg" alt="" width="180px" height="180px"/>
-          <p class="c-title">全套4本 米小圈上学记第一辑 小学一年级课外书注音版 二年级必读小学生课外阅读书籍 儿童读物7-10岁故事书
-            6-12周岁拼音老师推荐</p>
-          <span class="c-price">￥59.90</span>
-        </a></li>
-        <li><a href="#">
-          <img src="@/assets/img/book11.jpg" alt="" width="180px" height="180px"/>
-          <p class="c-title">编程思想第4版中文版thinking in </p>
-          <span class="c-price">￥86.40</span>
-        </a></li>
-        <li><a href="#">
-          <img src="@/assets/img/book12.jpg" alt="" width="180px" height="180px"/>
-          <p class="c-title">Vue.js实战尤雨溪作序 马骥 站长大漠 在线回</p>
-          <span class="c-price">￥49.80</span>
-        </a></li>
-      </ul>
-    </div>
-  </div>
-<Footer/>
+
+  <Footer/>
 </template>
 
 <style scoped>
@@ -386,6 +159,41 @@ onMounted(() => {
   align-items: center;
 }
 
+.h-title {
+  color: #B41E23;
+}
+
+.h-title:before {
+  background-color: #B41E23;
+}
+
+.foot {
+  background-color: #fff;
+  margin-bottom: 20px;
+}
+.nav-side {
+  width: 50px;
+  position: fixed;
+  bottom: 30px;
+  right: 8px;
+}
+.nav-button {
+  background-color: #c95c5c;
+  border-radius: 10px;
+}
+.nav-top{
+  border-radius: 10px;
+}
+.nav-side li a {
+  display: block;
+  width: 24px;
+  height: 36px;
+  padding: 8px;
+  margin: 4px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+}
 .banner-btn {
   width: auto;
 }

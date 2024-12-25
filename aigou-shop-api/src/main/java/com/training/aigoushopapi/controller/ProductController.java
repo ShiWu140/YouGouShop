@@ -1,15 +1,20 @@
 package com.training.aigoushopapi.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.training.aigoushopapi.annotation.ResponseResult;
 import com.training.aigoushopapi.entity.Product;
 import com.training.aigoushopapi.entity.ProductType;
+import com.training.aigoushopapi.entity.Sales;
+import com.training.aigoushopapi.entity.request.CategoryProductRequest;
 import com.training.aigoushopapi.service.IProductService;
+import com.training.aigoushopapi.service.IProductTypeService;
+import com.training.aigoushopapi.service.ISalesService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,7 +30,10 @@ import java.util.List;
 public class ProductController {
     @Resource
     private IProductService productService;
-
+    @Resource
+    private ISalesService salesService;
+    @Resource
+    private IProductTypeService productTypeService;
 //    @GetMapping("/page")
 //    public Page<Product> page(@RequestParam(defaultValue = "1") Integer page,
 //                              @RequestParam(defaultValue = "10") Integer size,
@@ -46,10 +54,20 @@ public class ProductController {
 //        pageInfo.setTotal(count);
 //        return pageInfo;
 //    }
+
+    /**
+     * 商品分页查询
+     *
+     * @param current 当前页码，用于指定从哪一页开始分页
+     * @param size    每页的大小，即每页包含的商品数量
+     * @return 返回一个分页对象，包含按创建时间降序排列的商品信息
+     */
     @GetMapping("/page")
     public Page<Product> page(@RequestParam Integer current, @RequestParam Integer size) {
         Page<Product> page = new Page<>(current, size);
-        return productService.page(page);
+        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("create_time");
+        return productService.page(page, queryWrapper);
     }
 
     /**
@@ -104,5 +122,46 @@ public class ProductController {
     @PostMapping("/delete")
     public boolean delete(@RequestBody Product product) {
         return productService.removeById(product.getId());
+    }
+
+    /**
+     * 销量榜
+     *
+     * @return 返回最畅销的产品列表
+     */
+    @GetMapping("/getProductSalesList")
+    public List<Product> getSalesList() {
+        List<Product> productList = new ArrayList<>();
+        Page<Sales> page = new Page<>(1, 6);
+        QueryWrapper<Sales> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("sales_num");
+        List<Sales> salesList = salesService.page(page, queryWrapper).getRecords();
+        salesList.forEach(sales -> productList.add(productService.getById(sales.getProductId())));
+        return productList;
+    }
+
+    /**
+     * 根据所有分类及产品列表
+     *
+     * @return 匹配给定分类ID的产品列表
+     */
+    @GetMapping("/allCategoryProduct")
+    public List<CategoryProductRequest> getClassify() {
+        List<CategoryProductRequest> allCategoryProduct = new ArrayList<>();
+        List<ProductType> productTypeList = productTypeService.list();
+        for (ProductType productType : productTypeList) {
+            String id = productType.getId();
+            String productTypeName = productType.getProductTypeName();
+            QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("product_type", id);
+            queryWrapper.orderByAsc("RAND()");
+            queryWrapper.last("LIMIT 5");
+            List<Product> productList = productService.list(queryWrapper);
+            if (productList.isEmpty()) {
+                continue;
+            }
+            allCategoryProduct.add(new CategoryProductRequest(id, productTypeName, productList));
+        }
+        return allCategoryProduct;
     }
 }
