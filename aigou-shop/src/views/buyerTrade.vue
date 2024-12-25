@@ -13,10 +13,10 @@ http.get("/order/all")
     <!--头部bar-->
     <div class="top-bar">
       <div class="w1230 top-main">
-        <a href="index.html" class="toIndex">
+        <router-link to="/" class="toIndex">
           <i class="fa fa-home"></i>
           <span>爱购网首页</span>
-        </a>
+        </router-link>
         <div class="account">
           <span>zhanghao<i class="fa fa-caret-down"></i></span>
           <div class="manage">

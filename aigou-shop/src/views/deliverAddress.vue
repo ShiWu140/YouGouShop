@@ -6,10 +6,10 @@
     <!--头部bar-->
     <div class="top-bar">
       <div class="w1230 top-main">
-        <a href="index.html" class="toIndex">
+        <router-link to="/" class="toIndex">
           <i class="fa fa-home"></i>
           <span>爱购网首页</span>
-        </a>
+        </router-link>
         <div class="account">
           <span>zhanghao<i class="fa fa-caret-down"></i></span>
           <div class="manage">
@@ -60,7 +60,7 @@
   <!--收货地址列表-->
   <div class="add-list w1230">
     <p class="message"><i class="fa fa-exclamation-circle"></i>只能保存5个地址</p>
-    <table class="table-list">
+    <el-table class="table-list">
       <tr>
         <th class="t-name">收货人</th>
         <th class="t-address">收货地址</th>
@@ -89,7 +89,7 @@
         <td><a href="#">修改</a>|<a href="#">删除</a></td>
         <td><a href="#">设为默认</a></td>
       </tr>
-    </table>
+    </el-table>
   </div>
   <!--脚注-->
   <div class="footer">
