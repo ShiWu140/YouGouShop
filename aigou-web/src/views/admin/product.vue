@@ -13,20 +13,16 @@ export default {
         productBrand: '',
         createTime: '',
       },
-      productFormVisible: false,
+      // 表单和表格
+      FormVisible: false,
       tableHeight: window.innerHeight - 220,
       // 分页属性
       total: 0,
       pageSize: 5,
       current: 1,
       operate: '',
-      //图片url地址
-      imageUrl: '',
       //表单验证
       rules: {
-        id: [
-          {required: true, message: '必填项', trigger: 'change'}
-        ],
         productName: [
           {required: true, message: '必填项', trigger: 'change'}
         ],
@@ -59,7 +55,7 @@ export default {
             message: '操作成功!'
           });
           this.loadData();
-          this.productFormVisible = false;
+          this.FormVisible = false;
         } else {
           this.$message({
             type: 'error',
@@ -87,7 +83,7 @@ export default {
       this.operate = 'modify';
       this.product = JSON.parse(JSON.stringify(row));
       this.imageUrl = this.product.productImage;
-      this.productFormVisible = true;
+      this.FormVisible = true;
     },
     addFrom() {
       this.operate = 'add';
@@ -103,7 +99,7 @@ export default {
       };
       // 清空图片 URL
       this.imageUrl = '';
-      this.productFormVisible = true;
+      this.FormVisible = true;
     },
     loadData() {
       this.$http.get("/product/page?current=" + this.current + '&size=' + this.pageSize)
@@ -121,6 +117,10 @@ export default {
           })
     },
   },
+  mounted() {
+    this.loadTypes()
+    this.loadBrands();
+  }
 }
 </script>
 
@@ -132,7 +132,7 @@ export default {
         <el-button class="add-button" round type="primary" @click="addFrom()">上架商品</el-button>
       </div>
     </div>
-    <el-dialog :visible.sync="productFormVisible" title="上架商品">
+    <el-dialog :visible.sync="FormVisible" title="上架商品">
       <el-form :model="product" label-width="auto" :rules="rules" ref="productForm">
         <el-form-item label="商品名称" prop="productName">
           <el-input v-model.trim="product.productName" autocomplete="off"></el-input>
@@ -156,14 +156,29 @@ export default {
           <el-input v-model.trim.number="product.price" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="所属分类" prop="productType">
-          <el-input v-model.trim="product.productType" autocomplete="off"></el-input>
+          <el-select v-model="product.productType" placeholder="请选择分类">
+            <el-option
+                v-for="type in typeList"
+                :key="type.id"
+                :label="type.productTypeName"
+                :value="type.id">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="商品品牌" prop="productBrand">
-          <el-input v-model.trim="product.productBrand" autocomplete="off"></el-input>
+          <el-select v-model="product.productBrand" placeholder="请选择品牌">
+            <el-option
+                v-for="brand in brandList"
+                :key="brand.id"
+                :label="brand.brandName"
+                :value="brand.id">
+            </el-option>
+          </el-select>
         </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="productFormVisible = false">取 消</el-button>
+        <el-button @click="FormVisible = false">取 消</el-button>
         <el-button type="primary" @click="operateProduct(product)">确 定</el-button>
       </div>
     </el-dialog>
@@ -201,11 +216,17 @@ export default {
           label="所属分类"
           min-width="100px"
           prop="productType">
+        <template slot-scope="scope">
+          {{ getTypeName(scope.row.productType) }}
+        </template>
       </el-table-column>
       <el-table-column
           label="商品品牌"
           min-width="100px"
           prop="productBrand">
+        <template slot-scope="scope">
+          {{ getBrandName(scope.row.productBrand) }}
+        </template>
       </el-table-column>
       <el-table-column
           label="创建时间"

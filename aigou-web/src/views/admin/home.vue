@@ -2,15 +2,11 @@
 export default {
   data() {
     return {
-      user: {
-        userId: '',
-        userName: '',
-        userPwd: '',
-        userType: '',
-      },
+      userName: '',
     };
   },
   mounted() {
+    this.userName = localStorage.getItem('userName')
   },
 };
 </script>
@@ -18,7 +14,7 @@ export default {
 <template>
   <div class="dashboard">
     <div class="welcome-container">
-      <span class="welcome-message">🎉欢迎用户🎉<br>{{ user.userName }}</span>
+      <span class="welcome-message">🎉欢迎用户🎉<br>{{ userName }}</span>
     </div>
   </div>
 </template>
@@ -38,13 +34,6 @@ export default {
   display: block;
   text-align: center;
   color: #000;
-}
-
-.button-group {
-  display: flex;
-  justify-content: center;
-  gap: 50px;
-  margin-top: 50px;
 }
 </style>
 

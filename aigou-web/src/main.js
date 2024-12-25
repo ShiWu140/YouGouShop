@@ -43,6 +43,15 @@ Vue.prototype.$http.interceptors.response.use(
     }
 );
 Vue.mixin({
+    data() {
+        return {
+            //图片url地址
+            imageUrl: '',
+            typeList: [],
+            brandList: [],
+            productList: [],
+        }
+    },
     //公共方法
     methods: {
         // 格式化时间
@@ -69,9 +78,53 @@ Vue.mixin({
         handleAvatarSuccess(res, file) {
             console.log('upload', res.data)
             this.imageUrl = res.data
-            this.brand.brandImg = res.data;
         },
         loadData() {
+        },
+        loadTypes() {
+            this.$http.get("/productType/all")
+                .then(response => {
+                    if (response.data.msg === "success") {
+                        this.typeList = response.data.data;
+                    }
+                })
+                .catch(error => {
+                    console.error("获取分类数据失败", error);
+                });
+        },
+        getTypeName(typeId) {
+            const type = this.typeList.find(type => type.id === typeId);
+            return type ? type.productTypeName : '';
+        },
+        loadBrands() {
+            this.$http.get("/brand/all")
+                .then(response => {
+                    if (response.data.msg === "success") {
+                        this.brandList = response.data.data;
+                    }
+                })
+                .catch(error => {
+                    console.error("获取品牌数据失败", error);
+                });
+        },
+        getBrandName(brandId) {
+            const brand = this.brandList.find(brand => brand.id === brandId);
+            return brand ? brand.brandName : '';
+        },
+        loadProducts() {
+            this.$http.get("/product/all")
+                .then(res => {
+                    if (res.data.msg === "success") {
+                        this.productList = res.data.data;
+                    }
+                })
+                .catch(error => {
+                console.error("获取商品数据失败", error);
+            });
+        },
+        getProductName(productId){
+            const product = this.productList.find(product => product.id === productId);
+            return product ? product.productName : '';
         }
     },
     mounted() {

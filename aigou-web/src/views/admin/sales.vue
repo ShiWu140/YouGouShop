@@ -8,7 +8,8 @@ export default {
         productId: '',
         salesNum: '',
       },
-      salesFormVisible: false,
+      // 表单和表格
+      FormVisible: false,
       tableHeight: window.innerHeight - 220,
       // 分页属性
       total: 0,
@@ -36,7 +37,7 @@ export default {
             message: '操作成功!'
           });
           this.loadData();
-          this.salesFormVisible = false;
+          this.FormVisible = false;
         } else {
           this.$message({
             type: 'error',
@@ -63,7 +64,7 @@ export default {
     handleEdit(index, row) {
       this.operate = 'modify';
       this.sales = JSON.parse(JSON.stringify(row));
-      this.salesFormVisible = true;
+      this.FormVisible = true;
     },
     addFrom() {
       this.operate = 'add';
@@ -72,7 +73,7 @@ export default {
         productId: '',
         salesNum: '',
       };
-      this.salesFormVisible = true;
+      this.FormVisible = true;
     },
     loadData() {
       this.$http.get("/sales/page?current=" + this.current + '&size=' + this.pageSize)
@@ -89,6 +90,9 @@ export default {
           })
     },
   },
+  mounted() {
+    this.loadProducts()
+  }
 }
 </script>
 
@@ -100,17 +104,24 @@ export default {
         <el-button class="add-button" round type="primary" @click="addFrom()">添加销量记录</el-button>
       </div>
     </div>
-    <el-dialog :visible.sync="salesFormVisible" title="添加销量记录">
+    <el-dialog :visible.sync="FormVisible" title="添加销量记录">
       <el-form :model="sales" label-width="auto" :rules="rules" ref="salesForm">
-        <el-form-item label="商品 ID" prop="productId">
-          <el-input v-model.trim="sales.productId" autocomplete="off"></el-input>
+        <el-form-item label="商品" prop="productId">
+          <el-select v-model="sales.productId" placeholder="请选择商品">
+            <el-option
+                v-for="type in productList"
+                :key="type.id"
+                :label="type.productName"
+                :value="type.id">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="售出数量" prop="salesNum">
           <el-input v-model.trim.number="sales.salesNum" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="salesFormVisible = false">取 消</el-button>
+        <el-button @click="FormVisible = false">取 消</el-button>
         <el-button type="primary" @click="operateSales(sales)">确 定</el-button>
       </div>
     </el-dialog>
@@ -120,9 +131,12 @@ export default {
         border
         style="width: 100%;">
       <el-table-column
-          label="商品 ID"
+          label="商品"
           min-width="100px"
           prop="productId">
+        <template slot-scope="scope">
+          {{ getProductName(scope.row.productId) }}
+        </template>
       </el-table-column>
       <el-table-column
           label="售出数量"

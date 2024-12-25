@@ -9,15 +9,14 @@ export default {
         brandImg: '',
         brandType: '',
       },
+      // 表单和表格
+      FormVisible: false,
+      tableHeight: window.innerHeight - 220,
       // 分页属性
       total: 0,
       pageSize: 10,
       current: 1,
       operate: '',
-      brandFormVisible: false,
-      tableHeight: window.innerHeight - 220,
-      //图片url地址
-      imageUrl: '',
       //表单验证
       rules: {
         brandName: [
@@ -43,7 +42,7 @@ export default {
             message: '操作成功!'
           });
           this.loadData();
-          this.brandFormVisible = false;
+          this.FormVisible = false;
         } else {
           this.$message({
             type: 'error',
@@ -71,7 +70,7 @@ export default {
       this.operate = 'modify';
       this.brand = JSON.parse(JSON.stringify(row));
       this.imageUrl = this.brand.brandImg;
-      this.brandFormVisible = true;
+      this.FormVisible = true;
     },
     addFrom() {
       this.operate = 'add';
@@ -83,7 +82,7 @@ export default {
       };
       // 清空图片 URL
       this.imageUrl = '';
-      this.brandFormVisible = true;
+      this.FormVisible = true;
     },
     loadData() {
       this.$http.get("/brand/page?current=" + this.current + '&size=' + this.pageSize)
@@ -101,6 +100,9 @@ export default {
           })
     },
   },
+  mounted() {
+    this.loadTypes()
+  }
 }
 </script>
 
@@ -112,7 +114,7 @@ export default {
         <el-button class="add-button" round type="primary" @click="addFrom()">添加品牌</el-button>
       </div>
     </div>
-    <el-dialog :visible.sync="brandFormVisible" title="添加品牌">
+    <el-dialog :visible.sync="FormVisible" title="添加品牌">
       <el-form :model="brand" label-width="auto" :rules="rules" ref="brandForm">
         <el-form-item label="品牌名称" prop="brandName">
           <el-input v-model.trim="brand.brandName" autocomplete="off"></el-input>
@@ -130,11 +132,19 @@ export default {
           </el-upload>
         </el-form-item>
         <el-form-item label="所属分类" prop="brandType">
-          <el-input v-model.trim="brand.brandType" autocomplete="off"></el-input>
+          <el-select v-model="brand.brandType" placeholder="请选择分类">
+            <el-option
+                v-for="type in typeList"
+                :key="type.id"
+                :label="type.productTypeName"
+                :value="type.id">
+            </el-option>
+          </el-select>
         </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="brandFormVisible = false">取 消</el-button>
+        <el-button @click="FormVisible = false">取 消</el-button>
         <el-button type="primary" @click="operateBrand(brand)">确 定</el-button>
       </div>
     </el-dialog>
@@ -164,6 +174,9 @@ export default {
           label="所属分类"
           min-width="100px"
           prop="brandType">
+        <template slot-scope="scope">
+          {{ getTypeName(scope.row.brandType) }}
+        </template>
       </el-table-column>
       <el-table-column
           fixed="right"
@@ -226,4 +239,3 @@ export default {
   display: block;
 }
 </style>
-

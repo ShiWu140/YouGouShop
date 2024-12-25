@@ -28,20 +28,20 @@ export default {
         userPwd: '',
         userType: '',
       },
-      userFormVisible: false,
-      UserFormVisible: false,
-      changePasswordVisible: false,
-      tableHeight: window.innerHeight - 220,
-      operate: '',
-      // 分页属性
-      total: 0,
-      pageSize: 10,
-      current: 1,
-      // 确认密码
       ruleForm: {
         pass: '',
         checkPass: ''
       },
+      changePasswordVisible: false,
+      operate: '',
+      // 表单和表格
+      FormVisible: false,
+      tableHeight: window.innerHeight - 220,
+      // 分页属性
+      total: 0,
+      pageSize: 10,
+      current: 1,
+      //表单验证
       rules: {
         pass: [
           {validator: validatePass, trigger: 'change'}
@@ -72,7 +72,7 @@ export default {
             message: '操作成功!'
           });
           this.loadData();
-          this.userFormVisible = false;
+          this.FormVisible = false;
           this.changePasswordVisible = false;
         } else {
           this.$message({
@@ -93,7 +93,7 @@ export default {
     handleEdit(index, row) {
       this.operate = 'modify';
       this.user = JSON.parse(JSON.stringify(row));
-      this.userFormVisible = true;
+      this.FormVisible = true;
     },
     handleChangePassword(index, row) {
       this.operate = 'modify';
@@ -117,7 +117,7 @@ export default {
     },
     handleRegistUser() {
       this.operate = 'add';
-      this.userFormVisible = true;
+      this.FormVisible = true;
     },
     handleDelete(index, row) {
       this.$confirm('此操作将永久该用户, 是否继续?', '提示', {
@@ -135,7 +135,6 @@ export default {
       });
     },
     loadData() {
-      ;
       this.$http.get("/user/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             if (res.data) {
@@ -163,7 +162,7 @@ export default {
       </div>
     </div>
 
-    <el-dialog :visible.sync="userFormVisible" title="用户" @close="handleClose">
+    <el-dialog :visible.sync="FormVisible" title="用户" @close="handleClose">
       <el-form :model="user" :rules="userRules" label-width="auto">
         <el-form-item label="用户名" prop="userName">
           <el-input v-model.trim="user.userName" autocomplete="off"></el-input>
@@ -179,7 +178,7 @@ export default {
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="userFormVisible = false">取 消</el-button>
+        <el-button @click="FormVisible = false">取 消</el-button>
         <el-button type="primary" @click="operateUser(user)">确 定</el-button>
       </div>
     </el-dialog>

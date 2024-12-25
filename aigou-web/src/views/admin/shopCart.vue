@@ -8,7 +8,8 @@ export default {
         cartId: '',
         userId: '',
       },
-      shopCartFormVisible: false,
+      // 表单和表格
+      FormVisible: false,
       tableHeight: window.innerHeight - 220,
       // 分页属性
       total: 0,
@@ -35,7 +36,7 @@ export default {
             message: '操作成功!'
           });
           this.loadData();
-          this.shopCartFormVisible = false;
+          this.FormVisible = false;
         } else {
           this.$message({
             type: 'error',
@@ -62,7 +63,7 @@ export default {
     handleEdit(index, row) {
       this.operate = 'modify';
       this.shopCart = JSON.parse(JSON.stringify(row));
-      this.shopCartFormVisible = true;
+      this.FormVisible = true;
     },
     addFrom() {
       this.operate = 'add';
@@ -71,7 +72,7 @@ export default {
         cartId: '',
         userId: '',
       };
-      this.shopCartFormVisible = true;
+      this.FormVisible = true;
     },
     calculateTableHeight() {
       // 动态计算表格高度，
@@ -104,7 +105,7 @@ export default {
         <el-button class="add-button" round type="primary" @click="addFrom()">新增购物车</el-button>
       </div>
     </div>
-    <el-dialog :visible.sync="shopCartFormVisible" title="购物车">
+    <el-dialog :visible.sync="FormVisible" title="购物车">
       <el-form :model="shopCart" label-width="auto" :rules="rules" ref="shopCart">
         <el-form-item label="购物车 ID" prop="cartId">
           <el-input v-model.trim="shopCart.cartId" autocomplete="off"></el-input>
@@ -114,7 +115,7 @@ export default {
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="shopCartFormVisible = false">取 消</el-button>
+        <el-button @click="FormVisible = false">取 消</el-button>
         <el-button type="primary" @click="operateShopCart(shopCart)">确 定</el-button>
       </div>
     </el-dialog>

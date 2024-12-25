@@ -9,7 +9,8 @@ export default {
         num: '',
         searchTime: ''
       },
-      searchHistoryFormVisible: false,
+      // 表单和表格
+      FormVisible: false,
       tableHeight: window.innerHeight - 220,
       // 分页属性
       total: 0,
@@ -38,7 +39,7 @@ export default {
             message: '操作成功!'
           });
           this.loadData();
-          this.searchHistoryFormVisible = false;
+          this.FormVisible = false;
         } else {
           this.$message({
             type: 'error',
@@ -71,7 +72,7 @@ export default {
     handleEdit(index, row) {
       this.operate = 'modify';
       this.searchHistory = JSON.parse(JSON.stringify(row));
-      this.searchHistoryFormVisible = true;
+      this.FormVisible = true;
     },
     addFrom() {
       this.operate = 'add';
@@ -81,10 +82,9 @@ export default {
         num: '',
         searchTime: ''
       };
-      this.searchHistoryFormVisible = true;
+      this.FormVisible = true;
     },
     loadData() {
-      ;
       this.$http.get("/searchHistory/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             if (res.data) {
@@ -110,7 +110,7 @@ export default {
         <el-button class="add-button" round type="primary" @click="addFrom()">添加搜索历史</el-button>
       </div>
     </div>
-    <el-dialog :visible.sync="searchHistoryFormVisible" title="搜索历史">
+    <el-dialog :visible.sync="FormVisible" title="搜索历史">
       <el-form :model="searchHistory" label-width="auto" :rules="rules" ref="searchHistory">
         <el-form-item label="搜索关键词" prop="searchWords">
           <el-input v-model.trim="searchHistory.searchWords" autocomplete="off"></el-input>
@@ -120,7 +120,7 @@ export default {
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="searchHistoryFormVisible = false">取 消</el-button>
+        <el-button @click="FormVisible = false">取 消</el-button>
         <el-button type="primary" @click="operateSearchHistory(searchHistory)">确 定</el-button>
       </div>
     </el-dialog>

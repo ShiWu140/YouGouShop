@@ -8,15 +8,14 @@ export default {
         url: '',
         sequenceNum: '',
       },
-      carouselFigureFormVisible: false,
+      // 表单和表格
+      FormVisible: false,
       tableHeight: window.innerHeight - 220,
       // 分页属性
       total: 0,
       pageSize: 10,
       current: 1,
       operate: '',
-      //图片url地址
-      imageUrl: '',
       //表单验证
       rules: {
         url: [{
@@ -41,7 +40,7 @@ export default {
             message: '操作成功!'
           });
           this.loadData();
-          this.carouselFigureFormVisible = false;
+          this.FormVisible = false;
         } else {
           this.$message({
             type: 'error',
@@ -76,7 +75,7 @@ export default {
       this.operate = 'modify';
       this.carouselFigure = JSON.parse(JSON.stringify(row));
       this.imageUrl = this.carouselFigure.url;
-      this.carouselFigureFormVisible = true;
+      this.FormVisible = true;
     },
     addFrom() {
       this.operate = 'add';
@@ -87,10 +86,9 @@ export default {
       };
       // 清空图片 URL
       this.imageUrl = '';
-      this.carouselFigureFormVisible = true;
+      this.FormVisible = true;
     },
     loadData() {
-      ;
       this.$http.get("/carouselFigure/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             if (res.data) {
@@ -117,7 +115,7 @@ export default {
         <el-button class="add-button" round type="primary" @click="addFrom()">添加轮播图</el-button>
       </div>
     </div>
-    <el-dialog :visible.sync="carouselFigureFormVisible" title="轮播图">
+    <el-dialog :visible.sync="FormVisible" title="轮播图">
       <el-form :model="carouselFigure" label-width="auto" :rules="rules" ref="carouselFigure">
         <el-form-item label="轮播图" prop="url">
           <el-input v-model.trim="this.imageUrl" autocomplete="off"></el-input>
@@ -136,7 +134,7 @@ export default {
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="carouselFigureFormVisible = false">取 消</el-button>
+        <el-button @click="FormVisible = false">取 消</el-button>
         <el-button type="primary" @click="operateCarouselFigure(carouselFigure)">确 定</el-button>
       </div>
     </el-dialog>

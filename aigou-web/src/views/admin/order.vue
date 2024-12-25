@@ -9,7 +9,8 @@ export default {
         receivingAddress: '',
         userId: '',
       },
-      orderFormVisible: false,
+      // 表单和表格
+      FormVisible: false,
       tableHeight: window.innerHeight - 220,
       // 分页属性
       total: 0,
@@ -39,7 +40,7 @@ export default {
             message: '操作成功!'
           });
           this.loadData();
-          this.orderFormVisible = false;
+          this.FormVisible = false;
         } else {
           this.$message({
             type: 'error',
@@ -72,7 +73,7 @@ export default {
     handleEdit(index, row) {
       this.operate = 'modify';
       this.order = JSON.parse(JSON.stringify(row));
-      this.orderFormVisible = true;
+      this.FormVisible = true;
     },
     addFrom() {
       this.operate = 'add';
@@ -81,10 +82,9 @@ export default {
         receivingAddress: '',
         userId: '',
       };
-      this.orderFormVisible = true;
+      this.FormVisible = true;
     },
     loadData() {
-      ;
       this.$http.get("/order/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             if (res.data) {
@@ -111,7 +111,7 @@ export default {
         <el-button class="add-button" round type="primary" @click="addFrom()">添加订单</el-button>
       </div>
     </div>
-    <el-dialog :visible.sync="orderFormVisible" title="订单" @close="handleClose">
+    <el-dialog :visible.sync="FormVisible" title="订单" @close="handleClose">
       <el-form :model="order" label-width="auto" :rules="rules" ref="orderForm">
         <el-form-item label="收货地址" prop="receivingAddress">
           <el-input v-model.trim="order.receivingAddress" autocomplete="off"></el-input>
@@ -121,7 +121,7 @@ export default {
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="orderFormVisible = false">取 消</el-button>
+        <el-button @click="FormVisible = false">取 消</el-button>
         <el-button type="primary" @click="operateOrder(order)">确 定</el-button>
       </div>
     </el-dialog>
@@ -130,6 +130,11 @@ export default {
         :height="tableHeight"
         border
         style="width: 100%;">
+      <el-table-column
+          label="订单号"
+          min-width="100px"
+          prop="id">
+      </el-table-column>
       <el-table-column
           label="创建时间"
           min-width="100px"

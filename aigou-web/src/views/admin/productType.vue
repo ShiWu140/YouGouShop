@@ -9,7 +9,8 @@ export default {
         productTypeDesc: '',
         productTypeIcon: '',
       },
-      productTypeFormVisible: false,
+      // 表单和表格
+      FormVisible: false,
       tableHeight: window.innerHeight - 220,
       // 分页属性
       total: 0,
@@ -39,7 +40,7 @@ export default {
             message: '操作成功!'
           });
           this.loadData();
-          this.productTypeFormVisible = false;
+          this.FormVisible = false;
         } else {
           this.$message({
             type: 'error',
@@ -66,7 +67,7 @@ export default {
     handleEdit(index, row) {
       this.operate = 'modify';
       this.productType = JSON.parse(JSON.stringify(row));
-      this.productTypeFormVisible = true;
+      this.FormVisible = true;
     },
     addFrom() {
       this.operate = 'add';
@@ -76,7 +77,7 @@ export default {
         productTypeDesc: '',
         productTypeIcon: '',
       };
-      this.productTypeFormVisible = true;
+      this.FormVisible = true;
     },
     loadData() {
 
@@ -106,7 +107,7 @@ export default {
         <el-button class="add-button" round type="primary" @click="addFrom()">添加类型</el-button>
       </div>
     </div>
-    <el-dialog :visible.sync="productTypeFormVisible" title="添加类型">
+    <el-dialog :visible.sync="FormVisible" title="添加类型">
       <el-form :model="productType" label-width="auto" :rules="rules" ref="productType">
         <el-form-item label="分类名称" prop="productTypeName">
           <el-input v-model.trim="productType.productTypeName" autocomplete="off"></el-input>
@@ -119,7 +120,7 @@ export default {
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="productTypeFormVisible = false">取 消</el-button>
+        <el-button @click="FormVisible = false">取 消</el-button>
         <el-button type="primary" @click="operateProductType(productType)">确 定</el-button>
       </div>
     </el-dialog>

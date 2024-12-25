@@ -9,7 +9,8 @@ export default {
         productId: '',
         productNum: '',
       },
-      orderProductFormVisible: false,
+      // 表单和表格
+      FormVisible: false,
       tableHeight: window.innerHeight - 220,
       // 分页属性
       total: 0,
@@ -40,7 +41,7 @@ export default {
             message: '操作成功!'
           });
           this.loadData();
-          this.orderProductFormVisible = false;
+          this.FormVisible = false;
         } else {
           this.$message({
             type: 'error',
@@ -67,7 +68,7 @@ export default {
     handleEdit(index, row) {
       this.operate = 'modify';
       this.orderProduct = JSON.parse(JSON.stringify(row));
-      this.orderProductFormVisible = true;
+      this.FormVisible = true;
     },
     addFrom() {
       this.operate = 'add';
@@ -77,10 +78,9 @@ export default {
         productId: '',
         productNum: '',
       };
-      this.orderProductFormVisible = true;
+      this.FormVisible = true;
     },
     loadData() {
-      ;
       this.$http.get("/orderProduct/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             if (res.data) {
@@ -95,6 +95,9 @@ export default {
             }
           })
     },
+  },
+  mounted() {
+    this.loadProducts()
   }
 }
 </script>
@@ -107,20 +110,27 @@ export default {
         <el-button class="add-button" round type="primary" @click="addFrom()">添加订单商品</el-button>
       </div>
     </div>
-    <el-dialog :visible.sync="orderProductFormVisible" title="订单商品">
+    <el-dialog :visible.sync="FormVisible" title="订单商品">
       <el-form :model="orderProduct" label-width="auto" :rules="rules" ref="orderProductForm">
         <el-form-item label="订单 ID" prop="orderId">
           <el-input v-model.trim="orderProduct.orderId" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="商品 ID" prop="productId">
-          <el-input v-model.trim="orderProduct.productId" autocomplete="off"></el-input>
+        <el-form-item label="商品" prop="productId">
+          <el-select v-model="orderProduct.productId" placeholder="请选择商品">
+            <el-option
+                v-for="type in productList"
+                :key="type.id"
+                :label="type.productName"
+                :value="type.id">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="商品数量" prop="productNum">
           <el-input v-model.trim.number="orderProduct.productNum" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="orderProductFormVisible = false">取 消</el-button>
+        <el-button @click="FormVisible = false">取 消</el-button>
         <el-button type="primary" @click="operateOrderProduct(orderProduct)">确 定</el-button>
       </div>
     </el-dialog>
@@ -130,14 +140,17 @@ export default {
         border
         style="width: 100%;">
       <el-table-column
-          label="订单 ID"
+          label="订单号"
           min-width="100px"
           prop="orderId">
       </el-table-column>
       <el-table-column
-          label="商品 ID"
+          label="商品"
           min-width="100px"
           prop="productId">
+        <template slot-scope="scope">
+          {{ getProductName(scope.row.productId) }}
+        </template>
       </el-table-column>
       <el-table-column
           label="商品数量"

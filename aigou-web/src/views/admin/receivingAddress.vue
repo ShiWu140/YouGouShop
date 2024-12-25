@@ -11,7 +11,8 @@ export default {
         userId: '',
         isDefault: ''
       },
-      receivingAddressFormVisible: false,
+      // 表单和表格
+      FormVisible: false,
       tableHeight: window.innerHeight - 220,
       // 分页属性
       total: 0,
@@ -47,7 +48,7 @@ export default {
             message: '操作成功!'
           });
           this.loadData();
-          this.receivingAddressFormVisible = false;
+          this.FormVisible = false;
         } else {
           this.$message({
             type: 'error',
@@ -74,7 +75,7 @@ export default {
     handleEdit(index, row) {
       this.operate = 'modify';
       this.receivingAddress = JSON.parse(JSON.stringify(row));
-      this.receivingAddressFormVisible = true;
+      this.FormVisible = true;
     },
     addFrom() {
       this.operate = 'add';
@@ -86,10 +87,9 @@ export default {
         userId: '',
         isDefault: ''
       };
-      this.receivingAddressFormVisible = true;
+      this.FormVisible = true;
     },
     loadData() {
-      ;
       this.$http.get("/receivingAddress/page?current=" + this.current + '&size=' + this.pageSize)
           .then(res => {
             if (res.data) {
@@ -116,7 +116,7 @@ export default {
         <el-button class="add-button" round type="primary" @click="addFrom()">新增收货地址</el-button>
       </div>
     </div>
-    <el-dialog :visible.sync="receivingAddressFormVisible" title="收货地址">
+    <el-dialog :visible.sync="FormVisible" title="收货地址">
       <el-form :model="receivingAddress" label-width="auto" :rules="rules" ref="receivingAddressForm">
         <el-form-item label="收货地址" prop="receivingAddress">
           <el-input v-model.trim="receivingAddress.receivingAddress" autocomplete="off"></el-input>
@@ -138,7 +138,7 @@ export default {
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="receivingAddressFormVisible = false">取 消</el-button>
+        <el-button @click="FormVisible = false">取 消</el-button>
         <el-button type="primary" @click="operateReceivingAddress(receivingAddress)">确 定</el-button>
       </div>
     </el-dialog>
@@ -147,6 +147,11 @@ export default {
         :height="tableHeight"
         border
         style="width: 100%;">
+      <el-table-column
+          label="收货地址 ID"
+          min-width="100px"
+          prop="id">
+      </el-table-column>
       <el-table-column
           label="收货地址"
           min-width="100px"
