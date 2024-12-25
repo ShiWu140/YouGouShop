@@ -1,4 +1,5 @@
 <script setup>
+import Footer from "@/components/Footer.vue";
 import {ref} from 'vue';
 import axios from 'axios';
 import {useRouter} from 'vue-router';
@@ -41,6 +42,16 @@ const login = async () => {
 </script>
 
 <template>
+  <!--登录/注册的头部-->
+  <div class="lr-top w1230">
+    <a href="index.html"><img src="@/assets/img/logo.png" width="150px" height="60px"/></a>
+    <div class="top-link">
+      <a href="#" class="top-link1"></a>
+      <a href="#" class="top-link2"></a>
+      <a href="#" class="top-link3"></a>
+    </div>
+  </div>
+  <!--登录/注册的中部-->
   <div class="lr-main">
     <div class="w1230">
       <div class="reg-div">
@@ -61,6 +72,7 @@ const login = async () => {
       </div>
     </div>
   </div>
+  <Footer/>
 </template>
 
 <style scoped>

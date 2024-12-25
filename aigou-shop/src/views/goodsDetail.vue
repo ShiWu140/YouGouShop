@@ -1,46 +1,11 @@
 <script setup>
+import Header from "@/components/Header.vue";
+import Search from "@/components/Search.vue";
+import Footer from "@/components/Footer.vue";
 </script>
 <template>
-  <!--头部-->
-  <div class="top" id="top">
-    <!--头部bar-->
-    <div class="top-bar">
-      <div class="w1230 top-bar-main">
-        <ul>
-          <li><a href="#" class="login">登录</a></li>
-          <li><a href="#" class="register">注册</a></li>
-          <li><a href="#"><i class="fa fa-file-text-o"></i>我的订单</a></li>
-          <li><a href="#"><i class="fa fa-shopping-cart"></i>购物车</a></li>
-        </ul>
-      </div>
-    </div>
-    <!--logo+搜索-->
-    <div class="top-header w1230 clear-float">
-      <router-link to="/" target="_blank" class="logo">
-        <img src="@/assets/img/logo.png"/>
-      </router-link>
-      <div class="top-header-right">
-        <!--搜索框-->
-        <div class="search clear-float">
-          <input type="text" placeholder="牛奶" class="search-txt"/>
-          <a href="#" class="search-btn">搜索</a>
-        </div>
-        <!--热搜-->
-        <p class="hotkey">
-          <a href="#">牛奶</a>
-          <a href="#">牛仔裤</a>
-          <a href="#">巧克力</a>
-          <a href="#">月饼</a>
-          <a href="#">抽纸</a>
-          <a href="#">狗粮</a>
-          <a href="#">奶粉</a>
-          <a href="#">护发素</a>
-          <a href="#">进口食品</a>
-          <a href="#">良品铺子</a>
-        </p>
-      </div>
-    </div>
-  </div>
+  <Header/>
+  <Search/>
   <!--导航栏-->
   <div class="nav">
     <div class="w1230">
@@ -201,22 +166,7 @@
       </div>
     </div>
   </div>
-  <!--脚注-->
-  <div class="footer">
-    <p class="w1230">
-      <a href="#">关于爱购</a>
-      <a href="#">合作伙伴</a>
-      <a href="#">营销中心</a>
-      <a href="#">廉正举报</a>
-      <a href="#">联系客服</a>
-      <a href="#">开发平台</a>
-      <a href="#">诚征英才</a>
-      <a href="#">联系我们</a>
-      <a href="#">网站地图</a>
-      <a href="#">知识产权</a><span>|</span>
-      <span>&copy;2018-2020 igo.com 版权所有</span>
-    </p>
-  </div>
+<Footer/>
 </template>
 <style scoped>
 @import "@/assets/css/goodsDetail.css";

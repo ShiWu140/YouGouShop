@@ -1,7 +1,9 @@
 <script setup>
 import {onMounted, ref} from 'vue';
 import axios from 'axios';
-
+import Header from "@/components/Header.vue";
+import Search from "@/components/Search.vue";
+import Footer from "@/components/Footer.vue";
 const carouselFigures = ref([]);
 const currentIndex = ref(0);
 
@@ -26,66 +28,14 @@ const fetchProductTypes = async () => {
     console.error('Error fetching product types:', error);
   }
 };
-const searchHistory = ref([]);
-
-const fetchSearchHistory = async () => {
-  try {
-    const response = await axios.get('http://localhost:8080/searchHistory/page', {
-      params: {
-        current: 1, // 当前页码
-        size: 10    // 每页大小
-      }
-    });
-    searchHistory.value = response.data.data.records;
-    console.log('Search history fetched:', searchHistory.value)
-  } catch (error) {
-    console.error('Error fetching search history:', error);
-  }
-};
 onMounted(() => {
   fetchProductTypes();
-  fetchSearchHistory();
   fetchCarouselFigures();
 });
 </script>
 <template>
-  <!--头部-->
-  <div class="top" id="top">
-    <!--头部bar-->
-    <div class="top-bar">
-      <div class="w1230 top-bar-main">
-        <ul>
-          <li>
-            <router-link to="/login" class="login">登录</router-link>
-          </li>
-          <li>
-            <router-link to="/register" class="register">注册</router-link>
-          </li>
-          <li><router-link to="/buyerTrade"><i class="fa fa-file-text-o"></i>我的订单</router-link></li>
-          <li><router-link to="/shoppingCart"><i class="fa fa-shopping-cart"></i>购物车</router-link></li>
-        </ul>
-      </div>
-    </div>
-    <!--logo+搜索-->
-    <div class="top-header w1230 clear-float">
-      <router-link to="/" target="_blank" class="logo">
-        <img src="@/assets/img/logo.png"/>
-      </router-link>
-      <div class="top-header-right">
-        <!--搜索框-->
-        <div class="search clear-float">
-          <input type="text" placeholder="牛奶" class="search-txt"/>
-          <a href="#" class="search-btn">搜索</a>
-        </div>
-        <!--热搜-->
-        <p class="hotkey">
-          <a v-for="history in searchHistory" :key="history.id" :href="`#${history.searchWords}`">{{
-              history.searchWords
-            }}</a>
-        </p>
-      </div>
-    </div>
-  </div>
+  <Header/>
+  <Search/>
   <!--分类+banner-->
   <div class="main w1230 clear-float">
     <!--商品分类-->
@@ -427,22 +377,7 @@ onMounted(() => {
       </ul>
     </div>
   </div>
-  <!--脚注-->
-  <div class="footer">
-    <p class="w1230">
-      <a href="#">关于爱购</a>
-      <a href="#">合作伙伴</a>
-      <a href="#">营销中心</a>
-      <a href="#">廉正举报</a>
-      <a href="#">联系客服</a>
-      <a href="#">开发平台</a>
-      <a href="#">诚征英才</a>
-      <a href="#">联系我们</a>
-      <a href="#">网站地图</a>
-      <a href="#">知识产权</a><span>|</span>
-      <span>&copy;2018-2020 igo.com 版权所有</span>
-    </p>
-  </div>
+<Footer/>
 </template>
 
 <style scoped>

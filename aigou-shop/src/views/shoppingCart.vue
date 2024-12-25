@@ -2,7 +2,8 @@
 import {ElMessage, ElTable} from 'element-plus';
 import {onMounted, ref} from 'vue';
 import axios from "axios";
-
+import Header from "@/components/Header.vue";
+import Footer from "@/components/Footer.vue";
 const userId = localStorage.getItem('userId')
 // 存储购物车数据
 const tableData = ref([])
@@ -180,36 +181,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <!--头部-->
-  <div class="top" id="top">
-    <!--头部bar-->
-    <div class="top-bar">
-      <div class="w1230 top-main">
-        <router-link to="/" class="toIndex">
-          <i class="fa fa-home"></i>
-          <span>爱购网首页</span>
-        </router-link>
-        <div class="account">
-          <span>{{ userId }}<i class="fa fa-caret-down"></i></span>
-          <div class="manage">
-            <ul>
-              <li>
-                <router-link to="/deliverAddress" href="#">收货地址</router-link>
-              </li>
-              <li>
-                <router-link to="/shoppingCart" href="#">购物车</router-link>
-              </li>
-              <li>
-                <router-link to="/classify" href="#">我的订单</router-link>
-              </li>
-              <li><a href="#" @click.prevent="logout">退出</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <Header/>
   <div class="w1230">
     <img src="@/assets/img/logo.png" width="100" height="40" class="logo"/>
     <span class="cart">购物车</span>
@@ -227,11 +199,11 @@ onMounted(() => {
         {{ addressData.receivingAddress || '暂无地址' }}
       </el-descriptions-item>
       <el-descriptions-item>
-        <!--箭头按钮-->
-        <el-button type="primary" size="small" @click="toggleDialog ">切换地址</el-button>
+        <template #label>
+          <el-button type="primary" size="small" @click="toggleDialog">切换地址</el-button>
+        </template>
       </el-descriptions-item>
     </el-descriptions>
-
     <!--切换地址弹窗-->
     <el-dialog title="切换收货地址" v-model="dialogVisible" width="50%">
       <el-table :data="addressList" style="width: 100%">
@@ -295,23 +267,7 @@ onMounted(() => {
     </div>
 
   </div>
-
-  <!--脚注-->
-  <div class="footer">
-    <p class="w1230">
-      <a href="#">关于爱购</a>
-      <a href="#">合作伙伴</a>
-      <a href="#">营销中心</a>
-      <a href="#">廉正举报</a>
-      <a href="#">联系客服</a>
-      <a href="#">开发平台</a>
-      <a href="#">诚征英才</a>
-      <a href="#">联系我们</a>
-      <a href="#">网站地图</a>
-      <a href="#">知识产权</a><span>|</span>
-      <span>&copy;2018-2020 igo.com 版权所有</span>
-    </p>
-  </div>
+<Footer/>
 </template>
 <style scoped>
 @import "@/assets/css/shoppingCart.css";

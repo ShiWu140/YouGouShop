@@ -1,7 +1,8 @@
 <script setup>
 
 import http from '@/utils/axios.js';
-
+import Header from "@/components/Header.vue";
+import Footer from "@/components/Footer.vue";
 http.get("/order/all")
     .then(res => {
       console.log(res.data);
@@ -10,26 +11,7 @@ http.get("/order/all")
 <template>
   <!--头部-->
   <div class="top" id="top">
-    <!--头部bar-->
-    <div class="top-bar">
-      <div class="w1230 top-main">
-        <router-link to="/" class="toIndex">
-          <i class="fa fa-home"></i>
-          <span>爱购网首页</span>
-        </router-link>
-        <div class="account">
-          <span>zhanghao<i class="fa fa-caret-down"></i></span>
-          <div class="manage">
-            <ul>
-              <li><a href="#">收货地址</a></li>
-              <li><a href="#">购物车</a></li>
-              <li><a href="#">我的订单</a></li>
-              <li><a href="#">退出</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Header/>
   </div>
   <div class="w1230">
     <img src="@/assets/img/logo.png" width="100" height="40" class="logo"/>
@@ -125,22 +107,7 @@ http.get("/order/all")
       </div>
     </div>
   </div>
-  <!--脚注-->
-  <div class="footer">
-    <p class="w1230">
-      <a href="#">关于爱购</a>
-      <a href="#">合作伙伴</a>
-      <a href="#">营销中心</a>
-      <a href="#">廉正举报</a>
-      <a href="#">联系客服</a>
-      <a href="#">开发平台</a>
-      <a href="#">诚征英才</a>
-      <a href="#">联系我们</a>
-      <a href="#">网站地图</a>
-      <a href="#">知识产权</a><span>|</span>
-      <span>&copy;2018-2020 igo.com 版权所有</span>
-    </p>
-  </div>
+  <Footer/>
 </template>
 <style scoped>
 @import "@/assets/css/buyerTrade.css";
