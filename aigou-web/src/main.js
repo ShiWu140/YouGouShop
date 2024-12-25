@@ -50,6 +50,7 @@ Vue.mixin({
             typeList: [],
             brandList: [],
             productList: [],
+            tableHeight: window.innerHeight - 220,
         }
     },
     //公共方法

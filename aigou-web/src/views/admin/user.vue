@@ -36,7 +36,6 @@ export default {
       operate: '',
       // 表单和表格
       FormVisible: false,
-      tableHeight: window.innerHeight - 220,
       // 分页属性
       total: 0,
       pageSize: 10,
