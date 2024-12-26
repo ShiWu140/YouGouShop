@@ -151,16 +151,7 @@ const submitForm = async () => {
     ElMessage.error("订单提交失败，请稍后重试！");
   }
 };
-// 退出登录
-const logout = () => {
-  // 清除 localStorage 中的 token 和 userId
-  localStorage.removeItem('token');
-  localStorage.removeItem('userId');
-  localStorage.removeItem('rememberMe')
-  ElMessage.info('已退出登录')
-  // 重定向到登录页面或其他页面
-  window.location.href = '/';
-};
+
 // 切换地址
 const selectAddress = (address) => {
   addressData.value = address

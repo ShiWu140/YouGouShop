@@ -31,11 +31,11 @@ const login = async () => {
       if (rememberMe.value) {
         localStorage.setItem('rememberMe', 'true');
       }
-      ElMessage.success(`登录成功: ${statusCodeValue}`)
+      ElMessage.success(`登录成功！`)
       // 跳转到首页
       await router.push('/');
     } else {
-      ElMessage.error(`登录失败: ${statusCode}`);
+      ElMessage.error(`登录失败!`);
     }
   } catch (error) {
     console.error('登录接口调用失败', error);

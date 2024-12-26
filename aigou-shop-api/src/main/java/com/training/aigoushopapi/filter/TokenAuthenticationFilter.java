@@ -1,4 +1,5 @@
 package com.training.aigoushopapi.filter;
+
 import com.training.aigoushopapi.util.JwtUtils;
 import com.training.aigoushopapi.util.RsaUtils;
 import jakarta.servlet.FilterChain;
@@ -37,7 +38,7 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // 配置白名单路径
-        List<String> whiteList = List.of("/user/login", "/user/add");
+        List<String> whiteList = List.of("/user/login", "/user/add", "/product/getProductSalesList", "/product/allCategoryProduct", "/carouselFigure/all", "/productType/all", "/product/newProduct");
         // 跳过无需验证的路径
         String path = request.getServletPath();
         if (whiteList.contains(path)) {

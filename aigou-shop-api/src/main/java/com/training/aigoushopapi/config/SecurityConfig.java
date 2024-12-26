@@ -1,4 +1,5 @@
 package com.training.aigoushopapi.config;
+
 import com.training.aigoushopapi.filter.TokenAuthenticationFilter;
 import com.training.aigoushopapi.handler.LoginSuccessHandler;
 import jakarta.annotation.Resource;
@@ -52,7 +53,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, TokenAuthenticationFilter tokenAuthenticationFilter) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/user/login", "/user/add").permitAll() // 配置白名单
+                        .requestMatchers(HttpMethod.POST, "/user/login", "/user/add").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/product/getProductSalesList", "/product/allCategoryProduct","/carouselFigure/all","/productType/all","/product/newProduct").permitAll()// 配置白名单
                         .anyRequest().authenticated() // 其他请求需要认证
                 )
                 .formLogin(login -> login

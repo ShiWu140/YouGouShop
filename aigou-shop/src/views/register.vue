@@ -37,7 +37,7 @@ const register = async () => {
     const response = await axios.post('/user/add', data);
     console.log('请求数据:', response.data)
     if (response.data.code === 1) {
-      ElMessage.info('注册成功')
+      ElMessage.success('注册成功')
       await router.push('/login'); // 注册成功后跳转到登录页面
     } else {
       ElMessage.error('注册失败,请重试')

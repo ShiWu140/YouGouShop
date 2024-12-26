@@ -31,8 +31,8 @@ const fetchProductTypes = async () => {
 const productNews = ref([]);
 const fetchProductNews = async () => {
   try {
-    const response = await axios.get('/product/page?current=1&size=6');
-    productNews.value = response.data.data.records;
+    const response = await axios.get('/product/newProduct');
+    productNews.value = response.data.data;
     console.log('Product news fetched:', productNews.value)
   } catch (error) {
     console.error('Error fetching product news:', error);
@@ -129,7 +129,8 @@ onMounted(() => {
     <ul>
       <li v-for="type in allCategoryProduct" :key="type.id">
         <a :href="'#' + type.id" class="nav-button">{{ type.typeName }}</a>
-      </li><li><a href="#top" class="nav-top">返回顶部</a></li>
+      </li>
+      <li><a href="#top" class="nav-top">返回顶部</a></li>
     </ul>
 
   </div>
@@ -141,7 +142,7 @@ onMounted(() => {
         <ul class="clear-float">
           <li v-for="product in type.product" :key="product.id" class="last">
             <a href="#">
-              <p>{{ product.productName }}</p>
+              <p class="product-name">{{ product.productName }}</p>
               <img :src="product.productImage" alt="" width="150px" height="150px"/>
             </a>
           </li>
@@ -159,6 +160,10 @@ onMounted(() => {
   align-items: center;
 }
 
+.classify {
+  height: 360px;
+}
+
 .h-title {
   color: #B41E23;
 }
@@ -167,23 +172,39 @@ onMounted(() => {
   background-color: #B41E23;
 }
 
+.global-list li p {
+  text-align: center;
+}
+
+.global-list li img {
+  right: 45px;
+}
+
+.global-list ul {
+  justify-content: center;
+}
+
 .foot {
   background-color: #fff;
   margin-bottom: 20px;
 }
+
 .nav-side {
   width: 50px;
   position: fixed;
   bottom: 30px;
   right: 8px;
 }
+
 .nav-button {
   background-color: #c95c5c;
   border-radius: 10px;
 }
-.nav-top{
+
+.nav-top {
   border-radius: 10px;
 }
+
 .nav-side li a {
   display: block;
   width: 24px;
@@ -194,6 +215,14 @@ onMounted(() => {
   font-size: 12px;
   font-weight: bold;
 }
+
+.product-name {
+  width: 220px; /* 根据实际情况调整宽度 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .banner-btn {
   width: auto;
 }

@@ -141,7 +141,7 @@ public class ProductController {
     }
 
     /**
-     * 根据所有分类及产品列表
+     * 所有分类及产品列表
      *
      * @return 匹配给定分类ID的产品列表
      */
@@ -155,7 +155,7 @@ public class ProductController {
             QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("product_type", id);
             queryWrapper.orderByAsc("RAND()");
-            queryWrapper.last("LIMIT 5");
+            queryWrapper.last("LIMIT 10");
             List<Product> productList = productService.list(queryWrapper);
             if (productList.isEmpty()) {
                 continue;
@@ -163,5 +163,17 @@ public class ProductController {
             allCategoryProduct.add(new CategoryProductRequest(id, productTypeName, productList));
         }
         return allCategoryProduct;
+    }
+    /**
+     * 新品数据列表
+     *
+     * @return 首页需要展示的新品
+     */
+    @GetMapping("/newProduct")
+    public List<Product> getNewProduct(){
+        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("create_time");
+        queryWrapper.last("LIMIT 6");
+        return productService.list(queryWrapper);
     }
 }
