@@ -39,7 +39,7 @@ app.config.globalProperties.$http.interceptors.request.use(
 app.config.globalProperties.$http.interceptors.response.use(
     resp => {
         console.log('响应数据拦截--->', resp)
-        if (resp.data.data.code === 0) {
+        if (resp.data.message === "login failed") {
             ElMessage.error({message: '没有登录，请重新登录'})
             location.href = '/login'
         }

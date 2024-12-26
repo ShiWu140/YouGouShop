@@ -16,23 +16,26 @@ const login = async () => {
     alert('请输入用户名和密码');
     return;
   }
-  const url = `/user/login?userName=${encodeURIComponent(userName.value)}&password=${encodeURIComponent(password.value)}`;
+  const url = `/user/login?username=${encodeURIComponent(userName.value)}&password=${encodeURIComponent(password.value)}`;
   console.log('请求地址:', url);
   try {
     const response = await axios.post(url);
-    const {code, msg, data} = response.data;
-    if (code === 1) {
+    const {statusCode, statusCodeValue, body} = response.data
+    console.log('token:', body)
+
+    if (statusCodeValue === 200) {
       // 登录成功，保存 token 和 userId
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('userId', data.userId);
+      localStorage.setItem('token', body.token);
+      localStorage.setItem('userId', body.userId);
+      localStorage.setItem("userName", body.username);
       if (rememberMe.value) {
         localStorage.setItem('rememberMe', 'true');
       }
-      ElMessage.info('登录成功')
+      ElMessage.success(`登录成功: ${statusCodeValue}`)
       // 跳转到首页
       await router.push('/');
     } else {
-      ElMessage.error(`登录失败: ${msg}`);
+      ElMessage.error(`登录失败: ${statusCode}`);
     }
   } catch (error) {
     console.error('登录接口调用失败', error);

@@ -71,7 +71,8 @@ router.beforeEach((to, from, next) => {
     const isAuthenticated = () => {
         const user = localStorage.getItem("userId");
         const token = localStorage.getItem("token");
-        return user && token;
+        const userName = localStorage.getItem("userName")
+        return user && token && userName;
     };
 
     // 如果路由不需要认证，直接放行

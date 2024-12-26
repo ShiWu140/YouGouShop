@@ -1,23 +1,18 @@
 package com.training.aigoushopapi.entity;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * @author 十五
+ */
+@Setter
+@Getter
+@Data
 public class UserVO {
-    //用户id
     private String userId;
+    private String username;
     //jwt令牌
     private String token;
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 }

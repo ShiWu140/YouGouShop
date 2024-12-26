@@ -1,5 +1,6 @@
 package com.training.aigoushopapi.handler;
 import com.alibaba.fastjson2.JSON;
+import com.training.aigoushopapi.entity.CustomUserDetails;
 import com.training.aigoushopapi.entity.UserVO;
 import com.training.aigoushopapi.util.JwtUtils;
 import com.training.aigoushopapi.util.RsaUtils;
@@ -9,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.io.IOException;
@@ -23,16 +23,19 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         //获得登录的用户名
-        UserDetails userDetails = (UserDetails)
-                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (userDetails == null) {
             throw new RuntimeException("user is not login");
         }
+        // 获取 userId
+        String userId = userDetails.getUserId();
         //生成JWT字符串
         String token = JwtUtils.generateToken(userDetails.getUsername(), RsaUtils.privateKey, JwtUtils.EXPIRE_MINUTES);
         //发送给前端
         UserVO userVO = new UserVO();
+        userVO.setUserId(userId);
         userVO.setToken(token);
+        userVO.setUsername(userDetails.getUsername());
         ResponseEntity<UserVO> entity = ResponseEntity.ok(userVO);
         response.getWriter().write(JSON.toJSONString(entity));
     }

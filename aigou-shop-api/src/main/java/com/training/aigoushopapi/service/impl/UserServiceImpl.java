@@ -27,6 +27,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     UserMapper userMapper;
     @Resource
     PasswordEncoder passwordEncoder;
+
     /**
      * 登录业务逻辑
      *
@@ -39,7 +40,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_name", userName);
         User user = getOne(queryWrapper);
-        if (user != null && passwordEncoder.encode(password).equals(user.getUserPwd())) {
+        if (user != null && passwordEncoder.matches(password, user.getUserPwd())) {
             UserVO userVO = new UserVO();
             userVO.setUserId(user.getUserId());
             //生成Jwt字符串
