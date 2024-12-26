@@ -41,6 +41,6 @@ public class SearchHistory implements Serializable {
      * 搜索时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @TableField(value = "search_time" ,fill = FieldFill.INSERT)
+    @TableField(value = "search_time", fill = FieldFill.INSERT)
     private LocalDateTime searchTime;
 }

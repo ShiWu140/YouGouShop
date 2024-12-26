@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * 分页插件
+ *
  * @author 十五
  */
 @Configuration

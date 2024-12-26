@@ -96,12 +96,12 @@ public class UserController {
     /**
      * 用户登录接口
      *
-     * @param userName 用户名
+     * @param username 用户名
      * @param password 密码
      * @return Result
      */
     @PostMapping("/login")
-    public UserVO login(@RequestParam String userName, @RequestParam String password) {
-        return userService.login(userName, password);
+    public UserVO login(@RequestParam String username, @RequestParam String password) {
+        return userService.login(username, password);
     }
 }

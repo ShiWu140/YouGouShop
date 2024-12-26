@@ -19,6 +19,7 @@ public interface ReceivingAddressMapper extends BaseMapper<ReceivingAddress> {
 
     /**
      * 根据用户id获取收货地址
+     *
      * @param userId 用户id
      * @return ReceivingAddress
      */

@@ -13,4 +13,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME) // 运行时
 @Target({ElementType.METHOD, ElementType.TYPE}) // 类或方法上
 @Documented
-public @interface ResponseResult { }
+public @interface ResponseResult {
+}

@@ -17,6 +17,7 @@ public interface IReceivingAddressService extends IService<ReceivingAddress> {
 
     /**
      * 根据userId查询收获地址
+     *
      * @param userId 用户ID
      */
     List<ReceivingAddress> getReceivingAddressByUserId(Long userId);

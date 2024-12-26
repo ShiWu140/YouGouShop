@@ -30,13 +30,13 @@ public class SearchHistoryController {
      * @param size    每页大小
      * @return 包含 搜索历史信息数据的分页对象
      */
-@GetMapping("/page")
-public Page<SearchHistory> page(@RequestParam Integer current, @RequestParam Integer size) {
-    Page<SearchHistory> page = new Page<>(current, size);
-    QueryWrapper<SearchHistory> queryWrapper = new QueryWrapper<>();
-    queryWrapper.orderByDesc("search_time");
-    return searchHistoryService.page(page, queryWrapper);
-}
+    @GetMapping("/page")
+    public Page<SearchHistory> page(@RequestParam Integer current, @RequestParam Integer size) {
+        Page<SearchHistory> page = new Page<>(current, size);
+        QueryWrapper<SearchHistory> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("search_time");
+        return searchHistoryService.page(page, queryWrapper);
+    }
 
 
     /**

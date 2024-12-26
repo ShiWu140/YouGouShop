@@ -42,7 +42,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             UserVO userVO = new UserVO();
             userVO.setUserId(user.getUserId());
             //生成Jwt字符串
-            userVO.setToken(JwtUtils.generateToken(user.getUserName(), RsaUtils.privateKey,JwtUtils.EXPIRE_MINUTES));
+            userVO.setToken(JwtUtils.generateToken(user.getUserName(), RsaUtils.privateKey, JwtUtils.EXPIRE_MINUTES));
             return userVO;
         } else {
             return null;

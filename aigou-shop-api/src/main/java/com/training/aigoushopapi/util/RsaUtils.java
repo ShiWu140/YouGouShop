@@ -12,7 +12,7 @@ import java.security.spec.X509EncodedKeySpec;
 public class RsaUtils {
 
     public static final String RSA_SECRET = "blbweb@#$%"; //秘钥
-    public static final String RSA_PATH = System.getProperty("user.dir")+"/rsa/";//秘钥保存位置
+    public static final String RSA_PATH = System.getProperty("user.dir") + "/rsa/";//秘钥保存位置
     public static final String RSA_PUB_KEY_PATH = RSA_PATH + "pubKey.rsa";//公钥路径
     public static final String RSA_PRI_KEY_PATH = RSA_PATH + "priKey.rsa";//私钥路径
 

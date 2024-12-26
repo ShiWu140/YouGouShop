@@ -31,7 +31,7 @@ public class JwtUtils {
     /**
      * 从token解析用户
      */
-    public static String getUsernameFromToken(String token, PublicKey publicKey){
+    public static String getUsernameFromToken(String token, PublicKey publicKey) {
         Jws<Claims> claimsJws = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token);
         Claims body = claimsJws.getBody();
         String username = (String) body.get(JWT_KEY_USERNAME);
