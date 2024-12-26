@@ -52,7 +52,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, TokenAuthenticationFilter tokenAuthenticationFilter) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/user/login").permitAll() // 配置白名单
+                        .requestMatchers(HttpMethod.POST, "/user/login", "/user/add").permitAll() // 配置白名单
                         .anyRequest().authenticated() // 其他请求需要认证
                 )
                 .formLogin(login -> login

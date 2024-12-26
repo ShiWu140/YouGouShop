@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author 十五
@@ -35,9 +36,11 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        // 配置白名单路径
+        List<String> whiteList = List.of("/user/login", "/user/add");
         // 跳过无需验证的路径
         String path = request.getServletPath();
-        if ("/user/login".equals(path)) {
+        if (whiteList.contains(path)) {
             chain.doFilter(request, response);
             return;
         }
