@@ -5,8 +5,8 @@ import com.training.aigoushopapi.annotation.ResponseResult;
 import com.training.aigoushopapi.entity.User;
 import com.training.aigoushopapi.entity.UserVO;
 import com.training.aigoushopapi.service.IUserService;
-import com.training.aigoushopapi.util.MD5Utils;
 import jakarta.annotation.Resource;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +23,8 @@ import java.util.List;
 public class UserController {
     @Resource
     private IUserService userService;
+    @Resource
+    PasswordEncoder passwordEncoder;
 
     /**
      * 分页查询 用户信息
@@ -66,7 +68,7 @@ public class UserController {
      */
     @PostMapping("/add")
     public boolean add(@RequestBody User user) {
-        user.setUserPwd(MD5Utils.md5(user.getUserPwd()));
+        user.setUserPwd(passwordEncoder.encode(user.getUserPwd()));
         return userService.save(user);
     }
 
@@ -78,7 +80,7 @@ public class UserController {
      */
     @PostMapping("/modify")
     public boolean modify(@RequestBody User user) {
-        user.setUserPwd(MD5Utils.md5(user.getUserPwd()));
+        user.setUserPwd(passwordEncoder.encode(user.getUserPwd()));
         return userService.updateById(user);
     }
 

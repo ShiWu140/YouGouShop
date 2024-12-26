@@ -7,9 +7,9 @@ import com.training.aigoushopapi.entity.UserVO;
 import com.training.aigoushopapi.mapper.UserMapper;
 import com.training.aigoushopapi.service.IUserService;
 import com.training.aigoushopapi.util.JwtUtils;
-import com.training.aigoushopapi.util.MD5Utils;
 import com.training.aigoushopapi.util.RsaUtils;
 import jakarta.annotation.Resource;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,7 +25,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Resource
     UserMapper userMapper;
-
+    @Resource
+    PasswordEncoder passwordEncoder;
     /**
      * 登录业务逻辑
      *
@@ -38,7 +39,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_name", userName);
         User user = getOne(queryWrapper);
-        if (user != null && MD5Utils.md5(password).equals(user.getUserPwd())) {
+        if (user != null && passwordEncoder.encode(password).equals(user.getUserPwd())) {
             UserVO userVO = new UserVO();
             userVO.setUserId(user.getUserId());
             //生成Jwt字符串
