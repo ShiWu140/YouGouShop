@@ -83,10 +83,15 @@ router.beforeEach((to, from, next) => {
     // 如果用户已登录，放行
     if (isAuthenticated()) {
         return next();
+    } else {
+        // 如果用户未登录，提示用户登录并重定向到登录页面
+        ElMessage.warning('请先登录');
+        next({
+            path: '/login',
+            // 保存目标路径
+            query: {redirect: to.fullPath}
+        });
     }
-    // 如果用户未登录，提示用户登录并重定向到登录页面
-    ElMessage.warning('请先登录');
-    next({path: '/login'});
 });
 
 export default router;

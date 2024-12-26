@@ -32,8 +32,10 @@ const login = async () => {
         localStorage.setItem('rememberMe', 'true');
       }
       ElMessage.success(`登录成功！`)
-      // 跳转到首页
-      await router.push('/');
+      // 检查是否有重定向路径
+      const redirectPath = router.currentRoute.value.query.redirect || '/';
+      // 跳转到目标路径或首页
+      await router.push(redirectPath);
     } else {
       ElMessage.error(`登录失败!`);
     }
@@ -47,7 +49,7 @@ const login = async () => {
 <template>
   <!--登录/注册的头部-->
   <div class="lr-top w1230">
-    <a href="index.html"><img src="@/assets/img/logo.png" width="150px" height="60px"/></a>
+    <router-link to="/"><img src="@/assets/img/logo.png" width="199" height="80"/></router-link>
     <div class="top-link">
       <a href="#" class="top-link1"></a>
       <a href="#" class="top-link2"></a>

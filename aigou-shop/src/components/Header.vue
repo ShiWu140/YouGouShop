@@ -2,19 +2,21 @@
 import {useRoute} from 'vue-router';
 import {onMounted, ref} from "vue";
 import {ElMessage} from "element-plus";
+import router from "@/router/index.js";
 
 let isHomeRoute = ref(false);
 let isLogin = ref(false);
 const userName = localStorage.getItem("userName")
 const route = useRoute();
 // 退出登录
-const logout = () => {
+const logout = async () => {
   // 清除 localStorage 中的 token 和 userId
   localStorage.removeItem('token');
   localStorage.removeItem('userId');
   localStorage.removeItem('rememberMe')
   ElMessage.info('已退出登录')
-  window.location.reload()
+  // 跳转到首页，并清除 query 参数
+  await router.replace({path: '/'});
 };
 onMounted(() => {
   isHomeRoute.value = (route.path === "/");
@@ -48,7 +50,7 @@ onMounted(() => {
           </ul>
         </div>
         <div class="account" v-if="isLogin">
-          <span>{{ userName }}<i class="fa fa-caret-down"></i></span>
+          <span>用户：{{ userName }}<i class="fa fa-caret-down"></i></span>
           <div class="manage">
             <ul>
               <li>
