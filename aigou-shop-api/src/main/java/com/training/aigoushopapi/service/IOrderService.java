@@ -2,6 +2,7 @@ package com.training.aigoushopapi.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.training.aigoushopapi.entity.Order;
+import com.training.aigoushopapi.entity.request.OrderDetailDTO;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.training.aigoushopapi.entity.Order;
  */
 public interface IOrderService extends IService<Order> {
 
+    OrderDetailDTO getOrderDetailsByUserId(String userId);
 }

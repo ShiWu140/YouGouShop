@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.training.aigoushopapi.annotation.ResponseResult;
 import com.training.aigoushopapi.entity.Order;
 import com.training.aigoushopapi.entity.OrderProduct;
+import com.training.aigoushopapi.entity.request.OrderDetailDTO;
 import com.training.aigoushopapi.entity.request.OrderRequest;
 import com.training.aigoushopapi.entity.request.ProductRequest;
 import com.training.aigoushopapi.service.IOrderProductService;
 import com.training.aigoushopapi.service.IOrderService;
 import jakarta.annotation.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -90,6 +92,14 @@ public class OrderController {
         }
     }
 
+    /**
+     * 返回订单详情
+     */
+    @GetMapping("/details/{userId}")
+    public ResponseEntity<OrderDetailDTO> getOrderDetails(@PathVariable String userId) {
+        OrderDetailDTO orderDetail = orderService.getOrderDetailsByUserId(userId);
+        return ResponseEntity.ok(orderDetail);
+    }
     /**
      * 更新订单信息
      *

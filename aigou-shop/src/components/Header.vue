@@ -15,8 +15,7 @@ const logout = async () => {
   localStorage.removeItem('userId');
   localStorage.removeItem('rememberMe')
   ElMessage.info('已退出登录')
-  // 跳转到首页，并清除 query 参数
-  await router.replace({path: '/'});
+  window.location.reload();
 };
 onMounted(() => {
   isHomeRoute.value = (route.path === "/");
