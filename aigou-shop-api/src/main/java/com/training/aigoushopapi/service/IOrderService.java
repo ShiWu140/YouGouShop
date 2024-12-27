@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.training.aigoushopapi.entity.Order;
 import com.training.aigoushopapi.entity.request.OrderDetailDTO;
 
+import java.util.List;
+
 /**
  * <p>
  * 服务类
@@ -14,5 +16,5 @@ import com.training.aigoushopapi.entity.request.OrderDetailDTO;
  */
 public interface IOrderService extends IService<Order> {
 
-    OrderDetailDTO getOrderDetailsByUserId(String userId);
+    List<OrderDetailDTO> getOrderDetailsByUserId(String userId);
 }

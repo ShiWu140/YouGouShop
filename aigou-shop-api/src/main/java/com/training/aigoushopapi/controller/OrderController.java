@@ -96,9 +96,8 @@ public class OrderController {
      * 返回订单详情
      */
     @GetMapping("/details/{userId}")
-    public ResponseEntity<OrderDetailDTO> getOrderDetails(@PathVariable String userId) {
-        OrderDetailDTO orderDetail = orderService.getOrderDetailsByUserId(userId);
-        return ResponseEntity.ok(orderDetail);
+    public List<OrderDetailDTO> getOrderDetails(@PathVariable String userId) {
+        return orderService.getOrderDetailsByUserId(userId);
     }
     /**
      * 更新订单信息

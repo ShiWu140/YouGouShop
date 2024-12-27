@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -35,44 +36,56 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Resource
     private ProductMapper productMapper;
 
-    public OrderDetailDTO getOrderDetailsByUserId(String userId) {
-        // 获取用户的订单
+    public List<OrderDetailDTO> getOrderDetailsByUserId(String userId) {
+        // 获取用户的所有订单
         List<Order> orders = orderMapper.selectList(new QueryWrapper<Order>().lambda().eq(Order::getUserId, userId));
         if (orders.isEmpty()) {
-            return null;
+            throw new RuntimeException("No orders found for userId: " + userId);
         }
 
-        // 假设只取第一个订单
-        Order order = orders.get(0);
+        // 获取所有订单的ID
+        List<String> orderIds = orders.stream()
+                .map(Order::getId)
+                .collect(Collectors.toList());
 
-        // 查询订单商品
+        // 查询多个订单的订单商品
         List<OrderProduct> orderProducts = orderProductMapper.selectList(
-                new QueryWrapper<OrderProduct>().eq("order_id", order.getId())
+                new QueryWrapper<OrderProduct>().lambda().in(OrderProduct::getOrderId, orderIds)
         );
 
         // 查询商品信息并封装
-        List<OrderDetailDTO.OrderProductDTO> productDTOList = new ArrayList<>();
-        for (OrderProduct orderProduct : orderProducts) {
-            Product product = productMapper.selectById(orderProduct.getProductId());
-            OrderDetailDTO.OrderProductDTO productDTO = new OrderDetailDTO.OrderProductDTO();
-            productDTO.setProductId(product.getId());
-            productDTO.setProductNum(orderProduct.getProductNum());
-            productDTO.setProductName(product.getProductName());
-            productDTO.setProductImage(product.getProductImage());
-            productDTO.setPrice(product.getPrice());
-            productDTO.setProductType(product.getProductType());
-            productDTO.setProductDesc(product.getProductDesc());
-            productDTO.setProductBrand(product.getProductBrand());
+        List<OrderDetailDTO> orderDetailDTOList = new ArrayList<>();
+        for (Order order : orders) {
+            List<OrderProduct> orderProductList = orderProducts.stream()
+                    .filter(op -> op.getOrderId().equals(order.getId()))
+                    .collect(Collectors.toList());
 
-            productDTOList.add(productDTO);
+            // 查询商品信息并封装
+            List<OrderDetailDTO.OrderProductDTO> productDTOList = new ArrayList<>();
+            for (OrderProduct orderProduct : orderProductList) {
+                Product product = productMapper.selectById(orderProduct.getProductId());
+                OrderDetailDTO.OrderProductDTO productDTO = new OrderDetailDTO.OrderProductDTO();
+                productDTO.setProductId(product.getId());
+                productDTO.setProductNum(orderProduct.getProductNum());
+                productDTO.setProductName(product.getProductName());
+                productDTO.setProductImage(product.getProductImage());
+                productDTO.setPrice(product.getPrice());
+                productDTO.setProductType(product.getProductType());
+                productDTO.setProductDesc(product.getProductDesc());
+                productDTO.setProductBrand(product.getProductBrand());
+
+                productDTOList.add(productDTO);
+            }
+
+            // 封装返回结果
+            OrderDetailDTO orderDetailDTO = new OrderDetailDTO();
+            orderDetailDTO.setOrderId(order.getId());
+            orderDetailDTO.setCreateTime(order.getCreateTime());
+            orderDetailDTO.setProducts(productDTOList);
+
+            orderDetailDTOList.add(orderDetailDTO);
         }
 
-        // 封装返回结果
-        OrderDetailDTO orderDetailDTO = new OrderDetailDTO();
-        orderDetailDTO.setOrderId(order.getId());
-        orderDetailDTO.setCreateTime(order.getCreateTime());
-        orderDetailDTO.setProducts(productDTOList);
-
-        return orderDetailDTO;
+        return orderDetailDTOList;
     }
 }
