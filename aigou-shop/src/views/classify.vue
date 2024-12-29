@@ -199,7 +199,6 @@ onMounted(() => {
 });
 */
 
-
 </script>
 <template>
   <!--头部-->
@@ -461,8 +460,11 @@ onMounted(() => {
     >
 
       <ul class="clear-float" >
+        <i class="fa fa-globe"></i>
         <!--          <el-card :body-style="{ padding: '0px' }">-->
-        <li style="height: 310px;width:90% ; margin-bottom: 50px;background-color: #fff"><a href="#">
+        <li style="height: 310px;width:90% ; margin-bottom: 50px;background-color: #fff">
+          <router-link :to="'/goodsDetail?id='+item.id">
+          <a href="#">
           <img
               width="230px" height="230px"
               :src=item.productImage
@@ -471,8 +473,12 @@ onMounted(() => {
           <p class="g-title">{{ item.productName }}</p>
           <span class="g-price">￥{{ item.price }}</span>
           <span class="g-num" style="float: right;margin-right: 50px">销量:{{ item.salesNum }}</span>
-        </a></li>
+
+
+          </a>
+          </router-link></li>
         <!--          </el-card>-->
+
       </ul>
 
     </el-col>
