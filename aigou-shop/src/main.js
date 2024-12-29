@@ -23,7 +23,7 @@ app.config.globalProperties.$http.interceptors.request.use(
     req => {
         //读取localstoge中的token
         let token = localStorage.getItem("token");
-        console.log("拦截请求数据--->" + token);
+        // console.log("拦截请求数据--->" + token);
         if (token) {
             //把localStorage的token放在Authorization里
             req.headers.Authorization = token;
@@ -38,7 +38,7 @@ app.config.globalProperties.$http.interceptors.request.use(
 //响应拦截器
 app.config.globalProperties.$http.interceptors.response.use(
     resp => {
-        console.log('响应数据拦截--->', resp)
+        // console.log('响应数据拦截--->', resp)
         if (resp.data.message === "login failed") {
             ElMessage.error({message: '没有登录，请重新登录'})
             location.href = '/login'

@@ -124,7 +124,7 @@ const batchDelete = async () => {
 const fetchProducts = async () => {
   try {
     const response = await axios.get('/shopCart/getProductsByUserId?userId=' + userId);
-    console.log('API Response:', response.data); // 调试日志
+    // console.log('API Response:', response.data);
     if (response.data.code === 1) {
       // 接收产品列表
       const products = response.data.data || [];
@@ -135,7 +135,7 @@ const fetchProducts = async () => {
         productPrice: product.productPrice,
         productNum: product.productNum,
       }));
-      console.log("购物车返回数据为：", tableData.value);
+      // console.log("购物车返回数据为：", tableData.value);
     } else {
       console.error('获取购物车数据失败:', response.data.msg);
     }
@@ -148,16 +148,16 @@ const fetchProducts = async () => {
 const fetchAddress = async () => {
   try {
     const response = await axios.get(`/receivingAddress/getReceivingAddressByUserId?userId=${userId}`);
-    console.log('API 请求:', response.data); // 调试日志
+    // console.log('API 请求:', response.data);
     if (response.data.code === 1) {
       response.data.data.filter((item) => {
         if (item.isDefault) {
           addressData.value = item; // 设置地址数据
-          console.log("默认收货地址数据为：", addressData)
+          // console.log("默认收货地址数据为：", addressData)
 
         }
       })
-      console.log("切换收货地址数据为：", addressData)
+      // console.log("切换收货地址数据为：", addressData)
       addressList.value.length = 0;
       addressList.value = response.data.data
     } else {
@@ -194,10 +194,28 @@ const submitForm = async () => {
     // 调用后端接口
     console.log("准备提交的数据:", orderData);
     const response = await axios.post('/order/add', orderData);
-    console.log(response.data.data)
     if (response.data.code === 1) {
-      ElMessage.success("订单提交成功！");
-      console.log("订单 ID:", response.data.data);
+      console.log("订单 ID:", response.data);
+      const orderId = response.data.data.orderId;
+      const totalAmount = response.data.data.totalAmount;
+
+      // 调用微信下单接口
+      const wxPayResponse = await axios.get('/wxpay/makeOrder', {
+        params: {
+          orderId: orderId,
+          price: totalAmount
+        }
+      });
+      if (wxPayResponse.data.code === 1) {
+        const qrCodeUrl = wxPayResponse.data.data.code_url;
+        const tradeNo = wxPayResponse.data.data.trade_no;
+        // 跳转到支付页面并展示二维码
+        window.location.href = `/payment?&totalAmount=${encodeURIComponent(totalAmount)}
+        &qrCodeUrl=${encodeURIComponent(qrCodeUrl)}
+        &tradeNo=${encodeURIComponent(tradeNo)}`;
+      } else {
+        ElMessage.error(`微信下单失败：${wxPayResponse.data.msg}`);
+      }
       // 清空选中项
       clearSelection();
     } else {
@@ -208,7 +226,6 @@ const submitForm = async () => {
     ElMessage.error("订单提交失败，请稍后重试！");
   }
 };
-
 // 切换地址
 const selectAddress = (address) => {
   addressData.value = address
