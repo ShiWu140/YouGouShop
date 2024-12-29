@@ -12,3 +12,14 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+security:
+  # URL白名单
+  whitelist:
+    - /user/add
+    - /user/login
+    - /product/getProductSalesList
+    - /product/allCategoryProduct
+    - /carouselFigure/all
+    - /productType/all
+    - /product/newProduct
+    - /searchHistory/page

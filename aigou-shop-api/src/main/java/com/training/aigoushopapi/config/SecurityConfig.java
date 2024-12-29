@@ -29,7 +29,14 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
     @Resource
+    private final SecurityProperties securityProperties;
+    @Resource
     private UserDetailsService userDetailsService;
+
+    // 白名单
+    public SecurityConfig(SecurityProperties securityProperties) {
+        this.securityProperties = securityProperties;
+    }
 
     //提供密码加密器
     @Bean
@@ -53,9 +60,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, TokenAuthenticationFilter tokenAuthenticationFilter) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/user/login", "/user/add").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/product/getProductSalesList", "/product/allCategoryProduct", "/carouselFigure/all", "/productType/all", "/product/newProduct").permitAll()// 配置白名单
-                        .anyRequest().authenticated() // 其他请求需要认证
+                        .requestMatchers(HttpMethod.POST, securityProperties.getWhitelist().toArray(new String[0])).permitAll()
+                        .requestMatchers(HttpMethod.GET, securityProperties.getWhitelist().toArray(new String[0])).permitAll()
+                        .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
                         .loginProcessingUrl("/user/login") // 登录处理 URL
@@ -94,7 +101,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // 配置允许的源
-        configuration.setAllowedOrigins(List.of("http://localhost:8091"));
+        configuration.setAllowedOrigins(List.of("http://localhost:8091", "http://localhost:8081/"));
         // 配置允许的方法
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         // 配置允许的请求头

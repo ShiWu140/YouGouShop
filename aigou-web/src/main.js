@@ -32,8 +32,8 @@ Vue.prototype.$http.interceptors.request.use(
 Vue.prototype.$http.interceptors.response.use(
     resp => {
         console.log('response拦截', resp)
-        if (resp.data.data.code === 0) {
-            Message.error({message: '没有登录，请重新登录'})
+        if (resp.data.message === "not login") {
+            Message.error({message: '拦截跳转'})
             location.href = '/login'
         }
         return resp;
@@ -74,11 +74,6 @@ Vue.mixin({
             this.current = val;
             console.log("分页大小：" + this.pageSize + "、当前页" + this.current);
             this.loadData(this.current);
-        },
-        //图片上传方法
-        handleAvatarSuccess(res, file) {
-            console.log('upload', res.data)
-            this.imageUrl = res.data
         },
         loadData() {
         },
