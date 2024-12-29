@@ -4,6 +4,7 @@ import axios from "axios";
 const searchHistory = ref([]);
 const fetchSearchHistory = async () => {
   try {
+    /*const response =await axios.post("http://localhost:8080/product/pageH", {name:searchHistory.value});*/
     const response = await axios.get('http://localhost:8080/searchHistory/page', {
       params: {
         current: 1, // 当前页码
@@ -33,7 +34,7 @@ onMounted(() => {
       <!--搜索框-->
       <div class="search clear-float">
         <input type="text" placeholder="牛奶" class="search-txt"/>
-        <a href="#" class="search-btn">搜索</a>
+        <a href="http://localhost:8091/classify" class="search-btn">搜索</a>
       </div>
       <!--热搜-->
       <p class="hotkey">
