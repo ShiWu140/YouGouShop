@@ -38,7 +38,7 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // 配置白名单路径
-        List<String> whiteList = List.of("/user/login", "/user/add", "/product/getProductSalesList", "/product/allCategoryProduct", "/carouselFigure/all", "/productType/all", "/product/newProduct");
+        List<String> whiteList = List.of("/user/login", "/user/add", "/product/getProductSalesList", "/product/allCategoryProduct", "/carouselFigure/all", "/productType/all", "/product/newProduct","/upload");
         // 跳过无需验证的路径
         String path = request.getServletPath();
         if (whiteList.contains(path)) {

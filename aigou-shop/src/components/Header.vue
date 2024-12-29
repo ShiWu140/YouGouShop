@@ -15,6 +15,7 @@ const logout = async () => {
   localStorage.removeItem('userId');
   localStorage.removeItem('rememberMe')
   ElMessage.info('已退出登录')
+  await router.push('/');
   window.location.reload();
 };
 onMounted(() => {

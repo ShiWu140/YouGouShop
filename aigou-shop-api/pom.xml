@@ -116,6 +116,12 @@
             <version>2.0.51.android8</version>
             <scope>compile</scope>
         </dependency>
+        <!--支付宝-->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>4.40.26.ALL</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -115,6 +115,12 @@ export default {
             }
           })
     },
+    //图片上传方法
+    handleAvatarSuccess(res, file) {
+      console.log('upload', res)
+      this.imageUrl = res
+      this.product.productImage = res
+    }
   },
   mounted() {
     this.loadTypes()

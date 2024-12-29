@@ -53,8 +53,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, TokenAuthenticationFilter tokenAuthenticationFilter) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/user/login", "/user/add").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/product/getProductSalesList", "/product/allCategoryProduct", "/carouselFigure/all", "/productType/all", "/product/newProduct").permitAll()// 配置白名单
+                        .requestMatchers(HttpMethod.POST, "/user/login", "/user/add","/upload").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/product/getProductSalesList", "/product/allCategoryProduct", "/carouselFigure/all", "/productType/all", "/product/newProduct","/upload").permitAll()// 配置白名单
                         .anyRequest().authenticated() // 其他请求需要认证
                 )
                 .formLogin(login -> login
@@ -94,7 +94,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // 配置允许的源
-        configuration.setAllowedOrigins(List.of("http://localhost:8091"));
+        configuration.setAllowedOrigins(List.of("http://localhost:8091","http://localhost:8081/"));
         // 配置允许的方法
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         // 配置允许的请求头

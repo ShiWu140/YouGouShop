@@ -3,6 +3,8 @@ package com.training.aigoushopapi.util;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -67,4 +69,8 @@ public class OSSUtils {
         // 将生成的URL转换为字符串并返回，以便在外部使用
         return url.toString();
     }
+//    public static void main(String[] args) throws FileNotFoundException {
+//        upload(new FileInputStream("D:\\10001.png"),"10001.png");
+//        System.out.println(getUrl("10001.png"));
+//    }
 }

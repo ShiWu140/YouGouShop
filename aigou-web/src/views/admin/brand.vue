@@ -98,6 +98,12 @@ export default {
             }
           })
     },
+    // 图片上传方法
+    handleAvatarSuccess(res, file) {
+      console.log('upload', res);
+      this.imageUrl = res;  // 仅更新当前品牌的图片 URL
+      this.brand.brandImg = res;  // 更新当前品牌的 brandImg 属性
+    }
   },
   mounted() {
     this.loadTypes()
@@ -123,7 +129,7 @@ export default {
           <el-upload
               class="avatar-uploader"
               action="http://localhost:8080/upload"
-              accept=".jpg,.png"
+              accept=".jpg,.png,.webp"
               :show-file-list="false"
               :on-success="handleAvatarSuccess">
             <img v-if="imageUrl" :src="imageUrl" class="avatar">

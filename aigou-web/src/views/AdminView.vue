@@ -7,7 +7,7 @@ export default {
     }
   },
   mounted() {
-    const userStr = localStorage.getItem('userName');
+    const userStr = localStorage.getItem('username');
     try {
       if (userStr) {
         this.userName = userStr;
@@ -29,7 +29,7 @@ export default {
         }).then(() => {
           localStorage.removeItem('token');
           localStorage.removeItem('userId');
-          localStorage.removeItem('userName')
+          localStorage.removeItem('username')
           this.$router.push('/login');
         }).catch(() => {
           this.$message.info('已取消退出');

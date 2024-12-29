@@ -3,11 +3,11 @@ export default {
   data() {
     return {
       form: {
-        userName: '',
+        username: '',
         password: ''
       },
       rules: {
-        userName: [
+        username: [
           {required: true, message: '请输入用户名', trigger: 'change'}
         ],
         password: [
@@ -17,7 +17,7 @@ export default {
     };
   },
   mounted() {
-    if (localStorage.getItem("token")){
+    if (localStorage.getItem("token")) {
       this.$router.push({path: '/admin'})
     }
   },
@@ -25,30 +25,29 @@ export default {
     login() {
       console.log('login:' + this.$qs.stringify(this.form))
       this.$http.post('/user/login', this.$qs.stringify(this.form)).then(resp => {
-        console.log(resp.data)
-        if (resp.data.code === 1) {
-          //保存JWT令牌
-          localStorage.setItem("userId", resp.data.data.userId)
-          localStorage.setItem("userName", this.form.userName)
-          localStorage.setItem("token", resp.data.data.token)
-          //登录成功后跳转管理页面
+        console.log("resp.data"+resp.data)
+        if (resp.data) {
+          // 保存JWT令牌
+          localStorage.setItem("userId", resp.data.body.userId)
+          localStorage.setItem("username", resp.data.body.username)
+          localStorage.setItem("token", resp.data.body.token)
+          // 登录成功后跳转管理页面
           this.$router.push({path: '/admin'})
         } else {
-          this.$alert('Error', {
+          this.$alert('登录失败，未返回有效数据', {
             confirmButtonText: '确定', type: 'warning'
           });
         }
       }).catch(error => {
         // 处理HTTP错误
         if (error.response) {
-          this.$alert('登录失败,账号或密码错误', {
+          this.$alert('登录失败，账号或密码错误', {
             confirmButtonText: '确定', type: 'warning'
           });
         } else if (error.request) {
           // 请求已发出，但没有收到响应
-          this.$alert('登录失败,未收到服务器相应', {
-            confirmButtonText: '确定', type:
-                'warning'
+          this.$alert('登录失败，未收到服务器响应', {
+            confirmButtonText: '确定', type: 'warning'
           });
         } else {
           // 在设置请求时发生了一些事情，触发了错误
@@ -77,8 +76,8 @@ export default {
           <el-col :span="12">
             <h1>爱购网后台管理系统</h1>
             <el-form ref="form" :model="form" :rules="rules" style="padding: 30px">
-              <el-form-item label="用户名" prop="userName">
-                <el-input v-model.trim="form.userName" placeholder="请输入内容" @keyup.enter.native="login"></el-input>
+              <el-form-item label="用户名" prop="username">
+                <el-input v-model.trim="form.username" placeholder="请输入内容" @keyup.enter.native="login"></el-input>
               </el-form-item>
               <el-form-item label="密码" prop="password">
                 <el-input v-model.trim="form.password" placeholder="请输入密码" show-password

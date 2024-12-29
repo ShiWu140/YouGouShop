@@ -9,7 +9,7 @@ import BuyerTradeView from '@/views/buyerTrade.vue';
 import ClassifyView from '@/views/classify.vue';
 import GoodsDetailView from '@/views/goodsDetail.vue';
 import DeliverAddressView from '@/views/deliverAddress.vue';
-
+import payment from "@/views/payment.vue";
 const routes = [
     {
         path: '/',
@@ -58,6 +58,12 @@ const routes = [
         name: 'deliverAddress',
         meta: {noRequireAuth: false},
         component: DeliverAddressView,
+    },
+    {
+        path: '/payment',
+        name: 'Payment',
+        meta: {noRequireAuth: false},
+        component: payment,
     }
 ];
 
