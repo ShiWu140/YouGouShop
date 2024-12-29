@@ -164,13 +164,14 @@ public class ProductController {
         }
         return allCategoryProduct;
     }
+
     /**
      * 新品数据列表
      *
      * @return 首页需要展示的新品
      */
     @GetMapping("/newProduct")
-    public List<Product> getNewProduct(){
+    public List<Product> getNewProduct() {
         QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("create_time");
         queryWrapper.last("LIMIT 6");

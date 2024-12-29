@@ -10,7 +10,6 @@ import com.training.aigoushopapi.entity.request.ProductRequest;
 import com.training.aigoushopapi.service.IOrderProductService;
 import com.training.aigoushopapi.service.IOrderService;
 import jakarta.annotation.Resource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -69,7 +68,6 @@ public class OrderController {
      * 添加订单
      *
      * @param orderRequest 订单对象
-     * @return 成功或失败信息
      */
     @PostMapping("/add")
     public void add(@RequestBody OrderRequest orderRequest) {
@@ -99,6 +97,7 @@ public class OrderController {
     public List<OrderDetailDTO> getOrderDetails(@PathVariable String userId) {
         return orderService.getOrderDetailsByUserId(userId);
     }
+
     /**
      * 更新订单信息
      *

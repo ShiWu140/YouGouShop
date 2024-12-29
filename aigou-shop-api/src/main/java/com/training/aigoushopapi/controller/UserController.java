@@ -22,9 +22,9 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
     @Resource
-    private IUserService userService;
-    @Resource
     PasswordEncoder passwordEncoder;
+    @Resource
+    private IUserService userService;
 
     /**
      * 分页查询 用户信息

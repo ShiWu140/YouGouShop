@@ -54,7 +54,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/user/login", "/user/add").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/product/getProductSalesList", "/product/allCategoryProduct","/carouselFigure/all","/productType/all","/product/newProduct").permitAll()// 配置白名单
+                        .requestMatchers(HttpMethod.GET, "/product/getProductSalesList", "/product/allCategoryProduct", "/carouselFigure/all", "/productType/all", "/product/newProduct").permitAll()// 配置白名单
                         .anyRequest().authenticated() // 其他请求需要认证
                 )
                 .formLogin(login -> login

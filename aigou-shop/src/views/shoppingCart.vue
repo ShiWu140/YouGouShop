@@ -4,6 +4,7 @@ import {onMounted, ref} from 'vue';
 import axios from "axios";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
+
 const userId = localStorage.getItem('userId')
 // 存储购物车数据
 const tableData = ref([])
@@ -39,29 +40,86 @@ const clearSelection = () => {
 const handleSelectionChange = (val) => {
   multipleSelection.value = val
 }
-// 商品数量更改
-const handleChange = (row) => {
-  console.log('商品数量更改为：', row.productNum);
-};
-// 删除商品
-const handleClick = (row) => {
-  tableData.value = tableData.value.filter(item => item !== row);
-  console.log('删除商品：', row);
-};
-// 批量删除选中商品
-const batchDelete = () => {
-  if (multipleSelection.value.length) {
-    tableData.value = tableData.value.filter(item => !multipleSelection.value.includes(item));
-    clearSelection(); // 删除后清空选中状态
-    console.log('批量删除商品：', multipleSelection.value);
-  }
-};
 // 提取省市信息
 const extractProvinceOrCity = (address) => {
   const regex = /^(.*?[省市])/; // 匹配以“省”或“市”结尾的部分
   const match = address.match(regex);
   return match ? match[1] : '';
 };
+// 商品数量更改
+const handleChange = async (row) => {
+  try {
+    const response = await axios.get('/shopCartProduct/updateProductNum', {
+      params: {
+        cartId: row.cartId,       // 购物车ID
+        productId: row.productId,  // 商品ID
+        productNum: row.productNum // 更新后的商品数量
+      }
+    });
+    if (response.data.code === 1) {
+      ElMessage.success("商品数量更新成功！");
+    } else {
+      ElMessage.error(`更新失败：${response.data.msg}`);
+    }
+  } catch (error) {
+    console.error("更新商品数量失败：", error);
+    ElMessage.error("更新失败，请稍后重试！");
+  }
+};
+
+// 删除商品 /shopCart/deleteProductFromCart
+const handleClick = async (row) => {
+  try {
+    const response = await axios.delete('/shopCart/deleteProductFromCart', {
+      params: {
+        cartId: row.cartId,
+        productId: row.productId
+      }
+    });
+    console.log("删除商品请求：" + response)
+    if (response.data.code === 1) {
+      ElMessage.success('删除成功');
+      tableData.value = tableData.value.filter(item => item !== row);
+      console.log('删除商品：', row);
+    } else {
+      ElMessage.error('删除失败');
+    }
+  } catch (error) {
+    ElMessage.error("删除商品失败")
+  }
+};
+
+// 批量删除选中商品
+const batchDelete = async () => {
+  if (!multipleSelection.value.length) {
+    ElMessage.warning("请先选择商品再批量删除！");
+    return;
+  }
+  try {
+    const promises = multipleSelection.value.map(item =>
+        axios.delete('/shopCart/deleteProductFromCart', {
+          params: {
+            cartId: item.cartId,
+            productId: item.productId,
+          },
+        })
+    );
+    const results = await Promise.all(promises);
+    const failedDeletes = results.filter(res => res.data.code !== 1);
+    if (failedDeletes.length === 0) {
+      ElMessage.success("批量删除成功！");
+      // 更新购物车数据
+      tableData.value = tableData.value.filter(item => !multipleSelection.value.includes(item));
+      clearSelection(); // 清空选中状态
+    } else {
+      ElMessage.warning(`部分商品删除失败：${failedDeletes.length}个`);
+    }
+  } catch (error) {
+    console.error("批量删除失败：", error);
+    ElMessage.error("批量删除失败，请稍后重试！");
+  }
+};
+
 // 获取购物车数据
 const fetchProducts = async () => {
   try {
@@ -71,6 +129,7 @@ const fetchProducts = async () => {
       // 接收产品列表
       const products = response.data.data || [];
       tableData.value = products.map(product => ({
+        cartId: product.cartId,
         productId: product.productId,
         productImage: product.productImage,
         productPrice: product.productPrice,
@@ -119,7 +178,6 @@ const submitForm = async () => {
     ElMessage.warning("请先设置收货地址！");
     return;
   }
-
   // 准备提交的数据
   const orderData = {
     id: "",
@@ -132,7 +190,6 @@ const submitForm = async () => {
       productNum: item.productNum,
     })),
   };
-
   try {
     // 调用后端接口
     console.log("准备提交的数据:", orderData);
@@ -245,20 +302,20 @@ onMounted(() => {
         </el-table-column>
         <el-table-column label="选择">
           <template #default="scope">
-            <el-button link type="primary" @click="handleClick(scope.row)">删除</el-button>
+            <el-button link type="danger" @click="handleClick(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <div style="margin: 2px">
         <el-button @click="toggleSelection(tableData)">全选</el-button>
-        <el-button @click="batchDelete()">批量删除</el-button>
+        <el-button type="danger" @click="batchDelete()">批量删除</el-button>
         <el-button @click="clearSelection()">清除</el-button>
         <el-button @click="submitForm()">结算</el-button>
       </div>
     </div>
 
   </div>
-<Footer/>
+  <Footer/>
 </template>
 <style scoped>
 @import "@/assets/css/shoppingCart.css";

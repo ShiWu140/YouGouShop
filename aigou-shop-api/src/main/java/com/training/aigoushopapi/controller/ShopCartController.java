@@ -3,6 +3,7 @@ package com.training.aigoushopapi.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.training.aigoushopapi.annotation.ResponseResult;
 import com.training.aigoushopapi.entity.ShopCart;
+import com.training.aigoushopapi.service.IShopCartProductService;
 import com.training.aigoushopapi.service.IShopCartService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,8 @@ import java.util.List;
 public class ShopCartController {
     @Resource
     private IShopCartService shopCartService;
+    @Resource
+    private IShopCartProductService shopCartProductService;
 
     /**
      * 分页查询 购物车信息
@@ -99,4 +102,17 @@ public class ShopCartController {
     public List<ShopCart> getProductsByUserId(@RequestParam Long userId) {
         return shopCartService.getProductsByUserId(userId);
     }
+
+    /**
+     * 根据购物车id从购物车中删除指定商品
+     *
+     * @param cartId    购物车id
+     * @param productId 商品id
+     * @return true false
+     */
+    @DeleteMapping("/deleteProductFromCart")
+    public boolean deleteProductFromCart(@RequestParam String cartId, @RequestParam String productId) {
+        return shopCartService.deleteProductFromCart(cartId, productId);
+    }
+
 }

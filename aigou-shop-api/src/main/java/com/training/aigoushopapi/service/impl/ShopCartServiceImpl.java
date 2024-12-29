@@ -35,4 +35,15 @@ public class ShopCartServiceImpl extends ServiceImpl<ShopCartMapper, ShopCart> i
     public List<ShopCart> getProductsByUserId(Long userId) {
         return shopCartMapper.getProductsByUserId(userId);
     }
+
+    /**
+     * 根据购物车id删除购物车商品信息{/shoppingCart/delete}
+     *
+     * @param cartId    购物车ID
+     * @param productId 商品ID
+     */
+    @Override
+    public boolean deleteProductFromCart(String cartId, String productId) {
+        return shopCartMapper.deleteProductFromCart(cartId, productId);
+    }
 }

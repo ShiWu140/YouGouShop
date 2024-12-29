@@ -22,4 +22,8 @@ public interface IShopCartService extends IService<ShopCart> {
      */
     List<ShopCart> getProductsByUserId(Long userId);
 
+    /**
+     * 根据购物车id删除购物车商品信息{/shoppingCart/delete}
+     */
+    boolean deleteProductFromCart(String cartId, String productId);
 }

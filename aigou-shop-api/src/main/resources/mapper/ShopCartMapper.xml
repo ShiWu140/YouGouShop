@@ -3,11 +3,11 @@
 <mapper namespace="com.training.aigoushopapi.mapper.ShopCartMapper">
 
     <!-- 定义结果映射 -->
-<!--    <resultMap id="BaseResultMap" type="com.training.aigoushopapi.entity.ShopCart">-->
-<!--        <id column="id" property="id" />-->
-<!--        <result column="cart_id" property="cartId" />-->
-<!--        <result column="user_id" property="userId" />-->
-<!--    </resultMap>-->
+    <!--    <resultMap id="BaseResultMap" type="com.training.aigoushopapi.entity.ShopCart">-->
+    <!--        <id column="id" property="id" />-->
+    <!--        <result column="cart_id" property="cartId" />-->
+    <!--        <result column="user_id" property="userId" />-->
+    <!--    </resultMap>-->
 
     <!-- 根据用户ID查询购物车商品信息 -->
     <select id="getProductsByUserId" resultType="ShopCart">
@@ -27,5 +27,11 @@
              s_product p ON scp.product_id = p.id
         WHERE u.user_id = #{userId}
     </select>
-
+    <!--根据购物车id删除购物车商品信息-->
+    <delete id="deleteProductFromCart">
+        DELETE
+        FROM s_shop_cart_product
+        WHERE shop_cart_id = #{cartId}
+          AND product_id = #{productId}
+    </delete>
 </mapper>

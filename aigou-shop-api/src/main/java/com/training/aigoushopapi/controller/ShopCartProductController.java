@@ -1,5 +1,6 @@
 package com.training.aigoushopapi.controller;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.training.aigoushopapi.annotation.ResponseResult;
 import com.training.aigoushopapi.entity.ShopCartProduct;
@@ -87,5 +88,21 @@ public class ShopCartProductController {
     @PostMapping("/delete")
     public boolean delete(@RequestBody ShopCartProduct shopCartProduct) {
         return shopCartProductService.removeById(shopCartProduct.getId());
+    }
+
+    /**
+     * 跟新商品数量
+     *
+     * @param cartId     购物车id
+     * @param productId  商品id
+     * @param productNum 商品数量
+     * @return true false
+     */
+    @GetMapping("/updateProductNum")
+    public boolean updateProductNum(@RequestParam String cartId, @RequestParam String productId, @RequestParam Integer productNum) {
+        return shopCartProductService.update(new UpdateWrapper<ShopCartProduct>().lambda()
+                .eq(ShopCartProduct::getShopCartId, cartId)
+                .eq(ShopCartProduct::getProductId, productId)
+                .set(ShopCartProduct::getProductNum, productNum));
     }
 }
