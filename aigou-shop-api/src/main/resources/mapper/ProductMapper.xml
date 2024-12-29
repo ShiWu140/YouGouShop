@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.training.aigoushopapi.mapper.ProductMapper">
+    <select id="pageH" resultType="com.training.aigoushopapi.entity.Product">
+        select * from s_product p left join s_sales s on p.id=s.product_id
+        <where>
+            <if test="name != null and name !='' ">
+                and p.product_name like concat('%',#{name},'%')
+            </if>
+            <if test="productType != null  ">
+                and p.product_type = #{productType}
+            </if>
+            <if test="brands != null">
+                and p.product_brand in
+                <foreach collection="brands" item="brand" separator="," open="(" close=")">
+                    #{brand}
+                </foreach>
+            </if>
+            <if test="minP != null">
+                and p.price >= #{minP}
+            </if>
+            <if test="maxP != null">
+                and p.price <![CDATA[
+                <=
+            ]]>
+                #{maxP}
+            </if>
+        </where>
+        <choose>
+            <when test="status != null and status == 1">
+                order by s.sales_num desc
+            </when>
+            <when test="status != null and status == 2">
+                order by s.sales_num asc
+            </when>
+            <when test="status != null and status == 3">
+                order by p.create_time asc
+            </when>
+            <when test="status != null and status == 4">
+                order by p.create_time desc
+            </when>
+            <otherwise>
+                order by p.price
+            </otherwise>
+        </choose>
+        
+    </select>
 
 </mapper>
