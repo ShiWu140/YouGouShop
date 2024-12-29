@@ -63,7 +63,7 @@ export default {
 
       this.tiaojian.productType = this.productType
       if(this.brands.length == 0){
-        this.tiaojian.brands = null
+        this.tiaojian.brands = []
       }else{
         this.tiaojian.brands = this.brands
       }
@@ -92,6 +92,11 @@ export default {
     },
     //价格
     priceProduct() {
+      this.loadingProduct();
+    },
+    priceNullProduct(){
+      this.maxP='';
+      this.minP='';
       this.loadingProduct();
     },
     //品牌数据列表
@@ -131,6 +136,7 @@ export default {
     //重置按钮
     cancelbrandsClick(){
       this.brands=[];
+      this.loadingProduct();
     },
     //点击历史搜索
     nameClick(item){
@@ -240,7 +246,7 @@ onMounted(() => {
   <div class="nav">
     <div class="w1230">
       <div id="all-goods">
-        <span class="all-goods" @click="productTypeClick(type.productTypeName='所有商品分类')">所有商品分类</span>
+        <span class="all-goods" @click="productTypeClick(null)">所有商品分类</span>
         <div class="nav-er" id="nav-er">
           <ul v-for="type in productTypes">
             <li @click="productTypeClick(type.id,type.productTypeName)">
@@ -440,7 +446,7 @@ onMounted(() => {
           <input type="number" placeholder="￥" min="0" class="price" v-model="this.maxP"/>
         </a>
         <a href="#" class="price-sure" @click="priceProduct()">确定</a>
-        <a href="javascript:void(0)" class="price-cancel" id="price-cancel">清空</a>
+        <a href="javascript:void(0)" class="price-cancel" id="price-cancel" @click="priceNullProduct()">清空</a>
       </li>
 
     </ul>

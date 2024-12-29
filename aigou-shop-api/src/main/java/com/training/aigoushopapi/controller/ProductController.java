@@ -28,8 +28,12 @@ public class ProductController {
     @Resource
     private IProductService productService;
 
+    /**
+     * 分页
+     * @param productDto
+     * @return
+     */
     @PostMapping("/pageH")
-    @Cacheable(cacheNames = "productCache",key = "#productDto.name+'_'+#productDto.productType+'_'+#productDto.brands+'_'+#productDto.minP+'_'+#productDto.maxP")
     public Page pageH(@RequestBody ProductDto productDto){
         Page page = productService.pageH(productDto);
         return page;
