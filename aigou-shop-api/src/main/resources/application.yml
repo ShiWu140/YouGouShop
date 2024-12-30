@@ -23,3 +23,7 @@ security:
     - /productType/all
     - /product/newProduct
     - /searchHistory/page
+    - /wxpay/makeOrder
+    - /wxpay/code
+    - /wxpay/checkOrder
+    - /wxpay/callback

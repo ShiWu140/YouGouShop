@@ -8,14 +8,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootTest
 class AigouShopApiApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
     @Autowired
     PasswordEncoder passwordEncoder;
 
     @Test
-    void testPassword(){
+    void contextLoads() {
+    }
+
+    @Test
+    void testPassword() {
         for (int i = 0; i < 5; i++) {
             System.out.println(
                     passwordEncoder.encode("123456"));
