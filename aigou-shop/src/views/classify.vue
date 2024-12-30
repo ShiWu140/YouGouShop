@@ -1,5 +1,9 @@
 <script>
+import Header from "@/components/Header.vue";
+import Search from "@/components/Search.vue";
+
 export default {
+  components: {Search, Header},
   data() {
     return {
       products: [],
@@ -27,7 +31,7 @@ export default {
       page: 1,
       size: 50,
       name: '',
-      names:[],
+      names: [],
       productType: null,
       productTypes: [],
       brands: [],
@@ -43,7 +47,7 @@ export default {
         brandImg: ''
       },
 
-      msg:''
+      msg: ''
     }
   },
   methods: {
@@ -52,19 +56,19 @@ export default {
       this.tiaojian.size = this.size
       this.tiaojian.name = this.name
 
-      if(this.names.includes(this.name)){
+      if (this.names.includes(this.name)) {
 
-      }else{
+      } else {
         this.names.unshift(this.name)
-        if(this.names.length>=8){
+        if (this.names.length >= 8) {
           this.names.pop()
         }
       }
 
       this.tiaojian.productType = this.productType
-      if(this.brands.length === 0){
+      if (this.brands.length === 0) {
         this.tiaojian.brands = []
-      }else{
+      } else {
         this.tiaojian.brands = this.brands
       }
 
@@ -75,10 +79,10 @@ export default {
         console.log('分页数据', response.data)
         if (response.data.code === 1) {
           this.products = response.data.data.records;
-          if(response.data.data.records.length===0){
-            this.msg="当前没有数据"
-          }else{
-            this.msg=''
+          if (response.data.data.records.length === 0) {
+            this.msg = "当前没有数据"
+          } else {
+            this.msg = ''
           }
         } else {
 
@@ -94,9 +98,9 @@ export default {
     priceProduct() {
       this.loadingProduct();
     },
-    priceNullProduct(){
-      this.maxP='';
-      this.minP='';
+    priceNullProduct() {
+      this.maxP = '';
+      this.minP = '';
       this.loadingProduct();
     },
     //品牌数据列表
@@ -122,7 +126,7 @@ export default {
       })
     },
     //点击分类
-    productTypeClick(typeId ,typeName) {
+    productTypeClick(typeId, typeName) {
       console.log('点击分类-数据', typeId)
       this.productType = typeId;
       this.product.productName = typeName
@@ -130,28 +134,28 @@ export default {
     },
     //点击品牌
     brandsClick() {
-      console.log("点击品牌-数据",this.brands)
+      console.log("点击品牌-数据", this.brands)
       this.loadingProduct();
     },
     //重置按钮
-    cancelbrandsClick(){
-      this.brands=[];
+    cancelbrandsClick() {
+      this.brands = [];
       this.loadingProduct();
     },
     //点击历史搜索
-    nameClick(item){
-      this.name=item;
+    nameClick(item) {
+      this.name = item;
       this.loadingProduct();
-      this.name=null;
+      this.name = null;
     },
     //失去焦点
-    handleFocus(){
-      if(this.name.length>=15){
+    handleFocus() {
+      if (this.name.length >= 15) {
         alert("请输入15个字符以内")
       }
     },
     //回车键
-    handleSubmit(item){
+    handleSubmit(item) {
       console.log('回车键被按下');
       this.nameClick(item)
     }
@@ -201,46 +205,8 @@ onMounted(() => {
 
 </script>
 <template>
-  <!--头部-->
-  <div class="top" id="top">
-    <!--头部bar-->
-    <div class="top-bar">
-      <div class="w1230 top-bar-main">
-        <ul>
-          <li><a href="#" class="login">登录</a></li>
-          <li><a href="#" class="register">注册</a></li>
-          <li><a href="#"><i class="fa fa-file-text-o"></i>我的订单</a></li>
-          <li><a href="#"><i class="fa fa-shopping-cart"></i>购物车</a></li>
-        </ul>
-      </div>
-    </div>
-    <!--logo+搜索-->
-    <div class="top-header w1230 clear-float">
-      <a href="index.html" target="_blank" class="logo">
-        <img src="@/assets/img/logo.png"/>
-      </a>
-      <div class="top-header-right">
-        <!--搜索框-->
-        <div class="search clear-float">
-          <input type="text" placeholder="爱购网-专业的综合网上购物商城" class="search-txt" v-model="this.name" @keyup.enter="handleSubmit(this.name)" @blur="handleFocus"/>
-          <a href="#" class="search-btn" @click="loadingProduct()" >搜索</a>
-        </div>
-        <!--热搜-->
-        <p class="hotkey" >
-          <a href="#" style="display: inline-block;" v-for="item in names" @click="nameClick(item)">{{item}}</a>
-<!--          <a href="#">牛仔裤</a>
-          <a href="#">巧克力</a>
-          <a href="#">月饼</a>
-          <a href="#">抽纸</a>
-          <a href="#">狗粮</a>
-          <a href="#">奶粉</a>
-          <a href="#">护发素</a>
-          <a href="#">进口食品</a>
-          <a href="#">良品铺子</a>-->
-        </p>
-      </div>
-    </div>
-  </div>
+  <Header/>
+  <Search/>
   <!--导航栏-->
   <div class="nav">
     <div class="w1230">
@@ -283,7 +249,7 @@ onMounted(() => {
   <!--面包屑导航栏-->
   <div class="crumbSlide w1230">
     <i class="fa fa-th-large classify-icon"></i>
-    <span>{{this.product.productName}}</span>
+    <span>{{ this.product.productName }}</span>
     <i class="fa fa-angle-right"></i>
   </div>
   <!--相关分类（品牌）-->
@@ -293,7 +259,7 @@ onMounted(() => {
       <ul class="clear-float">
         <li v-for="item in brandHH">
           <input type="checkbox" class="chk" :id="item.id" v-model="this.brands" :value="item.id"/>
-          <label :for="item.id" >
+          <label :for="item.id">
             <!--            <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>{{item.brandName}}-->
             <img :src="item.brandImg" width="50" height="50px"/><br/>{{ item.brandName }}
             <img src="../assets/img/choose.png" class="choose"/>
@@ -428,7 +394,7 @@ onMounted(() => {
       </ul>
       <div class="brands-btn">
         <a href="#" class="brands-sure" @click="brandsClick()">确定</a>
-        <a href="javascript:void(0)" class="brands-cancel" id="brands-cancel" @click="cancelbrandsClick()" >重置</a>
+        <a href="javascript:void(0)" class="brands-cancel" id="brands-cancel" @click="cancelbrandsClick()">重置</a>
       </div>
     </div>
   </div>
@@ -451,7 +417,7 @@ onMounted(() => {
     </ul>
   </div>
   <!--商品展示-->
-  <div v-if="msg!=''" style="margin: 100px auto;width: 100px;height: 150px;"  >{{msg}}</div>
+  <div v-if="msg!=''" style="margin: 100px auto;width: 100px;height: 150px;">{{ msg }}</div>
   <el-row style="width: 70%; margin: 50px auto">
     <el-col
         v-for="(item, index) in products"
@@ -459,24 +425,25 @@ onMounted(() => {
         :span="6"
     >
 
-      <ul class="clear-float" >
+      <ul class="clear-float">
         <i class="fa fa-globe"></i>
         <!--          <el-card :body-style="{ padding: '0px' }">-->
         <li style="height: 310px;width:90% ; margin-bottom: 50px;background-color: #fff">
           <router-link :to="'/goodsDetail?id='+item.id">
-          <a href="#">
-          <img
-              width="230px" height="230px"
-              :src=item.productImage
-              class="image"
-          />
-          <p class="g-title">{{ item.productName }}</p>
-          <span class="g-price">￥{{ item.price }}</span>
-          <span class="g-num" style="float: right;margin-right: 50px">销量:{{ item.salesNum }}</span>
+            <a href="#">
+              <img
+                  width="230px" height="230px"
+                  :src=item.productImage
+                  class="image"
+              />
+              <p class="g-title">{{ item.productName }}</p>
+              <span class="g-price">￥{{ item.price }}</span>
+              <span class="g-num" style="float: right;margin-right: 50px">销量:{{ item.salesNum }}</span>
 
 
-          </a>
-          </router-link></li>
+            </a>
+          </router-link>
+        </li>
         <!--          </el-card>-->
 
       </ul>

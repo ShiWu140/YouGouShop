@@ -1,4 +1,5 @@
 package com.training.aigoushopapi.entity.request;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.util.List;
 @Data
 public class OrderDetailDTO {
     private String orderId;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
     private List<OrderProductDTO> products;
 

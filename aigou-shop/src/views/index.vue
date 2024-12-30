@@ -76,7 +76,7 @@ onMounted(() => {
       <ul>
         <li v-for="type in productTypes" :key="type.id">
           <h3>
-            <a href="" class="icon-center">
+            <a :href="'/classify?category=' + type.productTypeName" class="icon-center">
               <el-icon :size="20">
                 <component :is="type.productTypeIcon"></component>
               </el-icon>
@@ -101,7 +101,7 @@ onMounted(() => {
       <div class="new-list">
         <ul v-for="product in productNews">
           <li>
-            <a href="#">
+            <a :href="'/goodsDetail?id=' + product.id">
               <img :src="product.productImage" alt="" width="90px" height="90px"/>
               <p>{{ product.productName }}</p>
             </a>
@@ -115,7 +115,7 @@ onMounted(() => {
       <div class="rank-list">
         <ul v-for="product in productSales">
           <li>
-            <a href="#">
+            <a :href="'/goodsDetail?id=' + product.id">
               <img :src="product.productImage" alt="" width="90px" height="90px"/>
               <p>{{ product.productName }}</p>
             </a>
@@ -141,7 +141,7 @@ onMounted(() => {
       <div class="global-list">
         <ul class="clear-float">
           <li v-for="product in type.product" :key="product.id" class="last">
-            <a href="#">
+            <a :href="'/goodsDetail?id=' + product.id">
               <p class="product-name">{{ product.productName }}</p>
               <img :src="product.productImage" alt="" width="150px" height="150px"/>
             </a>
