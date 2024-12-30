@@ -13,6 +13,7 @@ const logout = async () => {
   // 清除 localStorage 中的 token 和 userId
   localStorage.removeItem('token');
   localStorage.removeItem('userId');
+  localStorage.removeItem('userName')
   localStorage.removeItem('rememberMe')
   ElMessage.info('已退出登录')
   await router.push('/');

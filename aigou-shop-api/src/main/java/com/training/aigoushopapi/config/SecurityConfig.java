@@ -60,8 +60,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, TokenAuthenticationFilter tokenAuthenticationFilter) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, securityProperties.getWhitelist().toArray(new String[0])).permitAll()
-                        .requestMatchers(HttpMethod.GET, securityProperties.getWhitelist().toArray(new String[0])).permitAll()
+                        // 白名单
+                        .requestMatchers(securityProperties.getWhitelist().toArray(new String[0])).permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login

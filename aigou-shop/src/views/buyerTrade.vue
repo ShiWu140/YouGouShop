@@ -10,7 +10,7 @@ const loadOrder = async () => {
   try {
     const userId = localStorage.getItem('userId');
     // 这里将请求地址修改为正确的后端接口地址
-    const response = await axios.get(`/details/${userId}`);
+    const response = await axios.get(`/order/details/${userId}`);
     orderData.value = response.data;
     console.log(orderData.value);
   } catch (error) {

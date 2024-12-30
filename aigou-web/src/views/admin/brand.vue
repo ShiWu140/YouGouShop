@@ -107,6 +107,14 @@ export default {
   },
   mounted() {
     this.loadTypes()
+  },
+  computed: {
+    uploadHeaders() {
+      const token = localStorage.getItem('token');
+      return {
+        Authorization: `${token}`,
+      };
+    }
   }
 }
 </script>
@@ -128,10 +136,11 @@ export default {
           <el-input v-model.trim="this.imageUrl" autocomplete="off"></el-input>
           <el-upload
               class="avatar-uploader"
-              action="http://localhost:8080/upload"
+              action="http://localhost:8080/upload/fileupload"
               accept=".jpg,.png,.webp"
               :show-file-list="false"
-              :on-success="handleAvatarSuccess">
+              :on-success="handleAvatarSuccess"
+              :headers="uploadHeaders">
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
