@@ -33,15 +33,15 @@ onMounted(() => {
     <div class="top-header-right">
       <!--搜索框-->
       <div class="search clear-float">
-        <input type="text" placeholder="牛奶" class="search-txt"/>
+        <input type="text" placeholder="" class="search-txt"/>
         <a href="http://localhost:8091/classify" class="search-btn">搜索</a>
       </div>
       <!--热搜-->
-      <p class="hotkey">
-        <a v-for="history in searchHistory" :key="history.id" :href="`#${history.searchWords}`">{{
-            history.searchWords
-          }}</a>
-      </p>
+<!--      <p class="hotkey">-->
+<!--        <a v-for="history in searchHistory" :key="history.id" :href="`#${history.searchWords}`">{{-->
+<!--            history.searchWords-->
+<!--          }}</a>-->
+<!--      </p>-->
     </div>
   </div>
 </template>

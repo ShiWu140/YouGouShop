@@ -86,7 +86,9 @@ onMounted(() => {
           <span class="add"></span>
           <span class="reduce"></span>
         </div>
-        <a href="#" id="addCart" title="添加购物车"><i class="fa fa-shopping-cart"></i>添加购物车</a><span id="tips"><i
+        <a href="#" id="addCart" title="添加购物车" @click.prevent="addToCart">
+          <i class="fa fa-shopping-cart"></i>添加购物车
+        </a><span id="tips"><i
           class="fa fa-check-circle-o"></i>添加成功</span>
       </div>
     </div>
