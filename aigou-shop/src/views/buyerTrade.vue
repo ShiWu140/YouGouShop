@@ -1,12 +1,27 @@
 <script setup>
-
-import http from '@/utils/axios.js';
+import axios from "axios";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
-http.get("/order/all")
-    .then(res => {
-      console.log(res.data);
-    })
+import { onMounted, ref } from "vue";
+
+const orderData = ref(null);
+
+const loadOrder = async () => {
+  try {
+    const userId = localStorage.getItem('userId');
+    // 这里将请求地址修改为正确的后端接口地址
+    const response = await axios.get(`/details/${userId}`);
+    orderData.value = response.data;
+    console.log(orderData.value);
+  } catch (error) {
+    console.error("请求订单详情时出错:", error);
+    // 可以添加一些错误处理的逻辑，比如显示错误信息给用户
+  }
+};
+
+onMounted(() => {
+  loadOrder();
+});
 </script>
 <template>
   <!--头部-->
@@ -31,11 +46,11 @@ http.get("/order/all")
     </div>
     <!--详细展示-->
     <div class="trade-list">
-      <div>
+      <div v-for="item in order">
         <div class="trade-list-top clear-float">
           <div class="trade-list-l">
-            <span class="trade-date">2018-10-09</span>
-            <span class="trade-no">订单号:23959345783458275</span>
+            <span class="trade-date">{{item.createTime}}</span>
+            <span class="trade-no">订单号:{{item.id}}</span>
           </div>
           <a href="#"><i class="fa fa-trash trade-list-r"></i></a>
         </div>
