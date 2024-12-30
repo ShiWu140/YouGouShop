@@ -168,45 +168,30 @@ export default {
   }
 }
 
-/*
-import {onMounted, ref} from 'vue';
-import axios from "axios";
-
-const products = ref([])
-const product = {
-  id: '',
-  productName: '',
-  productImage: '',
-  price: '',
-  productType: '',
-  productDesc: '',
-  createTime: '',
-  productBrand: '',
-  salesNum: ''
-}
-
-const fetchProducts = async () => {
-  try {
-    const response = await axios.get('/product/pageH?page=1&size=10');
-    console.log('响应Response11111111111:', response.data); // 调试日志
-    // if (response.data) {
-    console.log('this.products:', response.data.data.records);
-      products.value=response.data.data.records;
-      console.log('this.products:11111111', products.value);
-    // }
-  }catch (e) {
-    console.log(e)
-  }
-}
-onMounted(() => {
-  fetchProducts()
-});
-*/
-
 </script>
 <template>
-  <Header/>
-  <Search/>
+  <!--头部-->
+  <div class="top" id="top">
+    <Header />
+    <!--logo+搜索-->
+    <div class="top-header w1230 clear-float">
+      <a href="/" target="_blank" class="logo">
+        <img src="@/assets/img/logo.png"/>
+      </a>
+      <div class="top-header-right">
+        <!--搜索框-->
+        <div class="search clear-float">
+          <input type="text" placeholder="爱购网-专业的综合网上购物商城" class="search-txt" v-model="this.name"
+                 @keyup.enter="handleSubmit(this.name)" @blur="handleFocus"/>
+          <a href="#" class="search-btn" @click="loadingProduct()">搜索</a>
+        </div>
+        <!--热搜-->
+        <p class="hotkey">
+          <a href="#" style="display: inline-block;" v-for="item in names" @click="nameClick(item)">{{ item }}</a>
+        </p>
+      </div>
+    </div>
+  </div>
   <!--导航栏-->
   <div class="nav">
     <div class="w1230">
