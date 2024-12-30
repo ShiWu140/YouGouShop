@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.List;
 @Component
 public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
     private final List<String> whitelist;
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     public TokenAuthenticationFilter(AuthenticationManager authenticationManager, SecurityProperties securityProperties) {
         super(authenticationManager);
@@ -44,7 +46,8 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
 
         // 跳过无需验证的路径
         String path = request.getServletPath();
-        if (whitelist.contains(path)) {
+        // 使用 AntPathMatcher 检查路径是否匹配白名单
+        if (whitelist.stream().anyMatch(pattern -> pathMatcher.match(pattern, path))) {
             chain.doFilter(request, response);
             return;
         }

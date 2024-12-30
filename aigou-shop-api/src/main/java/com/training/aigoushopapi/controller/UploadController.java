@@ -14,9 +14,10 @@ import java.io.IOException;
  */
 @RestController
 @CrossOrigin
+@RequestMapping("/upload")
 public class UploadController {
 
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @PostMapping("/fileupload")
     protected ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) throws IOException {
         try {
             // 获取原始文件名和扩展名
