@@ -1,12 +1,10 @@
 package com.training.aigoushopapi.util;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.joda.time.DateTime;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Date;
 
 /**
  * JWT工具类
@@ -45,5 +43,28 @@ public class JwtUtils {
         //解析jwt
         String username = JwtUtils.getUsernameFromToken(token, RsaUtils.publicKey);
         System.out.println(username);
+    }
+
+    public static boolean isTokenExpired(String token, PublicKey publicKey) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(publicKey)
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.getExpiration().before(new Date());
+        } catch (ExpiredJwtException ex) {
+            // 如果抛出过期异常，则返回 true
+            return true;
+        }
+    }
+
+    /**
+     * 刷新Token（在Token过期后生成新的Token）
+     */
+    public static String refreshToken(String token, PublicKey publicKey, PrivateKey privateKey, int expireMinutes) {
+        // 获取原始用户名
+        String username = getUsernameFromToken(token, publicKey);
+        // 生成新的Token
+        return generateToken(username, privateKey, expireMinutes);
     }
 }

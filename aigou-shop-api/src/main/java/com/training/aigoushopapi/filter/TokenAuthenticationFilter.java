@@ -54,10 +54,16 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
         // 验证 Token
         String token = request.getHeader("Authorization");
         if (token == null) {
-            throw new RuntimeException("token is null");
+            throw new RuntimeException("Token为空");
         }
         try {
             String userName = JwtUtils.getUsernameFromToken(token, RsaUtils.publicKey);
+            // 校验 Token 是否过期（此处假设 JwtUtils 会抛出过期异常）
+            if (JwtUtils.isTokenExpired(token, RsaUtils.publicKey)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token已过期");
+                return;
+            }
             System.out.println("userName --> " + userName);
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(userName, "", AuthorityUtils.commaSeparatedStringToAuthorityList(""));

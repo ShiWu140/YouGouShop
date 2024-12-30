@@ -5,7 +5,11 @@ import com.training.aigoushopapi.annotation.ResponseResult;
 import com.training.aigoushopapi.entity.User;
 import com.training.aigoushopapi.entity.UserVO;
 import com.training.aigoushopapi.service.IUserService;
+import com.training.aigoushopapi.util.JwtUtils;
+import com.training.aigoushopapi.util.RsaUtils;
 import jakarta.annotation.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -105,5 +109,15 @@ public class UserController {
     @PostMapping("/login")
     public UserVO login(@RequestParam String username, @RequestParam String password) {
         return userService.login(username, password);
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<String> refreshToken(@RequestBody String expiredToken) {
+        if (JwtUtils.isTokenExpired(expiredToken, RsaUtils.publicKey)) {
+            String newToken = JwtUtils.refreshToken(expiredToken, RsaUtils.publicKey, RsaUtils.privateKey, JwtUtils.EXPIRE_MINUTES);
+            return ResponseEntity.ok(newToken);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Token is not expired");
+        }
     }
 }
