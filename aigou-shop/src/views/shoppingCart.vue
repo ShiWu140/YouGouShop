@@ -209,6 +209,7 @@ const submitForm = async () => {
       if (wxPayResponse.data.code === 1) {
         const qrCodeUrl = wxPayResponse.data.data.code_url;
         const tradeNo = wxPayResponse.data.data.trade_no;
+        console.log("微信下单返回数据:", wxPayResponse.data.data)
         // 跳转到支付页面并展示二维码
         window.location.href = `/payment?&totalAmount=${encodeURIComponent(totalAmount)}
         &qrCodeUrl=${encodeURIComponent(qrCodeUrl)}

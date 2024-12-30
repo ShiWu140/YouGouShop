@@ -28,22 +28,22 @@ const handlePayment = () => {
 
 // 获取支付二维码
 const fetchPaymentQrCode = async () => {
-  const qrCodeUrl = route.query.qrCodeUrl;
-  try {
-    const response = await axios.get('/wxpay/code', {
-      params: {
-        url: qrCodeUrl
-      },
-      responseType: 'blob' // 设置响应类型为 blob
-    });
-
-    // 创建一个 URL 对象
-    const url = URL.createObjectURL(new Blob([response.data]));
-    paymentQrCode.value = url;
-  } catch (error) {
-    console.error("获取支付二维码失败：", error);
-    ElMessage.error("获取支付二维码失败，请稍后重试！");
-  }
+  // const qrCodeUrl = route.query.qrCodeUrl;
+  // console.log("codeurl:" + qrCodeUrl)
+  // try {
+  //   const response = await axios.get('/wxpay/code', {
+  //     params: {
+  //       url: qrCodeUrl
+  //     },
+  //     responseType: 'blob' // 设置响应类型为 blob
+  //   });
+  //   // 创建一个 URL 对象
+  //   const url = URL.createObjectURL(new Blob([response.data]));
+  //   paymentQrCode.value = url;
+  // } catch (error) {
+  //   console.error("获取支付二维码失败：", error);
+  //   ElMessage.error("获取支付二维码失败，请稍后重试！");
+  // }
 };
 // 检查订单状态
 const checkOrderStatus = async () => {
@@ -55,7 +55,7 @@ const checkOrderStatus = async () => {
     });
 
     // 解析接口返回的数据
-    const { code, msg, data } = response.data;
+    const {code, msg, data} = response.data;
     if (code === 1 && msg === "success") {
       paymentStatus.value = data; // 使用 data 字段的值
       if (paymentStatus.value === 'SUCCESS') {
@@ -101,7 +101,7 @@ onMounted(() => {
           <el-row>
             <el-col :span="24" class="qr-title">扫码支付</el-col>
             <el-col :span="24" class="qr-image">
-              <el-image :src="paymentQrCode" fit="contain" width="200px" height="200px"></el-image>
+              <el-image :src="'http://127.0.0.1:8080/wxpay/code?url=' + route.query.qrCodeUrl" fit="contain" width="200px" height="200px"></el-image>
             </el-col>
           </el-row>
         </div>
