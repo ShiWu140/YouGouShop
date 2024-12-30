@@ -213,34 +213,16 @@ onMounted(() => {
       <div id="all-goods">
         <span class="all-goods" @click="productTypeClick(null)">所有商品分类</span>
         <div class="nav-er" id="nav-er">
-          <ul v-for="type in productTypes">
-            <li @click="productTypeClick(type.id,type.productTypeName)">
-              <h3><a href="#"><i class="fa fa-globe"></i>{{ type.productTypeName }}</a></h3>
+          <ul>
+            <li v-for="type in productTypes" :key="type.id">
+              <h3>
+                <a href="#" class="icon-center">
+                  <el-icon :size="20">
+                    <component :is="type.productTypeIcon"></component>
+                  </el-icon>
+                  {{ type.productTypeName }}</a>
+              </h3>
             </li>
-            <!--            <li>
-                          <h3><a href="#"><i class="fa fa-cutlery"></i>国产食品</a></h3>
-                        </li>
-                        <li>
-                          <h3><a href="#"><i class="fa fa-diamond"></i>服装服饰</a></h3>
-                        </li>
-                        <li>
-                          <h3><a href="#"><i class="fa fa-magic"></i>护肤美妆</a></h3>
-                        </li>
-                        <li>
-                          <h3><a href="#"><i class="fa fa-bath"></i>家居用品</a></h3>
-                        </li>
-                        <li>
-                          <h3><a href="#"><i class="fa fa-futbol-o"></i>儿童玩具</a></h3>
-                        </li>
-                        <li>
-                          <h3><a href="#"><i class="fa fa-television"></i>电子产品</a></h3>
-                        </li>
-                        <li>
-                          <h3><a href="#"><i class="fa fa-medkit"></i>医药保健</a></h3>
-                        </li>
-                        <li>
-                          <h3><a href="#"><i class="fa fa-book"></i>图书学习</a></h3>
-                        </li>-->
           </ul>
         </div>
       </div>
@@ -265,132 +247,6 @@ onMounted(() => {
             <img src="../assets/img/choose.png" class="choose"/>
           </label>
         </li>
-        <!--        <li>
-                  <input type="checkbox" class="chk" id="chk1"/>
-                  <label for="chk1">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>盐津铺子
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk2"/>
-                  <label for="chk2">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>良品铺子
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk3"/>
-                  <label for="chk3">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>百草味
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk4"/>
-                  <label for="chk4">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>大红袍
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk5"/>
-                  <label for="chk5">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>金龙鱼
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk6"/>
-                  <label for="chk6">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>芬尼湾
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk7"/>
-                  <label for="chk7">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>农夫山泉
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk8"/>
-                  <label for="chk8">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>鲁花
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk9"/>
-                  <label for="chk9">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>伊利
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk10"/>
-                  <label for="chk10">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>芦苇微微
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk11"/>
-                  <label for="chk11">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>天地精华
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk12"/>
-                  <label for="chk12">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>广州酒家
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk13"/>
-                  <label for="chk13">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>吾润
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk14"/>
-                  <label for="chk14">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>雲杉
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk15"/>
-                  <label for="chk15">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>福芝林
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk16"/>
-                  <label for="chk16">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>十景斋
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk17"/>
-                  <label for="chk17">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>美心
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>
-                <li>
-                  <input type="checkbox" class="chk" id="chk18"/>
-                  <label for="chk18">
-                    <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>购食惠
-                    <img src="../assets/img/choose.png" class="choose"/>
-                  </label>
-                </li>-->
       </ul>
       <div class="brands-btn">
         <a href="#" class="brands-sure" @click="brandsClick()">确定</a>
@@ -418,102 +274,21 @@ onMounted(() => {
   </div>
   <!--商品展示-->
   <div v-if="msg!=''" style="margin: 100px auto;width: 100px;height: 150px;">{{ msg }}</div>
-  <el-row style="width: 70%; margin: 50px auto">
-    <el-col
-        v-for="(item, index) in products"
-        :key="item"
-        :span="6"
-    >
-
-      <ul class="clear-float">
-        <i class="fa fa-globe"></i>
-        <!--          <el-card :body-style="{ padding: '0px' }">-->
-        <li style="height: 310px;width:90% ; margin-bottom: 50px;background-color: #fff">
-          <router-link :to="'/goodsDetail?id='+item.id">
-            <a href="#">
-              <img
-                  width="230px" height="230px"
-                  :src=item.productImage
-                  class="image"
-              />
-              <p class="g-title">{{ item.productName }}</p>
-              <span class="g-price">￥{{ item.price }}</span>
-              <span class="g-num" style="float: right;margin-right: 50px">销量:{{ item.salesNum }}</span>
-
-
-            </a>
-          </router-link>
-        </li>
-        <!--          </el-card>-->
-
-      </ul>
-
-    </el-col>
-  </el-row>
-  <!--  <div class="goods-show w1230">
+  <div class="goods-show w1230">
     <ul class="clear-float">
-       <li><a href="#">
-         <div class="g-img"><img src="@/assets/img/classify/classify-global01.jpg" alt="" width="230px" height="230px"/></div>
-         <p class="g-title">马来西亚进口 茱蒂丝（Julie's) 美旋律什锦饼干658.8g（新老包装随机发货）</p>
-         <span class="g-price">￥39.00</span>
-         <span class="g-num">销量:800</span>
-       </a></li>
-       <li><a href="#">
-         <div class="g-img"><img src="@/assets/img/classify/classify-global02.jpg" alt="" width="230px" height="230px"/></div>
-         <p class="g-title">新西兰原装进口牛奶 安佳Anchor全脂牛奶UHT纯牛奶250ml*24 整箱装</p>
-         <span class="g-price">￥89.00</span>
-         <span class="g-num">销量:800</span>
-       </a></li>
-       <li><a href="#">
-         <div class="g-img"><img src="@/assets/img/classify/classify-global03.jpg" alt="" width="230px" height="230px"/></div>
-         <p class="g-title">葡韵手信 澳门特产 休闲零食 传统糕点小吃 千层酥150g</p>
-         <span class="g-price">￥23.00</span>
-         <span class="g-num">销量:800</span>
-       </a></li>
-       <li><a href="#">
-         <div class="g-img"><img src="@/assets/img/classify/classify-global04.jpg" alt="" width="230px" height="230px"/></div>
-         <p class="g-title">日本进口 白色恋人 北海道 白巧克力夹心饼干12枚 休闲零食 礼盒132g</p>
-         <span class="g-price">￥89.00</span>
-         <span class="g-num">销量:800</span>
-       </a></li>
-       <li><a href="#">
-         <div class="g-img"><img src="@/assets/img/classify/classify-global05.jpg" alt="" width="230px" height="230px"/></div>
-         <p class="g-title">澳大利亚 进口奶粉 德运 （Devondale）调制乳粉（全脂）成人奶粉 1kg 袋装</p>
-         <span class="g-price">￥69.00</span>
-         <span class="g-num">销量:800</span>
-       </a></li>
-       <li><a href="#">
-         <div class="g-img"><img src="@/assets/img/classify/classify-global06.jpg" alt="" width="230px" height="230px"/></div>
-         <p class="g-title">澳大利亚 进口牛奶 德运（Devondale） 全脂牛奶 1L*10 整箱装</p>
-         <span class="g-price">￥99.00</span>
-         <span class="g-num">销量:800</span>
-       </a></li>
-       <li><a href="#">
-         <div class="g-img"><img src="@/assets/img/classify/classify-global07.jpg" alt="" width="230px" height="230px"/></div>
-         <p class="g-title">Ferrero Rocher费列罗榛果威化糖果巧克力礼盒48粒600g</p>
-         <span class="g-price">￥129.00</span>
-         <span class="g-num">销量:800</span>
-       </a></li>
-       <li><a href="#">
-         <div class="g-img"><img src="@/assets/img/classify/classify-global08.jpg" alt="" width="230px" height="230px"/></div>
-         <p class="g-title">新西兰原装进口牛奶 安佳Anchor全脂牛奶UHT纯牛奶1L*12 整箱装</p>
-         <span class="g-price">￥139.00</span>
-       </a></li>
-       <li><a href="#">
-         <div class="g-img"><img src="@/assets/img/classify/classify-global09.jpg" alt="" width="230px" height="230px"/></div>
-         <p class="g-title">沙特阿拉伯进口 麦维他（Mcvitie's）全麦酥性消化饼干纤滋棒原味180g</p>
-         <span class="g-price">￥17.90</span>
-         <span class="g-num">销量:800</span>
-       </a></li>
-       <li><a href="#">
-         <div class="g-img"><img src="@/assets/img/classify/classify-global10.jpg" alt="" width="230px" height="230px"/></div>
-         <p class="g-title">泰国进口 家乐氏（Kellogg’s）谷维滋 即食谷物 进口冲调 营养谷物早餐310g</p>
-         <span class="g-price">￥29.90</span>
-         <span class="g-num">销量:800</span>
-       </a></li>
-     </ul>
+      <li v-for="(item, index) in products" :key="item.id">
+        <a :href="'/goodsDetail?id=' + item.id">
+          <div class="g-img">
+            <img :src="item.productImage" alt="" width="230px" height="230px"/>
+          </div>
+          <p class="g-title">{{ item.productName }}</p>
+          <span class="g-price">￥{{ item.price }}</span>
+          <span class="g-num">销量:{{ item.salesNum }}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
 
-   </div>-->
   <!--脚注-->
   <div class="footer">
     <p class="w1230">
