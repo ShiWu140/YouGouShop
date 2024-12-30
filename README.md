@@ -81,9 +81,9 @@ npm run dev
 
 ### 赵映添
 
-- [ ] goodsDetail.html
+- [X] goodsDetail.html
 
-- [ ] index.html
+- [X] index.html
 
 
 ### 杜杰龙
@@ -97,11 +97,11 @@ npm run dev
 
 ### 王熙
 
-- [ ] buyerTrade.html
+- [X] buyerTrade.html
 
 
 ### 熊诗怡
 
-- [ ] deliverAddress.html
+- [X] deliverAddress.html
 
-- [ ] classify.html
+- [X] classify.html

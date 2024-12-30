@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.training.aigoushopapi.dto.ProductDto;
 import com.training.aigoushopapi.entity.Product;
 
+import java.util.List;
+
 /**
  * <p>
  * 服务类
@@ -15,4 +17,8 @@ import com.training.aigoushopapi.entity.Product;
  */
 public interface IProductService extends IService<Product> {
     Page pageH(ProductDto productDto);
+
+    List<Product> getSameTypeProducts(String productId);
+
+    Product getDetailByProductId(String id);
 }

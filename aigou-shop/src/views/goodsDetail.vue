@@ -2,6 +2,48 @@
 import Header from "@/components/Header.vue";
 import Search from "@/components/Search.vue";
 import Footer from "@/components/Footer.vue";
+import {onMounted, ref} from "vue";
+import axios from "axios";
+import {useRoute} from "vue-router";
+
+const route = useRoute();
+const productTypes = ref([]);
+
+const fetchProductTypes = async () => {
+  try {
+    const response = await axios.get('/productType/all');
+    productTypes.value = response.data.data;
+    console.log('Product types fetched:', productTypes.value)
+  } catch (error) {
+    console.error('Error fetching product types:', error);
+  }
+};
+const goodsDetail = ref({})
+const fetchGoodsDetail = async () => {
+  try {
+    const response = await axios.get('/product/detail?id=' + route.query.id);
+    goodsDetail.value = response.data.data;
+    console.log('Product GoodsDetail fetched:', goodsDetail.value);
+  } catch (error) {
+    console.error('Error GoodsDetail:', error);
+  }
+};
+
+const sameType = ref([]);
+const fetchRandomProductsByType = async () => {
+  try {
+    const response = await axios.get('/product/sameType?id=' + route.query.id);
+    sameType.value = response.data.data;
+    console.log('Random products fetched:', sameType.value);
+  } catch (error) {
+    console.error('Error fetching random products:', error);
+  }
+};
+onMounted(() => {
+  fetchRandomProductsByType();
+  fetchGoodsDetail();
+  fetchProductTypes()
+})
 </script>
 <template>
   <Header/>
@@ -13,32 +55,14 @@ import Footer from "@/components/Footer.vue";
         <span class="all-goods">所有商品分类</span>
         <div class="nav-er" id="nav-er">
           <ul>
-            <li>
-              <h3><a href="#"><i class="fa fa-globe"></i>全球进口</a></h3>
-            </li>
-            <li>
-              <h3><a href="#"><i class="fa fa-cutlery"></i>国产食品</a></h3>
-            </li>
-            <li>
-              <h3><a href="#"><i class="fa fa-diamond"></i>服装服饰</a></h3>
-            </li>
-            <li>
-              <h3><a href="#"><i class="fa fa-magic"></i>护肤美妆</a></h3>
-            </li>
-            <li>
-              <h3><a href="#"><i class="fa fa-bath"></i>家居用品</a></h3>
-            </li>
-            <li>
-              <h3><a href="#"><i class="fa fa-futbol-o"></i>儿童玩具</a></h3>
-            </li>
-            <li>
-              <h3><a href="#"><i class="fa fa-television"></i>电子产品</a></h3>
-            </li>
-            <li>
-              <h3><a href="#"><i class="fa fa-medkit"></i>医药保健</a></h3>
-            </li>
-            <li>
-              <h3><a href="#"><i class="fa fa-book"></i>图书学习</a></h3>
+            <li v-for="type in productTypes" :key="type.id">
+              <h3>
+                <a href="#" class="icon-center">
+                  <el-icon :size="20">
+                    <component :is="type.productTypeIcon"></component>
+                  </el-icon>
+                  {{ type.productTypeName }}</a>
+              </h3>
             </li>
           </ul>
         </div>
@@ -48,12 +72,14 @@ import Footer from "@/components/Footer.vue";
   <!--商品详情-->
   <div class="w1230 clear-float goods-main">
     <div class="big-img">
-      <img src="@/assets/img/detail/big-detail.jpg"/>
+      <el-image :src="goodsDetail.productImage" fit="contain" style="width: 360px;height: 360px"/>
     </div>
     <div class="goods-detail">
-      <h3 class="goods-title">盼盼 法式软面包 奶香味 300g（内装15枚）</h3>
-      <p class="price">价格<span>￥14.9</span></p>
-      <p class="store-num">销量：<span>800件</span></p>
+      <h3 class="goods-title">
+        {{ goodsDetail.productName }}
+      </h3>
+      <p class="price">价格<span>￥{{ goodsDetail.price }}</span></p>
+      <p class="store-num">销量：<span>{{ goodsDetail.salasNum }}件</span></p>
       <div class="update-num">
         <div>
           <input type="text" value="1" id="goodsNum"/>
@@ -76,75 +102,14 @@ import Footer from "@/components/Footer.vue";
     <!--商品推荐-->
     <div class="recommend goods-show">
       <h3>看了本商品的用户最终购买了</h3>
-      <ul class="clear-float">
+      <ul class="clear-float" v-for="product in sameType">
         <li><a href="#">
-          <div class="g-img"><img src="@/assets/img/classify/classify-global01.jpg" alt="" width="230px"
-                                  height="230px"/></div>
-          <p class="g-title">马来西亚进口 茱蒂丝（Julie's) 美旋律什锦饼干658.8g（新老包装随机发货）</p>
-          <span class="g-price">￥39.00</span>
-          <span class="g-num">销量:800</span>
-        </a></li>
-        <li><a href="#">
-          <div class="g-img"><img src="@/assets/img/classify/classify-global02.jpg" alt="" width="230px"
-                                  height="230px"/></div>
-          <p class="g-title">新西兰原装进口牛奶 安佳Anchor全脂牛奶UHT纯牛奶250ml*24 整箱装</p>
-          <span class="g-price">￥89.00</span>
-          <span class="g-num">销量:800</span>
-        </a></li>
-        <li><a href="#">
-          <div class="g-img"><img src="@/assets/img/classify/classify-global03.jpg" alt="" width="230px"
-                                  height="230px"/></div>
-          <p class="g-title">葡韵手信 澳门特产 休闲零食 传统糕点小吃 千层酥150g</p>
-          <span class="g-price">￥23.00</span>
-          <span class="g-num">销量:800</span>
-        </a></li>
-        <li><a href="#">
-          <div class="g-img"><img src="@/assets/img/classify/classify-global04.jpg" alt="" width="230px"
-                                  height="230px"/></div>
-          <p class="g-title">日本进口 白色恋人 北海道 白巧克力夹心饼干12枚 休闲零食 礼盒132g</p>
-          <span class="g-price">￥89.00</span>
-          <span class="g-num">销量:800</span>
-        </a></li>
-        <li><a href="#">
-          <div class="g-img"><img src="@/assets/img/classify/classify-global05.jpg" alt="" width="230px"
-                                  height="230px"/></div>
-          <p class="g-title">澳大利亚 进口奶粉 德运 （Devondale）调制乳粉（全脂）成人奶粉 1kg 袋装</p>
-          <span class="g-price">￥69.00</span>
-          <span class="g-num">销量:800</span>
-        </a></li>
-        <li><a href="#">
-          <div class="g-img"><img src="@/assets/img/classify/classify-global06.jpg" alt="" width="230px"
-                                  height="230px"/></div>
-          <p class="g-title">澳大利亚 进口牛奶 德运（Devondale） 全脂牛奶 1L*10 整箱装</p>
-          <span class="g-price">￥99.00</span>
-          <span class="g-num">销量:800</span>
-        </a></li>
-        <li><a href="#">
-          <div class="g-img"><img src="@/assets/img/classify/classify-global07.jpg" alt="" width="230px"
-                                  height="230px"/></div>
-          <p class="g-title">Ferrero Rocher费列罗榛果威化糖果巧克力礼盒48粒600g</p>
-          <span class="g-price">￥129.00</span>
-          <span class="g-num">销量:800</span>
-        </a></li>
-        <li><a href="#">
-          <div class="g-img"><img src="@/assets/img/classify/classify-global08.jpg" alt="" width="230px"
-                                  height="230px"/></div>
-          <p class="g-title">新西兰原装进口牛奶 安佳Anchor全脂牛奶UHT纯牛奶1L*12 整箱装</p>
-          <span class="g-price">￥139.00</span>
-        </a></li>
-        <li><a href="#">
-          <div class="g-img"><img src="@/assets/img/classify/classify-global09.jpg" alt="" width="230px"
-                                  height="230px"/></div>
-          <p class="g-title">沙特阿拉伯进口 麦维他（Mcvitie's）全麦酥性消化饼干纤滋棒原味180g</p>
-          <span class="g-price">￥17.90</span>
-          <span class="g-num">销量:800</span>
-        </a></li>
-        <li><a href="#">
-          <div class="g-img"><img src="@/assets/img/classify/classify-global10.jpg" alt="" width="230px"
-                                  height="230px"/></div>
-          <p class="g-title">泰国进口 家乐氏（Kellogg’s）谷维滋 即食谷物 进口冲调 营养谷物早餐310g</p>
-          <span class="g-price">￥29.90</span>
-          <span class="g-num">销量:800</span>
+          <div class="g-img">
+            <el-image :src="product.productImage" fit="contain" style="width: 230px;height: 230px"/>
+          </div>
+          <p class="g-title">{{ product.productName }}</p>
+          <span class="g-price">￥{{ product.price }}</span>
+          <span class="g-num">销量:{{ product.salasNum }}</span>
         </a></li>
       </ul>
     </div>
@@ -153,20 +118,12 @@ import Footer from "@/components/Footer.vue";
       <h3 class="goods-tro">商品介绍</h3>
       <div class="goods-info">
         <ul>
-          <li><img src="@/assets/img/detail/detail01.jpg" alt=""/></li>
-          <li><img src="@/assets/img/detail/detail02.jpg" alt=""/></li>
-          <li><img src="@/assets/img/detail/detail03.jpg" alt=""/></li>
-          <li><img src="@/assets/img/detail/detail04.jpg" alt=""/></li>
-          <li><img src="@/assets/img/detail/detail05.jpg" alt=""/></li>
-          <li><img src="@/assets/img/detail/detail06.jpg" alt=""/></li>
-          <li><img src="@/assets/img/detail/detail07.jpg" alt=""/></li>
-          <li><img src="@/assets/img/detail/detail08.jpg" alt=""/></li>
-          <li><img src="@/assets/img/detail/detail09.jpg" alt=""/></li>
+          {{ goodsDetail.productDesc }}
         </ul>
       </div>
     </div>
   </div>
-<Footer/>
+  <Footer/>
 </template>
 <style scoped>
 @import "@/assets/css/goodsDetail.css";

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
+@ToString
 @TableName("s_product")
 public class Product implements Serializable {
 
@@ -71,4 +73,10 @@ public class Product implements Serializable {
      */
     @TableField("product_brand")
     private String productBrand;
+
+    /**
+     * 商品销量
+     */
+    @TableField(exist = false)
+    private int salasNum;
 }

@@ -62,7 +62,7 @@ export default {
       }
 
       this.tiaojian.productType = this.productType
-      if(this.brands.length == 0){
+      if(this.brands.length === 0){
         this.tiaojian.brands = []
       }else{
         this.tiaojian.brands = this.brands
@@ -73,9 +73,9 @@ export default {
       this.tiaojian.status = this.status
       this.$http.post("/product/pageH", this.tiaojian).then((response) => {
         console.log('分页数据', response.data)
-        if (response.data.code == 1) {
+        if (response.data.code === 1) {
           this.products = response.data.data.records;
-          if(response.data.data.records.length==0){
+          if(response.data.data.records.length===0){
             this.msg="当前没有数据"
           }else{
             this.msg=''
@@ -102,7 +102,7 @@ export default {
     //品牌数据列表
     brandsLoading() {
       this.$http.get("/brand/all").then((response) => {
-        if (response.data.code == 1) {
+        if (response.data.code === 1) {
           console.log("品牌数据列表", response.data.data);
           this.brandHH = response.data.data;
         } else {
@@ -113,7 +113,7 @@ export default {
     //分类列表
     productTypesLoading() {
       this.$http.get("/productType/all").then((response) => {
-        if (response.data.code == 1) {
+        if (response.data.code === 1) {
           console.log("分类列表", response.data.data);
           this.productTypes = response.data.data;
         } else {

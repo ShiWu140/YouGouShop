@@ -76,7 +76,7 @@ onMounted(() => {
       <ul>
         <li v-for="type in productTypes" :key="type.id">
           <h3>
-            <a href="#" class="icon-center">
+            <a href="" class="icon-center">
               <el-icon :size="20">
                 <component :is="type.productTypeIcon"></component>
               </el-icon>

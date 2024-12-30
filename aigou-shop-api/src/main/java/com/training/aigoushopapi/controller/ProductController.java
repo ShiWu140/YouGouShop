@@ -163,4 +163,13 @@ public class ProductController {
         return productService.list(queryWrapper);
 
     }
+
+    @GetMapping("/detail")
+    public Product detail(@RequestParam String id) {
+        return productService.getDetailByProductId(id);
+    }
+    @GetMapping("/sameType")
+    public List<Product> getSameTypeProducts(@RequestParam String id) {
+        return productService.getSameTypeProducts(id);
+    }
 }
