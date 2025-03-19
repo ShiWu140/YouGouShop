@@ -5,46 +5,71 @@ import Footer from "@/components/Footer.vue";
 import {onMounted, ref} from "vue";
 import axios from "axios";
 import {useRoute} from "vue-router";
+import {ElMessage} from "element-plus"; // 引入 ElMessage
 
 const route = useRoute();
 const productTypes = ref([]);
+const goodsDetail = ref({});
+const sameType = ref([]);
+const quantity = ref(1);
 
 const fetchProductTypes = async () => {
   try {
     const response = await axios.get('/productType/all');
     productTypes.value = response.data.data;
-    console.log('Product types fetched:', productTypes.value)
   } catch (error) {
     console.error('Error fetching product types:', error);
   }
 };
-const goodsDetail = ref({})
 const fetchGoodsDetail = async () => {
   try {
     const response = await axios.get('/product/detail?id=' + route.query.id);
     goodsDetail.value = response.data.data;
-    console.log('Product GoodsDetail fetched:', goodsDetail.value);
   } catch (error) {
     console.error('Error GoodsDetail:', error);
   }
 };
-
-const sameType = ref([]);
 const fetchRandomProductsByType = async () => {
   try {
     const response = await axios.get('/product/sameType?id=' + route.query.id);
     sameType.value = response.data.data;
-    console.log('Random products fetched:', sameType.value);
   } catch (error) {
     console.error('Error fetching random products:', error);
   }
 };
+
+// 加入购物车方法
+const addToCart = async () => {
+  try {
+    await axios.post('/shopCart/addProductFromCart', {
+      userId: localStorage.getItem('userId'),
+      productId: goodsDetail.value.id,
+      quantity: quantity.value
+    });
+    ElMessage.success('添加购物车成功！');
+  } catch (error) {
+    ElMessage.error('添加失败，请重试');
+    console.error('添加购物车失败', error);
+  }
+};
+
+// 数量控制
+const increment = () => {
+  quantity.value++;
+};
+const decrement = () => {
+  if (quantity.value > 1) {
+    quantity.value--;
+  }
+};
+
 onMounted(() => {
   fetchRandomProductsByType();
   fetchGoodsDetail();
-  fetchProductTypes()
-})
+  fetchProductTypes();
+});
 </script>
+
 <template>
   <Header/>
   <Search/>
@@ -75,21 +100,18 @@ onMounted(() => {
       <el-image :src="goodsDetail.productImage" fit="contain" style="width: 360px;height: 360px"/>
     </div>
     <div class="goods-detail">
-      <h3 class="goods-title">
-        {{ goodsDetail.productName }}
-      </h3>
+      <h3 class="goods-title">{{ goodsDetail.productName }}</h3>
       <p class="price">价格<span>￥{{ goodsDetail.price }}</span></p>
       <p class="store-num">销量：<span>{{ goodsDetail.salasNum }}件</span></p>
       <div class="update-num">
-        <div>
-          <input type="text" value="1" id="goodsNum"/>
-          <span class="add"></span>
-          <span class="reduce"></span>
+        <div class="quantity">
+          <span class="reduce" @click="decrement">-</span>
+          <input type="number" v-model="quantity" min="1"/>
+          <span class="add" @click="increment">+</span>
         </div>
         <a href="#" id="addCart" title="添加购物车" @click.prevent="addToCart">
           <i class="fa fa-shopping-cart"></i>添加购物车
-        </a><span id="tips"><i
-          class="fa fa-check-circle-o"></i>添加成功</span>
+        </a>
       </div>
     </div>
     <!--店家承诺-->
@@ -104,8 +126,8 @@ onMounted(() => {
     <!--商品推荐-->
     <div class="recommend goods-show">
       <h3>看了本商品的用户最终购买了</h3>
-      <ul class="clear-float" v-for="product in sameType">
-        <li><a href="#">
+      <ul class="clear-float" v-for="product in sameType" :key="product.id">
+        <li><a :href="`/goodsDetail?id=${product.id}`">
           <div class="g-img">
             <el-image :src="product.productImage" fit="contain" style="width: 230px;height: 230px"/>
           </div>
@@ -119,14 +141,13 @@ onMounted(() => {
     <div class="goods-des">
       <h3 class="goods-tro">商品介绍</h3>
       <div class="goods-info">
-        <ul>
-          {{ goodsDetail.productDesc }}
-        </ul>
+        <ul>{{ goodsDetail.productDesc }}</ul>
       </div>
     </div>
   </div>
   <Footer/>
 </template>
+
 <style scoped>
 @import "@/assets/css/goodsDetail.css";
 </style>

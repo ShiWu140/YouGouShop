@@ -9,7 +9,7 @@ import qs from 'qs';
 Vue.config.productionTip = false;
 Vue.prototype.$qs = qs;
 Vue.prototype.$http = axios;
-Vue.prototype.$http.defaults.baseURL = 'http://127.0.0.1:8080';
+Vue.prototype.$http.defaults.baseURL = 'http://localhost:8080';
 // Vue.prototype.$http.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 //请求拦截器
 Vue.prototype.$http.interceptors.request.use(

@@ -2,6 +2,9 @@ package com.training.aigoushopapi.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.training.aigoushopapi.entity.ShopCartProduct;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * <p>
@@ -13,4 +16,6 @@ import com.training.aigoushopapi.entity.ShopCartProduct;
  */
 public interface ShopCartProductMapper extends BaseMapper<ShopCartProduct> {
 
+    ShopCartProduct findByCartIdAndProductId(@Param("cartId") String cartId, @Param("productId") String productId);
+    int updateProductNum(ShopCartProduct existingProduct);
 }

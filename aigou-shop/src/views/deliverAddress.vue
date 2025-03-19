@@ -1,6 +1,4 @@
 <script>
-import Header from "@/components/Header.vue";
-import Footer from "@/components/Footer.vue";
 
 export default {
   data() {
@@ -46,7 +44,7 @@ export default {
             this.ReceivingAddress.receivingAddress = '';
             this.ReceivingAddress.receivingPerson = '';
             this.ReceivingAddress.mobilePhone = '';
-            this.ReceivingAddress.isDefault='';
+            this.ReceivingAddress.isDefault = '';
             this.loadingReceivingAddress();
           }
         })
@@ -59,7 +57,7 @@ export default {
             this.ReceivingAddress.receivingAddress = '';
             this.ReceivingAddress.receivingPerson = '';
             this.ReceivingAddress.mobilePhone = '';
-            this.ReceivingAddress.isDefault='';
+            this.ReceivingAddress.isDefault = '';
             this.loadingReceivingAddress();
           }
         })
@@ -74,7 +72,7 @@ export default {
           this.ReceivingAddress.receivingAddress = '';
           this.ReceivingAddress.receivingPerson = '';
           this.ReceivingAddress.mobilePhone = '';
-          this.ReceivingAddress.isDefault='';
+          this.ReceivingAddress.isDefault = '';
           this.loadingReceivingAddress();
         }
       })
@@ -94,16 +92,12 @@ export default {
   }
 }
 
-
 </script>
 <template>
-  <!--头部-->
-  <!--  <div class="top" id="top">
-      <Header/>
-    </div>-->
+  <Header />
   <div>
     <div class="w1230">
-      <img src="@/assets/img/logo.png" width="100" height="40" class="logo"/>
+      <img src="@/assets/img/logo.png" width="100" height="40" class="logo" />
       <span class="cart">收货地址</span>
     </div>
     <!--编辑收货地址-->
@@ -111,69 +105,53 @@ export default {
       <h3 class="add-title">新增收货地址</h3>
       <div class="add-address">
         <form action="#" method="post">
-          <div class="add-area">
-            <label>地址信息：</label>
-            <div id="area"></div>
-          </div>
           <p>
             <label>详细地址：</label>
             <textarea placeholder="请输入详细地址信息，如道路、门牌号、小区、楼栋号、单元等信息" class="add-detail"
-                      v-model="this.ReceivingAddress.receivingAddress"></textarea>
+                      v-model="ReceivingAddress.receivingAddress"></textarea>
           </p>
           <p>
             <label>收货人姓名：</label>
-            <input v-model="this.ReceivingAddress.receivingPerson" type="text" class="add-name" placeholder="请输入收货人姓名"/>
+            <input v-model="ReceivingAddress.receivingPerson" type="text" class="add-name"
+                   placeholder="请输入收货人姓名" />
           </p>
           <p>
             <label>手机号码：</label>
-            <input v-model="this.ReceivingAddress.mobilePhone" type="text" class="add-tel" placeholder="请输入收货人手机号"/>
+            <input v-model="ReceivingAddress.mobilePhone" type="text" class="add-tel"
+                   placeholder="请输入收货人手机号" />
           </p>
           <p class="chk-address">
-            <input type="checkbox" v-model="this.ReceivingAddress.isDefault"/>
+            <input type="checkbox" v-model="ReceivingAddress.isDefault" />
             <span>设置为默认收货地址</span>
           </p>
-          <input @click="addAddress(this.ReceivingAddress.id)" type="button" value="保存" class="save-btn"/>
+          <input @click="addAddress(ReceivingAddress.id)" type="button" value="保存" class="save-btn" />
         </form>
       </div>
     </div>
     <!--收货地址列表-->
     <div class="add-list w1230">
-      <p class="message"><i class="fa fa-exclamation-circle"></i>只能保存5个地址</p>
-      <table class="table-list">
-        <tr>
-          <th class="t-name">收货人</th>
-          <th class="t-address">收货地址</th>
-          <th class="t-tel">手机号</th>
-          <th class="t-operate">操作</th>
-          <th class="t-default"></th>
-        </tr>
-        <tr v-for="item in this.ReceivingAddresses">
-          <td>{{ item.receivingPerson }}</td>
-          <td>{{ item.receivingAddress }}</td>
-          <td>{{ item.mobilePhone }}</td>
-          <td><a href="#" @click="updateAddress(item)">修改</a>|<a href="#" @click="deleteAddress(item.id)">删除</a></td>
-          <td class="default-on">
-            <span v-if="this.ReceivingAddress.isDefault==0"><a href="#" @click="statusAddress(1)">设置为默认地址</a></span>
-            <span v-if="this.ReceivingAddress.isDefault==1">默认收货地址</span>
-          </td>
-        </tr>
-        <!--            <tr>
-                      <td>李四</td>
-                      <td>湖北省武汉市洪山区光谷软件园B</td>
-                      <td>13009876666</td>
-                      <td><a href="#">修改</a>|<a href="#">删除</a></td>
-                      <td><a href="#">设为默认</a></td>
-                    </tr>
-                    <tr>
-                      <td>王五</td>
-                      <td>湖北省武汉市洪山区光谷软件园C</td>
-                      <td>13588880000</td>
-                      <td><a href="#">修改</a>|<a href="#">删除</a></td>
-                      <td><a href="#">设为默认</a></td>
-                    </tr>-->
-      </table>
+<!--      <p class="message"><i class="fa fa-exclamation-circle"></i>只能保存5个地址</p>-->
+      <el-table :data="ReceivingAddresses" border style="width: 80%">
+        <el-table-column prop="receivingPerson" label="收货人" width="80" />
+        <el-table-column prop="receivingAddress" label="收货地址" />
+        <el-table-column prop="mobilePhone" label="手机号" width="150" />
+        <el-table-column label="操作" width="180">
+          <template #default="scope">
+            <a href="#" @click.prevent="updateAddress(scope.row)">修改</a> |
+            <a href="#" @click.prevent="deleteAddress(scope.row.id)">删除</a>
+          </template>
+        </el-table-column>
+        <el-table-column label="默认" width="140">
+          <template #default="scope">
+            <span v-if="scope.row.isDefault == 0">
+              <a href="#" @click.prevent="statusAddress(scope.row)">设为默认地址</a>
+            </span>
+            <span v-if="scope.row.isDefault == 1">默认收货地址</span>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
-    <!--  <Footer/>-->
+    <Footer />
   </div>
 </template>
 

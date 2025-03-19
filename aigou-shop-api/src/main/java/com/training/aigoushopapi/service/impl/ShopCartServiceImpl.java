@@ -1,13 +1,18 @@
 package com.training.aigoushopapi.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.training.aigoushopapi.entity.ShopCart;
+import com.training.aigoushopapi.entity.ShopCartProduct;
 import com.training.aigoushopapi.mapper.ShopCartMapper;
+import com.training.aigoushopapi.mapper.ShopCartProductMapper;
 import com.training.aigoushopapi.service.IShopCartService;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * <p>
@@ -22,6 +27,8 @@ public class ShopCartServiceImpl extends ServiceImpl<ShopCartMapper, ShopCart> i
 
     @Resource
     ShopCartMapper shopCartMapper;
+    @Autowired
+    private ShopCartProductMapper shopCartProductMapper;
 
     /**
      * 根据用户ID查询对应购物车列表信息{/shoppingCart}
@@ -46,4 +53,40 @@ public class ShopCartServiceImpl extends ServiceImpl<ShopCartMapper, ShopCart> i
     public boolean deleteProductFromCart(String cartId, String productId) {
         return shopCartMapper.deleteProductFromCart(cartId, productId);
     }
+
+    @Override
+    public boolean addProductToCart(String userId, String productId, Integer quantity) {
+        // 1. 查询用户是否已有购物车
+        ShopCart cart = shopCartMapper.selectOne(new QueryWrapper<ShopCart>().eq("user_id", userId));
+        String cartId;
+
+        if (cart == null) {
+            // 2. 没有购物车则创建购物车
+            cartId = UUID.randomUUID().toString();
+            cart = new ShopCart();
+            cart.setId(UUID.randomUUID().toString());
+            cart.setCartId(cartId);
+            cart.setUserId(userId);
+            shopCartMapper.insert(cart);
+        } else {
+            cartId = cart.getCartId();
+        }
+
+        // 3. 查询购物车中是否已有该商品
+        ShopCartProduct existingProduct = shopCartProductMapper.findByCartIdAndProductId(cartId, productId);
+        if (existingProduct != null) {
+            // 4. 有则更新数量
+            existingProduct.setProductNum(existingProduct.getProductNum() + quantity);
+            return shopCartProductMapper.updateProductNum(existingProduct) > 0;
+        } else {
+            // 5. 无则插入新记录
+            ShopCartProduct newProduct = new ShopCartProduct();
+            newProduct.setId(UUID.randomUUID().toString());
+            newProduct.setShopCartId(cartId);
+            newProduct.setProductId(productId);
+            newProduct.setProductNum(quantity);
+            return shopCartProductMapper.insert(newProduct) > 0;
+        }
+    }
+
 }

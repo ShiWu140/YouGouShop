@@ -23,6 +23,7 @@ const fetchProductTypes = async () => {
   try {
     const response = await axios.get('/productType/all');
     productTypes.value = response.data.data;
+    productTypes.value = productTypes.value.filter(item => item !== null && item.id);
     console.log('Product types fetched:', productTypes.value)
   } catch (error) {
     console.error('Error fetching product types:', error);
@@ -33,6 +34,7 @@ const fetchProductNews = async () => {
   try {
     const response = await axios.get('/product/newProduct');
     productNews.value = response.data.data;
+    productNews.value = productNews.value.filter(item => item !== null && item.id);
     console.log('Product news fetched:', productNews.value)
   } catch (error) {
     console.error('Error fetching product news:', error);
@@ -43,6 +45,7 @@ const fetchProductSales = async () => {
   try {
     const response = await axios.get('/product/getProductSalesList');
     productSales.value = response.data.data;
+    productSales.value = productSales.value.filter(item => item !== null && item.id);
     console.log('Product sales fetched:', productSales.value)
   } catch (error) {
     console.error('Error fetching product sales:', error);
@@ -52,7 +55,9 @@ const allCategoryProduct = ref([]);
 const fetchAllCategoryProduct = async () => {
   try {
     const response = await axios.get(`/product/allCategoryProduct`);
-    allCategoryProduct.value = response.data.data;
+    // allCategoryProduct.value = response.data.data;
+    allCategoryProduct.value = response.data.data.filter(item => item !== null && item.id);
+
     console.log('allCategoryProduct fetched:', allCategoryProduct.value)
   } catch (error) {
     console.error('Error allCategoryProduct:', error);

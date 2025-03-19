@@ -2,8 +2,7 @@
 import {ElMessage, ElTable} from 'element-plus';
 import {onMounted, ref} from 'vue';
 import axios from "axios";
-import Header from "@/components/Header.vue";
-import Footer from "@/components/Footer.vue";
+
 
 const userId = localStorage.getItem('userId')
 // 存储购物车数据

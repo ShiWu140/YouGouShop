@@ -5,6 +5,10 @@ import ElementPlus, {ElMessage} from 'element-plus'
 import 'element-plus/dist/index.css'
 import axios from "axios";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
+
+
 // 创建 Vue 应用
 const app = createApp(App)
     .use(router)
@@ -16,7 +20,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 app.config.productionTip = false;
 // 挂载全局属性
 app.config.globalProperties.$http = axios;
-app.config.globalProperties.$http.defaults.baseURL = 'http://127.0.0.1:8080';
+app.config.globalProperties.$http.defaults.baseURL = 'http://localhost:8080';
 
 //请求拦截器
 app.config.globalProperties.$http.interceptors.request.use(req => {
@@ -76,5 +80,6 @@ app.config.globalProperties.$http.interceptors.response.use(
 //     }
 // };
 // onMounted(refreshToken)
-
+app.component('Header', Header)
+app.component('Footer', Footer)
 app.mount('#app')

@@ -2,6 +2,7 @@ package com.training.aigoushopapi.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.training.aigoushopapi.annotation.ResponseResult;
+import com.training.aigoushopapi.dto.ShoppingCartDto;
 import com.training.aigoushopapi.entity.ShopCart;
 import com.training.aigoushopapi.service.IShopCartProductService;
 import com.training.aigoushopapi.service.IShopCartService;
@@ -113,6 +114,13 @@ public class ShopCartController {
     @DeleteMapping("/deleteProductFromCart")
     public boolean deleteProductFromCart(@RequestParam String cartId, @RequestParam String productId) {
         return shopCartService.deleteProductFromCart(cartId, productId);
+    }
+    /**
+     * 根据商品id添加到用户购物车中
+     */
+    @PostMapping("/addProductFromCart")
+    public boolean addToCart(@RequestBody ShoppingCartDto cartDto) {
+        return shopCartService.addProductToCart(cartDto.getUserId(), cartDto.getProductId(), cartDto.getQuantity());
     }
 
 }

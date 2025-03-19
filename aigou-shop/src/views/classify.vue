@@ -75,6 +75,7 @@ export default {
       this.tiaojian.minP = this.minP
       this.tiaojian.maxP = this.maxP
       this.tiaojian.status = this.status
+      this.tiaojian.productType = this.productType
       this.$http.post("/product/pageH", this.tiaojian).then((response) => {
         console.log('分页数据', response.data)
         if (response.data.code === 1) {
@@ -116,21 +117,26 @@ export default {
     },
     //分类列表
     productTypesLoading() {
-      this.$http.get("/productType/all").then((response) => {
+      return this.$http.get("/productType/all").then((response) => {
         if (response.data.code === 1) {
-          console.log("分类列表", response.data.data);
           this.productTypes = response.data.data;
-        } else {
-
+          console.log("分类列表", response.data.data);
         }
-      })
+      });
     },
     //点击分类
     productTypeClick(typeId, typeName) {
-      console.log('点击分类-数据', typeId)
-      this.productType = typeId;
-      this.product.productName = typeName
-      this.loadingProduct();
+      if (this.productType !== typeId) {
+        // 切换到新分类
+        this.productType = typeId;
+        this.page = 1;
+        this.name = ''; // 可选，是否清空搜索框
+        this.loadingProduct();
+      } else {
+        // 如果点击的是当前分类，直接刷新
+        this.page = 1;
+        this.loadingProduct();
+      }
     },
     //点击品牌
     brandsClick() {
@@ -162,9 +168,23 @@ export default {
 
   },
   mounted() {
-    this.loadingProduct();
+    // 获取 URL 参数
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category');
+    if (category) {
+      // 从 productTypes 中找到匹配的 typeId（需要在接口请求后执行）
+      this.productTypesLoading().then(() => {
+        const type = this.productTypes.find(item => item.productTypeName === category);
+        if (type) {
+          this.productType = type.id;
+        }
+        this.loadingProduct();
+      });
+    } else {
+      this.loadingProduct();
+    }
+
     this.brandsLoading();
-    this.productTypesLoading()
   }
 }
 
@@ -172,7 +192,7 @@ export default {
 <template>
   <!--头部-->
   <div class="top" id="top">
-    <Header />
+    <Header/>
     <!--logo+搜索-->
     <div class="top-header w1230 clear-float">
       <a href="/" target="_blank" class="logo">
@@ -199,7 +219,8 @@ export default {
         <span class="all-goods" @click="productTypeClick(null)">所有商品分类</span>
         <div class="nav-er" id="nav-er">
           <ul>
-            <li v-for="type in productTypes" :key="type.id">
+            <li v-for="type in productTypes" :key="type.id" :class="{ active: productType === type.id }"
+                @click="productTypeClick(type.id, type.productTypeName)">
               <h3>
                 <a href="#" class="icon-center">
                   <el-icon :size="20">

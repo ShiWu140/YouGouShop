@@ -1,8 +1,11 @@
 package com.training.aigoushopapi;
 
+import org.apache.log4j.Logger;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.Environment;
 
 
 /**
@@ -12,9 +15,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @MapperScan("com.training.aigoushopapi.mapper")
 public class AigouShopApiApplication {
+    private static final Logger logger = Logger.getLogger(AigouShopApiApplication.class);
 
     public static void main(String[] args) {
-        SpringApplication.run(AigouShopApiApplication.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(AigouShopApiApplication.class, args);
+        // 获取Environment实例
+        Environment env = context.getEnvironment();
+
+        // 获取端口号和上下文路径
+        String serverPort = env.getProperty("server.port");
+        String contextPath = env.getProperty("server.servlet.context-path", "");
+
+        // 输出启动信息
+        logger.info("\n\n===========> 系统启动成功！后台地址：http://localhost:" + serverPort + contextPath);
     }
 
 }
