@@ -16,7 +16,7 @@
       <a href="#">联系我们</a>
       <a href="#">网站地图</a>
       <a href="#">知识产权</a><span>|</span>
-      <span>&copy;2018-2020 igo.com 版权所有</span>
+      <span>&copy;2024-2025 dushiwu.n 版权所有</span>
     </p>
   </div>
 </template>

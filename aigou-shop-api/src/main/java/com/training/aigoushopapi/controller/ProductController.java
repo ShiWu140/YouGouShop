@@ -49,6 +49,7 @@ public class ProductController {
         return page;
     }
 
+
     @GetMapping("/page")
     public Page<Product> page(@RequestParam Integer current, @RequestParam Integer size) {
         Page<Product> page = new Page<>(current, size);
@@ -164,10 +165,23 @@ public class ProductController {
 
     }
 
+    /**
+     * 获取商品详情
+     *
+     * @param id 商品ID
+     * @return 商品详情
+     */
     @GetMapping("/detail")
     public Product detail(@RequestParam String id) {
         return productService.getDetailByProductId(id);
     }
+
+    /**
+     * 获取相同类型的商品
+     *
+     * @param id 商品ID
+     * @return 相同类型的商品列表
+     */
     @GetMapping("/sameType")
     public List<Product> getSameTypeProducts(@RequestParam String id) {
         return productService.getSameTypeProducts(id);

@@ -26,25 +26,6 @@ const handlePayment = () => {
   ElMessage.success('支付成功！');
 };
 
-// 获取支付二维码
-const fetchPaymentQrCode = async () => {
-  // const qrCodeUrl = route.query.qrCodeUrl;
-  // console.log("codeurl:" + qrCodeUrl)
-  // try {
-  //   const response = await axios.get('/wxpay/code', {
-  //     params: {
-  //       url: qrCodeUrl
-  //     },
-  //     responseType: 'blob' // 设置响应类型为 blob
-  //   });
-  //   // 创建一个 URL 对象
-  //   const url = URL.createObjectURL(new Blob([response.data]));
-  //   paymentQrCode.value = url;
-  // } catch (error) {
-  //   console.error("获取支付二维码失败：", error);
-  //   ElMessage.error("获取支付二维码失败，请稍后重试！");
-  // }
-};
 // 检查订单状态
 const checkOrderStatus = async () => {
   try {
@@ -53,7 +34,6 @@ const checkOrderStatus = async () => {
         tradeNo: tradeNo.value
       }
     });
-
     // 解析接口返回的数据
     const {code, msg, data} = response.data;
     if (code === 1 && msg === "success") {

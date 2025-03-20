@@ -41,7 +41,7 @@ const handleSelectionChange = (val) => {
 }
 // 提取省市信息
 const extractProvinceOrCity = (address) => {
-  const regex = /^(.*?[省市])/; // 匹配以“省”或“市”结尾的部分
+  const regex = /^(.*?[省市])/; // 匹配以"省"或"市"结尾的部分
   const match = address.match(regex);
   return match ? match[1] : '';
 };
@@ -147,23 +147,24 @@ const fetchProducts = async () => {
 const fetchAddress = async () => {
   try {
     const response = await axios.get(`/receivingAddress/getReceivingAddressByUserId?userId=${userId}`);
-    // console.log('API 请求:', response.data);
     if (response.data.code === 1) {
-      response.data.data.filter((item) => {
-        if (item.isDefault) {
-          addressData.value = item; // 设置地址数据
-          // console.log("默认收货地址数据为：", addressData)
-
-        }
-      })
-      // console.log("切换收货地址数据为：", addressData)
-      addressList.value.length = 0;
-      addressList.value = response.data.data
+      const addresses = response.data.data;
+      addressList.value = addresses;
+      
+      // 查找默认地址
+      const defaultAddress = addresses.find(item => item.isDefault === 1);
+      if (defaultAddress) {
+        addressData.value = defaultAddress;
+      } else if (addresses.length > 0) {
+        // 如果没有默认地址，使用第一个地址
+        addressData.value = addresses[0];
+      }
     } else {
-      console.error('获取收获地址失败:', response.data.msg);
+      ElMessage.error('获取收货地址失败');
     }
   } catch (error) {
-    console.error('获取收获地址失败:', error);
+    console.error('获取收货地址失败:', error);
+    ElMessage.error('获取收货地址失败');
   }
 };
 
@@ -228,9 +229,9 @@ const submitForm = async () => {
 };
 // 切换地址
 const selectAddress = (address) => {
-  addressData.value = address
-  // 关闭弹窗
+  addressData.value = address;
   dialogVisible.value = false;
+  ElMessage.success('收货地址已更新');
 };
 // 切换弹窗
 const toggleDialog = () => {

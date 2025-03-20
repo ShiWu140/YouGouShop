@@ -1,5 +1,6 @@
 package com.training.aigoushopapi.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.training.aigoushopapi.annotation.ResponseResult;
 import com.training.aigoushopapi.entity.ReceivingAddress;
@@ -27,12 +28,18 @@ public class ReceivingAddressController {
      *
      * @param current 当前页码
      * @param size    每页大小
+     * @param userId  用户ID
      * @return 包含 收货地址数据的分页对象
      */
     @GetMapping("/page")
-    public Page<ReceivingAddress> page(@RequestParam Integer current, @RequestParam Integer size) {
+    public Page<ReceivingAddress> page(@RequestParam Integer current, @RequestParam Integer size, @RequestParam(required = false) String userId) {
         Page<ReceivingAddress> page = new Page<>(current, size);
-        return receivingAddressService.page(page);
+        LambdaQueryWrapper<ReceivingAddress> queryWrapper = new LambdaQueryWrapper<>();
+        // 如果提供了userId，则按用户ID过滤
+        if (userId != null && !userId.isEmpty()) {
+            queryWrapper.eq(ReceivingAddress::getUserId, userId);
+        }
+        return receivingAddressService.page(page, queryWrapper);
     }
 
     /**

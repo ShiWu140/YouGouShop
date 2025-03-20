@@ -38,36 +38,36 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Autowired
     private ProductMapper productDao;
 
-   @Override
-   public List<Product> getSameTypeProducts(String productId) {
-       // 首先根据商品ID获取商品对象
-       Product product = productMapper.selectById(productId);
-       if (product == null) {
-           return Collections.emptyList();
-       }
-       System.out.println(product);
-       // 获取商品的分类ID
-       String productTypeId = product.getProductType();
-       System.out.println(productTypeId);
-       // 根据分类ID查询同一个分类下的所有商品
-       QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
-       // 随机查询
-       queryWrapper.orderByAsc("RAND()");
-       queryWrapper.eq("product_type", productTypeId);
-       List<Product> sameTypeProducts = productMapper.selectList(queryWrapper);
-       System.out.println(sameTypeProducts);
-       // 查询每个商品的销量并设置到商品对象中
-       for (Product p : sameTypeProducts) {
-           LambdaQueryWrapper<Sales> salesQueryWrapper = new LambdaQueryWrapper<>();
-           salesQueryWrapper.eq(Sales::getProductId, p.getId());
-           Sales sales = salesService.getOne(salesQueryWrapper);
-           if (sales != null) {
-               p.setSalasNum(sales.getSalesNum());
-           }
-       }
-       System.out.println(sameTypeProducts);
-       return sameTypeProducts;
-   }
+    @Override
+    public List<Product> getSameTypeProducts(String productId) {
+        // 首先根据商品ID获取商品对象
+        Product product = productMapper.selectById(productId);
+        if (product == null) {
+            return Collections.emptyList();
+        }
+        System.out.println(product);
+        // 获取商品的分类ID
+        String productTypeId = product.getProductType();
+        System.out.println(productTypeId);
+        // 根据分类ID查询同一个分类下的所有商品
+        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
+        // 随机查询
+        queryWrapper.orderByAsc("RAND()");
+        queryWrapper.eq("product_type", productTypeId);
+        List<Product> sameTypeProducts = productMapper.selectList(queryWrapper);
+        System.out.println(sameTypeProducts);
+        // 查询每个商品的销量并设置到商品对象中
+        for (Product p : sameTypeProducts) {
+            LambdaQueryWrapper<Sales> salesQueryWrapper = new LambdaQueryWrapper<>();
+            salesQueryWrapper.eq(Sales::getProductId, p.getId());
+            Sales sales = salesService.getOne(salesQueryWrapper);
+            if (sales != null) {
+                p.setSalasNum(sales.getSalesNum());
+            }
+        }
+        System.out.println(sameTypeProducts);
+        return sameTypeProducts;
+    }
 
 
     @Override
@@ -87,10 +87,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         if (sales != null) {
             product.setSalasNum(sales.getSalesNum());
         } else {
-            product.setSalasNum(0);
             // 如果没有对应的销量记录，设置为0
+            product.setSalasNum(0);
         }
-
         return product;
     }
 

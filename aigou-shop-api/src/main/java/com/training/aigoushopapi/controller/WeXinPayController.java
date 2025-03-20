@@ -30,8 +30,7 @@ public class WeXinPayController {
      * 微信下单
      */
     @RequestMapping("makeOrder")
-    public Map<String, String> makeOrder(Long
-                                                 orderId, Long price) throws Exception {
+    public Map<String, String> makeOrder(Long orderId, Long price) throws Exception {
         //微信下单
         return payService.makeWxOrder(orderId, price);
     }

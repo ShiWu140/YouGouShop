@@ -59,7 +59,6 @@ public class ShopCartServiceImpl extends ServiceImpl<ShopCartMapper, ShopCart> i
         // 1. 查询用户是否已有购物车
         ShopCart cart = shopCartMapper.selectOne(new QueryWrapper<ShopCart>().eq("user_id", userId));
         String cartId;
-
         if (cart == null) {
             // 2. 没有购物车则创建购物车
             cartId = UUID.randomUUID().toString();
@@ -71,7 +70,6 @@ public class ShopCartServiceImpl extends ServiceImpl<ShopCartMapper, ShopCart> i
         } else {
             cartId = cart.getCartId();
         }
-
         // 3. 查询购物车中是否已有该商品
         ShopCartProduct existingProduct = shopCartProductMapper.findByCartIdAndProductId(cartId, productId);
         if (existingProduct != null) {
