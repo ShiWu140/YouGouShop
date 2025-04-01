@@ -6,7 +6,7 @@
   <!--脚注-->
   <div class="footer">
     <p class="w1230">
-      <a href="#">关于爱购</a>
+      <a href="#">关于优购</a>
       <a href="#">合作伙伴</a>
       <a href="#">营销中心</a>
       <a href="#">廉正举报</a>

@@ -89,8 +89,8 @@ onMounted(() => {
     <div class="rank">
       <h3 class="title">排行榜</h3>
       <div class="rank-list">
-        <ul v-for="product in productSales">
-          <li>
+        <ul>
+          <li v-for="(product, index) in productSales" :key="product.id" :data-rank="index + 1">
             <a :href="'/goodsDetail?id=' + product.id">
               <img :src="product.productImage" alt="" width="90px" height="90px"/>
               <p>{{ product.productName }}</p>
@@ -148,16 +148,54 @@ onMounted(() => {
   background-color: #B41E23;
 }
 
-.global-list li p {
-  text-align: center;
+.global-list ul {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.global-list li {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.global-list li a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.global-list li:hover {
+  transform: translateY(-5px);
 }
 
 .global-list li img {
-  right: 45px;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
 }
 
-.global-list ul {
-  justify-content: center;
+.global-list li:hover img {
+  transform: scale(1.1);
+}
+
+.product-name {
+  width: 150px;
+  margin-bottom: 10px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  color: #333;
 }
 
 .foot {
@@ -168,8 +206,8 @@ onMounted(() => {
 .nav-side {
   width: 50px;
   position: fixed;
-  bottom: 30px;
-  right: 8px;
+  bottom: 60px;
+  right: 10px;
 }
 
 .nav-button {
@@ -192,14 +230,104 @@ onMounted(() => {
   font-weight: bold;
 }
 
-.product-name {
-  width: 220px; /* 根据实际情况调整宽度 */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .banner-btn {
   width: auto;
+}
+
+.rank-list li,.new-list li{
+	height: 130px;
+	float: left;
+	text-align: center;
+	margin-top: 10px;
+	padding: 20px 5px 10px;
+}
+.new-list li{
+	width: 140px;
+	border: 1px solid #eee;
+	margin: 10px 0 0 11px;
+}
+.rank-list li{
+	width: 100px;
+	border: 1px solid #eee;
+	margin: 10px 0 0 11px;
+	position: relative;
+}
+.rank-list li:nth-child(1)::before {
+	content: "1";
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 20px;
+	height: 20px;
+	background-color: #FFD700;
+	color: #fff;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: bold;
+	font-size: 12px;
+}
+.rank-list li:nth-child(2)::before {
+	content: "2";
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 20px;
+	height: 20px;
+	background-color: #C0C0C0;
+	color: #fff;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: bold;
+	font-size: 12px;
+}
+.rank-list li:nth-child(3)::before {
+	content: "3";
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 20px;
+	height: 20px;
+	background-color: #CD7F32;
+	color: #fff;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: bold;
+	font-size: 12px;
+}
+.rank-list li:nth-child(n+4)::before {
+	content: attr(data-rank);
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 20px;
+	height: 20px;
+	background-color: #666;
+	color: #fff;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: bold;
+	font-size: 12px;
+}
+.new-list li p,.rank-list li p{
+	font-size: 14px;
+	color: #333;
+	line-height: 32px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.rank-list li img{
+	transition: transform .5s;
+}
+.rank-list li:hover img{
+	transform: scale(1.1);
 }
 </style>

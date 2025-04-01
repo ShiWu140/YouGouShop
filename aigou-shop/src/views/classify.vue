@@ -134,6 +134,7 @@ export default {
   async mounted() {
     const urlParams = new URLSearchParams(window.location.search);
     const category = urlParams.get('category');
+    const keyword = urlParams.get('keyword');
     
     await this.productTypesLoading();
     await this.brandsLoading();
@@ -144,8 +145,23 @@ export default {
         this.productType = type.id;
       }
     }
-    
-    await this.loadingProduct();
+
+    if (keyword) {
+      this.name = keyword;
+      await this.loadingProduct();
+    } else {
+      await this.loadingProduct();
+    }
+
+    // 添加搜索事件监听
+    window.addEventListener('search', (event) => {
+      this.name = event.detail.keyword;
+      this.loadingProduct();
+    });
+  },
+  beforeUnmount() {
+    // 移除事件监听
+    window.removeEventListener('search', () => {});
   }
 }
 </script>
@@ -154,33 +170,7 @@ export default {
   <!--头部-->
   <div class="top" id="top">
     <Header/>
-    <!--logo+搜索-->
-    <div class="top-header w1230 clear-float">
-      <a href="/" target="_blank" class="logo">
-        <el-image 
-          src="@/assets/img/logo.png"
-          style="width: 100px; height: 40px"
-        />
-      </a>
-      <div class="top-header-right">
-        <!--搜索框-->
-        <div class="search clear-float">
-          <input 
-            type="text" 
-            placeholder="优购网-专业的综合网上购物商城" 
-            class="search-txt" 
-            v-model="name"
-            @keyup.enter="handleSubmit(name)" 
-            @blur="handleFocus"
-          />
-          <a href="#" class="search-btn" @click="loadingProduct()">搜索</a>
-        </div>
-        <!--热搜-->
-        <p class="hotkey">
-          <a href="#" style="display: inline-block;" v-for="item in names" @click="nameClick(item)">{{ item }}</a>
-        </p>
-      </div>
-    </div>
+    <Search/>
   </div>
   <!--导航栏-->
   <div class="nav">
@@ -213,7 +203,7 @@ export default {
   </div>
   <!--相关分类（品牌）-->
   <div class="classify-brand w1230 clear-float">
-    <div class="brand-title">品牌</div>
+    <div class="brand-title">品牌筛选</div>
     <div class="brands">
       <ul class="clear-float">
         <li v-for="item in brandHH" :key="item.id">
@@ -233,6 +223,10 @@ export default {
           </label>
         </li>
       </ul>
+      <div class="brand-filter-actions">
+        <el-button type="primary" size="small" @click="brandsClick">确定</el-button>
+        <el-button size="small" @click="cancelbrandsClick">重置</el-button>
+      </div>
     </div>
   </div>
   <!--商品列表-->
@@ -377,5 +371,63 @@ export default {
   padding: 40px;
   color: #999;
   font-size: 16px;
+}
+
+.classify-brand {
+  background: #fff;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.brand-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.brands ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.brands li {
+  position: relative;
+}
+
+.brands li label {
+  display: block;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.brands li:hover label {
+  border-color: #409EFF;
+}
+
+.brands li input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+}
+
+.brands li input[type="checkbox"]:checked + label {
+  border-color: #409EFF;
+  background-color: #f5f7fa;
+}
+
+.brand-filter-actions {
+  text-align: center;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.brand-filter-actions .el-button {
+  margin: 0 8px;
 }
 </style>

@@ -3,6 +3,7 @@ import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import {onMounted, ref} from "vue";
 import { buyerTradeApi } from '@/api/buyerTrade';
+import logoImage from '@/assets/img/logo.png';
 
 const orderData = ref([]);
 
@@ -25,68 +26,282 @@ onMounted(() => {
   <div class="top" id="top">
     <Header/>
   </div>
-  <div class="w1230">
-    <el-image 
-      src="@/assets/img/logo.png" 
-      style="width: 100px; height: 40px" 
-      class="logo"
-    />
-    <span class="cart">我的订单</span>
-  </div>
-  <!--订单列表-->
-  <div class="w1230 trade">
-    <!--标题栏-->
-    <div class="trade-title">
-      <ul class="clear-float">
-        <li class="info">宝贝</li>
-        <li class="price">单价</li>
-        <li class="num">数量</li>
-        <li class="real-price-title">实付款</li>
-        <!--        <li class="operate">交易操作</li>-->
-      </ul>
-    </div><!--详细展示-->
-    <div class="trade-list">
-      <div v-for="order in orderData" :key="order.orderId">
-        <div class="trade-list-top clear-float">
-          <div class="trade-list-l">
-            <span class="trade-date">{{ order.createTime }}</span>
-            <span class="trade-no">订单号:{{ order.orderId }}</span>
-          </div>
-          <!--      <a href="#"><i class="fa fa-trash trade-list-r"></i></a>-->
-        </div>
-        <div v-for="product in order.products" :key="product.productId">
-          <ul class="clear-float">
-            <li class="info">
-              <el-image 
-                :src="product.productImage" 
-                style="width: 100px; height: 100px"
-                fit="cover"
-              />
-              <a class="product-name">{{ product.productName }}</a>
-            </li>
 
-            <li class="price">￥{{ product.price }}</li>
-            <li class="num">{{ product.productNum }}</li>
-            <li class="real-price">￥{{ product.price * product.productNum }}</li>
-            <!--        <li class="operate"><a href="#">再次购买</a></li>-->
-          </ul>
+  <div class="page-container">
+    <div class="header-section">
+      <img src="@/assets/img/logo.png" width="100" height="40" class="logo"/>
+
+      <span class="cart">我的订单</span>
+    </div>
+    
+    <!--订单列表-->
+    <div class="trade">
+      <!--标题栏-->
+      <div class="trade-title">
+        <ul class="title-list">
+          <li class="info">宝贝</li>
+          <li class="price">单价</li>
+          <li class="num">数量</li>
+          <li class="real-price-title">实付款</li>
+        </ul>
+      </div>
+      
+      <!--详细展示-->
+      <div class="trade-list">
+        <div v-for="order in orderData" :key="order.orderId" class="order-card">
+          <div class="order-info">
+            <div class="order-meta">
+              <div class="order-date">
+                <i class="el-icon-time"></i>
+                <span>{{ order.createTime }}</span>
+              </div>
+              <div class="order-no">
+                <i class="el-icon-document"></i>
+                <span>订单号: {{ order.orderId }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div v-for="product in order.products" :key="product.productId" class="product-item">
+            <ul class="product-list">
+              <li class="info">
+                <el-image 
+                  :src="product.productImage" 
+                  style="width: 100px; height: 100px"
+                  :preview-src-list="[product.productImage]"
+                  fit="scale-down"
+                  class="product-image"
+                />
+                <a class="product-name">{{ product.productName }}</a>
+              </li>
+              <li class="price">￥{{ product.price }}</li>
+              <li class="num">{{ product.productNum }}</li>
+              <li class="real-price">￥{{ product.price * product.productNum }}</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
-
   </div>
   <Footer/>
 </template>
+
 <style scoped>
 @import "@/assets/css/buyerTrade.css";
-.info {
+
+.page-container {
+  max-width: 1230px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.header-section {
   display: flex;
-  align-items: center; /* 垂直居中 */
+  align-items: center;
+}
+
+.logo {
+  display: block;
+  margin-right: 0px;
+}
+
+
+
+.trade {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.trade-title {
+  background: #f8f9fa;
+  padding: 15px 20px;
+  border-bottom: 2px solid #409EFF;
+}
+
+.title-list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  justify-content: space-between;
+}
+
+.title-list li {
+  color: #333;
+  font-weight: 600;
+  font-size: 18px;
+  position: relative;
+}
+
+.title-list .info {
+  flex: 2;
+  min-width: 300px;
+  padding-left: 10px;
+}
+
+.title-list .price, 
+.title-list .num, 
+.title-list .real-price-title {
+  flex: 1;
+  text-align: center;
+  min-width: 100px;
+}
+
+.order-card {
+  border-bottom: 1px solid #eee;
+  transition: all 0.3s ease;
+}
+
+.order-card:hover {
+  background: #f8f9fa;
+}
+
+.order-info {
+  padding: 15px 20px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e4e7ed;
+}
+
+.order-meta {
+  display: flex;
+  gap: 30px;
+  color: #606266;
+  font-size: 14px;
+}
+
+.order-date, .order-no {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.order-date i, .order-no i {
+  font-size: 16px;
+  color: #409EFF;
+}
+
+.order-date span, .order-no span {
+  color: #303133;
+  font-weight: 600;
+}
+
+.product-item {
+  padding: 20px;
+}
+
+.product-list {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  justify-content: space-between;
+}
+
+.info {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-width: 300px;
+}
+
+.price, .num {
+  flex: 1;
+  text-align: center;
+  color: #333;
+  font-weight: 500;
+  min-width: 100px;
+  font-size: 15px;
+}
+
+.real-price-title {
+  flex: 1;
+  text-align: center;
+  color: #333;
+  font-weight: 600;
+  min-width: 100px;
+}
+
+.real-price {
+  flex: 1;
+  text-align: center;
+  color: #f56c6c;
+  font-size: 16px;
+  font-weight: 600;
+  min-width: 100px;
+}
+
+.product-image {
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 4px;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.product-image:hover {
+  transform: scale(1.05);
 }
 
 .product-name {
-  margin-left: 50px; /* 距离左边的图片50px */
+  flex: 1;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 150px;
 }
 
+:deep(.el-image) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:deep(.el-image__inner) {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 10px;
+  }
+  
+  .product-list {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .info {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .price, .num, .real-price-title, .real-price {
+    width: 100%;
+    text-align: left;
+    min-width: auto;
+  }
+  
+  .title-list {
+    display: none;
+  }
+  
+  .product-name {
+    min-width: auto;
+  }
+}
 </style>
 

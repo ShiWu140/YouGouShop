@@ -156,7 +156,6 @@ onMounted(() => {
           <el-button 
             type="primary" 
             @click="handleAddToCart"
-            :icon="ShoppingCart"
             size="large"
             class="add-cart-btn"
           >
@@ -309,6 +308,10 @@ onMounted(() => {
   display: flex;
   gap: 20px;
   margin-top: 20px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
 .goods-des {
