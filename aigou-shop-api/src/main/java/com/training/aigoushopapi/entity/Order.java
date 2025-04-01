@@ -49,4 +49,10 @@ public class Order implements Serializable {
      */
     @TableField("state")
     private Integer state;
+
+    /**
+     * 发货状态 0未发货 1已发货 2已收货 3已完成
+     */
+    @TableField("delivery_status")
+    private Integer deliveryStatus;
 }

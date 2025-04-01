@@ -8,6 +8,8 @@ export default {
         createTime: '',
         receivingAddress: '',
         userId: '',
+        state: '',
+        deliveryStatus: ''
       },
       // 表单和表格
       FormVisible: false,
@@ -31,6 +33,78 @@ export default {
     }
   },
   methods: {
+    // 获取支付状态文本
+    getPaymentStatusText(state) {
+      switch (state) {
+        case 0:
+          return '未支付';
+        case 1:
+          return '已支付';
+        default:
+          return '未知状态';
+      }
+    },
+    // 获取发货状态文本
+    getDeliveryStatusText(status) {
+      switch (status) {
+        case 0:
+          return '未发货';
+        case 1:
+          return '已发货';
+        case 2:
+          return '已收货';
+        case 3:
+          return '已完成';
+        default:
+          return '未知状态';
+      }
+    },
+    // 获取状态标签类型
+    getStatusType(status) {
+      switch (status) {
+        case 0:
+          return 'warning';
+        case 1:
+          return 'success';
+        case 2:
+        case 3:
+          return 'info';
+        default:
+          return 'info';
+      }
+    },
+    // 发货操作
+    handleDelivery(row) {
+      this.$confirm('确认发货？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.post('/order/updateDeliveryStatus', null, {
+          params: {
+            orderId: row.id,
+            deliveryStatus: 1
+          }
+        }).then(response => {
+          if (response.data) {
+            this.$message({
+              type: 'success',
+              message: '发货成功！'
+            });
+            this.loadData();
+          } else {
+            this.$message.error('发货失败');
+          }
+        }).catch(() => {
+          this.$message.error('发货失败');
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消发货'
+        });
+      });
+    },
     operateOrder(order) {
       this.$http.post("/order/" + this.operate, order).then((response) => {
         if (response.status === 200) {
@@ -151,13 +225,37 @@ export default {
           prop="userId">
       </el-table-column>
       <el-table-column
+          label="支付状态"
+          min-width="100px">
+        <template #default="scope">
+          <el-tag :type="getStatusType(scope.row.state)">
+            {{ getPaymentStatusText(scope.row.state) }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+          label="发货状态"
+          min-width="100px">
+        <template #default="scope">
+          <el-tag :type="getStatusType(scope.row.deliveryStatus)">
+            {{ getDeliveryStatusText(scope.row.deliveryStatus) }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
           fixed="right"
           label="操作"
-          width="150px">
-        <template slot-scope="scope">
+          width="250px">
+        <template #default="scope">
           <el-button
               size="mini"
               @click="handleEdit(scope.$index, scope.row)">编辑
+          </el-button>
+          <el-button
+              v-if="scope.row.state === 1 && scope.row.deliveryStatus === 0"
+              size="mini"
+              type="success"
+              @click="handleDelivery(scope.row)">发货
           </el-button>
           <el-button
               size="mini"

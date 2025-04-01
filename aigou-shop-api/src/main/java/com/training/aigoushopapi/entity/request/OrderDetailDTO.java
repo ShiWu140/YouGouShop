@@ -18,6 +18,8 @@ public class OrderDetailDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
     private List<OrderProductDTO> products;
+    private Integer state;
+    private Integer deliveryStatus;
 
     @Setter
     @Getter

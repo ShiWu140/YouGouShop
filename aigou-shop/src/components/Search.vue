@@ -141,7 +141,7 @@ onMounted(() => {
 .search-txt {
   flex: 1;
   height: 40px;
-  padding: 0 15px;
+  padding: 0 px;
   border: 2px solid #B41E23;
   border-right: none;
   font-size: 14px;
@@ -179,7 +179,7 @@ onMounted(() => {
 
 .hotkey {
   width: 100%;
-  margin-top: 5px;
+  margin-top: 4px;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -201,6 +201,11 @@ onMounted(() => {
   line-height: normal;
   margin-right: 0;
   box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  text-align: center;
 }
 
 .hotkey a:hover {

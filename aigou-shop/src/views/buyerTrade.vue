@@ -4,6 +4,7 @@ import Footer from "@/components/Footer.vue";
 import {onMounted, ref} from "vue";
 import { buyerTradeApi } from '@/api/buyerTrade';
 import logoImage from '@/assets/img/logo.png';
+import { ElMessage } from 'element-plus';
 
 const orderData = ref([]);
 
@@ -13,6 +14,44 @@ const loadOrder = async () => {
     orderData.value = await buyerTradeApi.getUserOrders(userId);
   } catch (error) {
     console.error("加载订单详情时出错:", error);
+  }
+};
+
+// 获取支付状态文本
+const getPaymentStatusText = (state) => {
+  return state === 0 ? '未支付' : '已支付';
+};
+
+// 获取发货状态文本
+const getDeliveryStatusText = (status) => {
+  const statusMap = {
+    0: '未发货',
+    1: '已发货',
+    2: '已收货',
+    3: '已完成'
+  };
+  return statusMap[status] || '未知状态';
+};
+
+// 获取发货状态类型
+const getDeliveryStatusType = (status) => {
+  const typeMap = {
+    0: 'info',
+    1: 'warning',
+    2: 'success',
+    3: 'success'
+  };
+  return typeMap[status] || 'info';
+};
+
+// 确认收货
+const confirmReceive = async (orderId) => {
+  try {
+    await buyerTradeApi.updateDeliveryStatus(orderId, 2);
+    ElMessage.success('确认收货成功！');
+    loadOrder(); // 重新加载订单列表
+  } catch (error) {
+    ElMessage.error('确认收货失败，请重试！');
   }
 };
 
@@ -43,6 +82,8 @@ onMounted(() => {
           <li class="price">单价</li>
           <li class="num">数量</li>
           <li class="real-price-title">实付款</li>
+          <li class="status">订单状态</li>
+          <li class="action">操作</li>
         </ul>
       </div>
       
@@ -59,6 +100,14 @@ onMounted(() => {
                 <i class="el-icon-document"></i>
                 <span>订单号: {{ order.orderId }}</span>
               </div>
+              <!-- <div class="order-status">
+                <el-tag :type="order.state === 0 ? 'danger' : 'success'">
+                  支付状态：{{ getPaymentStatusText(order.state) }}
+                </el-tag>
+                <el-tag :type="getDeliveryStatusType(order.deliveryStatus)" class="ml-2">
+                  发货状态：{{ getDeliveryStatusText(order.deliveryStatus) }}
+                </el-tag>
+              </div> -->
             </div>
           </div>
           
@@ -77,6 +126,32 @@ onMounted(() => {
               <li class="price">￥{{ product.price }}</li>
               <li class="num">{{ product.productNum }}</li>
               <li class="real-price">￥{{ product.price * product.productNum }}</li>
+              <li class="status">
+                <el-tag :type="order.state === 0 ? 'danger' : 'success'">
+                  {{ getPaymentStatusText(order.state) }}
+                </el-tag>
+                <el-tag :type="getDeliveryStatusType(order.deliveryStatus)" class="ml-2">
+                  {{ getDeliveryStatusText(order.deliveryStatus) }}
+                </el-tag>
+              </li>
+              <li class="action">
+                <el-button 
+                  v-if="order.state === 0" 
+                  type="primary" 
+                  size="small"
+                  @click="$router.push(`/payment?orderId=${order.orderId}&totalAmount=${order.products.reduce((sum, p) => sum + p.price * p.productNum, 0)}`)"
+                >
+                  去支付
+                </el-button>
+                <el-button 
+                  v-if="order.state === 1 && order.deliveryStatus === 1" 
+                  type="success" 
+                  size="small"
+                  @click="confirmReceive(order.orderId)"
+                >
+                  确认收货
+                </el-button>
+              </li>
             </ul>
           </div>
         </div>
@@ -104,8 +179,6 @@ onMounted(() => {
   display: block;
   margin-right: 0px;
 }
-
-
 
 .trade {
   background: #fff;
@@ -144,7 +217,9 @@ onMounted(() => {
 
 .title-list .price, 
 .title-list .num, 
-.title-list .real-price-title {
+.title-list .real-price-title,
+.title-list .status,
+.title-list .action {
   flex: 1;
   text-align: center;
   min-width: 100px;
@@ -216,7 +291,6 @@ onMounted(() => {
   color: #333;
   font-weight: 500;
   min-width: 100px;
-  font-size: 15px;
 }
 
 .real-price-title {
@@ -302,6 +376,27 @@ onMounted(() => {
   .product-name {
     min-width: auto;
   }
+}
+
+.status,
+.action {
+  flex: 1;
+  text-align: center;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.ml-2 {
+  margin-left: 8px;
+}
+
+.order-status {
+  display: flex;
+  gap: 8px;
+  margin-left: 20px;
 }
 </style>
 

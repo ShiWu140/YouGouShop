@@ -86,6 +86,7 @@ public class OrderController {
         order.setReceivingAddress(orderRequest.getReceivingAddress());
         order.setUserId(orderRequest.getUserId());
         order.setState(0);
+        order.setDeliveryStatus(0); // 设置初始发货状态为未发货
         orderService.save(order);
         // 获取自动生成的订单 ID
         String orderId = order.getId();
@@ -147,5 +148,40 @@ public class OrderController {
     @PostMapping("/delete")
     public boolean delete(@RequestBody Order order) {
         return orderService.removeById(order.getId());
+    }
+
+    /**
+     * 更新订单发货状态
+     *
+     * @param orderId 订单ID
+     * @param deliveryStatus 发货状态 0未发货 1已发货 2已收货 3已完成
+     * @return 成功或失败信息
+     */
+    @PostMapping("/updateDeliveryStatus")
+    public boolean updateDeliveryStatus(@RequestParam String orderId, @RequestParam Integer deliveryStatus) {
+        Order order = new Order();
+        order.setId(orderId);
+        order.setDeliveryStatus(deliveryStatus);
+        return orderService.updateById(order);
+    }
+
+    /**
+     * 更新订单支付状态
+     *
+     * @param orderId 订单ID
+     * @param state 支付状态 0未支付 1已支付
+     * @return 成功或失败信息
+     */
+    @PostMapping("/updatePaymentStatus")
+    public Map<String, Object> updatePaymentStatus(@RequestParam String orderId, @RequestParam Integer state) {
+        Order order = new Order();
+        order.setId(orderId);
+        order.setState(state);
+        boolean success = orderService.updateById(order);
+        
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", success ? 1 : 0);
+        result.put("msg", success ? "支付状态更新成功" : "支付状态更新失败");
+        return result;
     }
 }

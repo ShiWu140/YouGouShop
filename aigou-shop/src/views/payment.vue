@@ -1,9 +1,11 @@
 <script setup>
 import {ref, onMounted} from 'vue';
-import {useRoute} from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
 import {ElCard, ElRow, ElCol, ElButton, ElImage, ElMessage} from 'element-plus';
 import {checkOrderStatus} from '@/api/payment';
+import axios from 'axios';
 
+const router = useRouter();
 // 订单号和金额数据
 const orderId = ref('');
 const orderAmount = ref('');
@@ -19,18 +21,40 @@ orderId.value = route.query.orderId;
 orderAmount.value = route.query.totalAmount;
 tradeNo.value = route.query.tradeNo;
 
-// 支付处理函数
-const handlePayment = () => {
-  // 处理支付逻辑
-  ElMessage.success('支付成功！');
+// 测试环境的支付处理函数
+const handlePayment = async () => {
+  try {
+    // 直接更新订单状态为已支付
+    const response = await axios.post('/order/updatePaymentStatus', null, {
+      params: {
+        orderId: orderId.value,
+        state: 1  // 1 表示已支付
+      }
+    });
+    
+    if (response.data.code === 1) {
+      ElMessage.success('支付成功！');
+      paymentStatus.value = 'SUCCESS';
+      // 3秒后跳转到订单页面
+      setTimeout(() => {
+        router.push('/buyerTrade');
+      }, 3000);
+    } else {
+      ElMessage.error('支付失败，请重试！');
+    }
+  } catch (error) {
+    console.error('支付处理失败:', error);
+    ElMessage.error('支付失败，请重试！');
+  }
 };
 
+/* 以下为原微信支付相关代码，暂时注释保存
 // 检查订单状态
 const checkStatus = async () => {
   try {
     const {code, msg, data} = await checkOrderStatus(tradeNo.value);
     if (code === 1 && msg === "success") {
-      paymentStatus.value = data; // 使用 data 字段的值
+      paymentStatus.value = data;
       if (paymentStatus.value === 'SUCCESS') {
         ElMessage.success('支付成功！');
         // 停止轮询
@@ -51,6 +75,7 @@ onMounted(() => {
   // 每10秒检查一次订单状态
   intervalId = setInterval(checkStatus, 10000);
 });
+*/
 </script>
 
 <template>
@@ -59,8 +84,8 @@ onMounted(() => {
       <el-card class="payment-card">
         <div class="order-info">
           <el-row class="order-row">
-            <el-col :span="6" class="label">支付单号:</el-col>
-            <el-col :span="18" class="value">{{ tradeNo }}</el-col>
+            <el-col :span="6" class="label">订单号:</el-col>
+            <el-col :span="18" class="value">{{ orderId }}</el-col>
           </el-row>
           <el-row class="order-row">
             <el-col :span="6" class="label">订单金额:</el-col>
@@ -68,6 +93,7 @@ onMounted(() => {
           </el-row>
         </div>
 
+        <!-- 注释掉微信支付二维码部分
         <div class="payment-qr">
           <el-row>
             <el-col :span="24" class="qr-title">扫码支付</el-col>
@@ -81,6 +107,7 @@ onMounted(() => {
             </el-col>
           </el-row>
         </div>
+        -->
 
         <div class="payment-action" v-if="paymentStatus !== 'SUCCESS'">
           <el-button type="primary" size="large" @click="handlePayment">立即支付</el-button>
@@ -88,7 +115,10 @@ onMounted(() => {
 
         <div class="payment-success" v-if="paymentStatus === 'SUCCESS'">
           <el-row>
-            <el-col :span="24" class="success-title">支付成功！</el-col>
+            <el-col :span="24" class="success-title">
+              <el-icon><Check /></el-icon>
+              支付成功！3秒后跳转到订单页面...
+            </el-col>
           </el-row>
         </div>
       </el-card>
@@ -158,8 +188,18 @@ onMounted(() => {
 }
 
 .success-title {
-  font-size: 18px;
-  color: #67c23a;
+  color: #67C23A;
+  font-size: 20px;
+  text-align: center;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.success-title .el-icon {
+  font-size: 24px;
 }
 
 .qr-loading {

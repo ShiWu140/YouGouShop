@@ -183,9 +183,7 @@ const submitForm = async () => {
       if (wxPayResponse.code === 1) {
         const qrCodeUrl = wxPayResponse.data.code_url;
         const tradeNo = wxPayResponse.data.trade_no;
-        window.location.href = `/payment?&totalAmount=${encodeURIComponent(totalAmount)}
-        &qrCodeUrl=${encodeURIComponent(qrCodeUrl)}
-        &tradeNo=${encodeURIComponent(tradeNo)}`;
+        window.location.href = `/payment?orderId=${encodeURIComponent(orderId)}&totalAmount=${encodeURIComponent(totalAmount)}&qrCodeUrl=${encodeURIComponent(qrCodeUrl)}&tradeNo=${encodeURIComponent(tradeNo)}`;
       } else {
         ElMessage.error(`微信下单失败：${wxPayResponse.msg}`);
       }
