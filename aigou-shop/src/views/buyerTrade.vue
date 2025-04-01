@@ -1,21 +1,17 @@
 <script setup>
-import axios from "axios";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import {onMounted, ref} from "vue";
+import { buyerTradeApi } from '@/api/buyerTrade';
 
 const orderData = ref([]);
 
 const loadOrder = async () => {
   try {
     const userId = localStorage.getItem('userId');
-    // 这里将请求地址修改为正确的后端接口地址
-    const response = await axios.get(`/order/details/${userId}`);
-    orderData.value = response.data.data;
-    console.log(orderData.value);
+    orderData.value = await buyerTradeApi.getUserOrders(userId);
   } catch (error) {
-    console.error("请求订单详情时出错:", error);
-    // 可以添加一些错误处理的逻辑，比如显示错误信息给用户
+    console.error("加载订单详情时出错:", error);
   }
 };
 
@@ -23,13 +19,18 @@ onMounted(() => {
   loadOrder();
 });
 </script>
+
 <template>
   <!--头部-->
   <div class="top" id="top">
     <Header/>
   </div>
   <div class="w1230">
-    <img src="@/assets/img/logo.png" width="100" height="40" class="logo"/>
+    <el-image 
+      src="@/assets/img/logo.png" 
+      style="width: 100px; height: 40px" 
+      class="logo"
+    />
     <span class="cart">我的订单</span>
   </div>
   <!--订单列表-->
@@ -56,7 +57,11 @@ onMounted(() => {
         <div v-for="product in order.products" :key="product.productId">
           <ul class="clear-float">
             <li class="info">
-              <el-image :src="product.productImage" style="width: 100px; height: 100px;"/>
+              <el-image 
+                :src="product.productImage" 
+                style="width: 100px; height: 100px"
+                fit="cover"
+              />
               <a class="product-name">{{ product.productName }}</a>
             </li>
 

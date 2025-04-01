@@ -22,7 +22,34 @@
 </template>
 
 <style scoped>
-.footer{
+.footer {
+  background-color: #F4F4F4;
+  border-top: 1px solid #e5e5e5;
+  padding: 20px 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
 
+.footer p {
+  text-align: center;
+  margin: 0;
+}
+
+.footer p span {
+  margin-right: 20px;
+  color: #999;
+}
+
+.footer a {
+  color: #999;
+  margin-right: 10px;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: #333;
 }
 </style>

@@ -2,12 +2,11 @@
 import {ref, onMounted} from 'vue';
 import {useRoute} from 'vue-router';
 import {ElCard, ElRow, ElCol, ElButton, ElImage, ElMessage} from 'element-plus';
-import axios from 'axios';
+import {checkOrderStatus} from '@/api/payment';
 
 // 订单号和金额数据
 const orderId = ref('');
 const orderAmount = ref('');
-const paymentQrCode = ref('');
 const tradeNo = ref('');
 // 支付状态，默认为PENDING
 const paymentStatus = ref('PENDING');
@@ -27,15 +26,9 @@ const handlePayment = () => {
 };
 
 // 检查订单状态
-const checkOrderStatus = async () => {
+const checkStatus = async () => {
   try {
-    const response = await axios.get('/wxpay/checkOrder', {
-      params: {
-        tradeNo: tradeNo.value
-      }
-    });
-    // 解析接口返回的数据
-    const {code, msg, data} = response.data;
+    const {code, msg, data} = await checkOrderStatus(tradeNo.value);
     if (code === 1 && msg === "success") {
       paymentStatus.value = data; // 使用 data 字段的值
       if (paymentStatus.value === 'SUCCESS') {
@@ -45,20 +38,18 @@ const checkOrderStatus = async () => {
       } else {
         ElMessage.info("未支付");
       }
-    } else {
     }
   } catch (error) {
+    console.error('检查订单状态失败:', error);
   }
 };
 
 let intervalId;
 
-
-// 组件挂载时获取支付二维码并开始轮询
+// 组件挂载时开始轮询
 onMounted(() => {
-  fetchPaymentQrCode();
   // 每10秒检查一次订单状态
-  intervalId = setInterval(checkOrderStatus, 10000);
+  intervalId = setInterval(checkStatus, 10000);
 });
 </script>
 
@@ -81,7 +72,12 @@ onMounted(() => {
           <el-row>
             <el-col :span="24" class="qr-title">扫码支付</el-col>
             <el-col :span="24" class="qr-image">
-              <el-image :src="'http://127.0.0.1:8080/wxpay/code?url=' + route.query.qrCodeUrl" fit="contain" width="200px" height="200px"></el-image>
+              <el-image 
+                :src="'http://localhost:8080/wxpay/code?url=' + route.query.qrCodeUrl" 
+                fit="contain" 
+                width="200px" 
+                height="200px"
+              ></el-image>
             </el-col>
           </el-row>
         </div>
@@ -164,5 +160,16 @@ onMounted(() => {
 .success-title {
   font-size: 18px;
   color: #67c23a;
+}
+
+.qr-loading {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  color: #909399;
 }
 </style>

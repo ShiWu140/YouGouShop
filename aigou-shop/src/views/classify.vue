@@ -1,6 +1,7 @@
 <script>
 import Header from "@/components/Header.vue";
 import Search from "@/components/Search.vue";
+import { classifyApi } from '@/api/classify';
 
 export default {
   components: {Search, Header},
@@ -39,60 +40,41 @@ export default {
       minP: null,
       maxP: null,
       status: 0,
-
       brand: {
         id: '',
         brandName: '',
         brandType: '',
         brandImg: ''
       },
-
       msg: ''
     }
   },
   methods: {
-    loadingProduct() {
-      this.tiaojian.page = this.page
-      this.tiaojian.size = this.size
-      this.tiaojian.name = this.name
+    async loadingProduct() {
+      this.tiaojian.page = this.page;
+      this.tiaojian.size = this.size;
+      this.tiaojian.name = this.name;
 
-      if (this.names.includes(this.name)) {
-
-      } else {
-        this.names.unshift(this.name)
+      if (!this.names.includes(this.name)) {
+        this.names.unshift(this.name);
         if (this.names.length >= 8) {
-          this.names.pop()
+          this.names.pop();
         }
       }
 
-      this.tiaojian.productType = this.productType
-      if (this.brands.length === 0) {
-        this.tiaojian.brands = []
-      } else {
-        this.tiaojian.brands = this.brands
-      }
+      this.tiaojian.productType = this.productType;
+      this.tiaojian.brands = this.brands.length === 0 ? [] : this.brands;
+      this.tiaojian.minP = this.minP;
+      this.tiaojian.maxP = this.maxP;
+      this.tiaojian.status = this.status;
 
-      this.tiaojian.minP = this.minP
-      this.tiaojian.maxP = this.maxP
-      this.tiaojian.status = this.status
-      this.tiaojian.productType = this.productType
-      this.$http.post("/product/pageH", this.tiaojian).then((response) => {
-        console.log('分页数据', response.data)
-        if (response.data.code === 1) {
-          this.products = response.data.data.records;
-          if (response.data.data.records.length === 0) {
-            this.msg = "当前没有数据"
-          } else {
-            this.msg = ''
-          }
-        } else {
-
-        }
-      })
+      const result = await classifyApi.getPageProducts(this.tiaojian);
+      this.products = result.records;
+      this.msg = result.hasData ? '' : "当前没有数据";
     },
     //状态
     statusProduct(status) {
-      this.status = status
+      this.status = status;
       this.loadingProduct();
     },
     //价格
@@ -105,42 +87,26 @@ export default {
       this.loadingProduct();
     },
     //品牌数据列表
-    brandsLoading() {
-      this.$http.get("/brand/all").then((response) => {
-        if (response.data.code === 1) {
-          console.log("品牌数据列表", response.data.data);
-          this.brandHH = response.data.data;
-        } else {
-
-        }
-      })
+    async brandsLoading() {
+      this.brandHH = await classifyApi.getAllBrands();
     },
     //分类列表
-    productTypesLoading() {
-      return this.$http.get("/productType/all").then((response) => {
-        if (response.data.code === 1) {
-          this.productTypes = response.data.data;
-          console.log("分类列表", response.data.data);
-        }
-      });
+    async productTypesLoading() {
+      this.productTypes = await classifyApi.getAllProductTypes();
     },
     //点击分类
-    productTypeClick(typeId, typeName) {
+    async productTypeClick(typeId, typeName) {
       if (this.productType !== typeId) {
-        // 切换到新分类
         this.productType = typeId;
         this.page = 1;
-        this.name = ''; // 可选，是否清空搜索框
-        this.loadingProduct();
+        this.name = '';
       } else {
-        // 如果点击的是当前分类，直接刷新
         this.page = 1;
-        this.loadingProduct();
       }
+      await this.loadingProduct();
     },
     //点击品牌
     brandsClick() {
-      console.log("点击品牌-数据", this.brands)
       this.loadingProduct();
     },
     //重置按钮
@@ -157,38 +123,33 @@ export default {
     //失去焦点
     handleFocus() {
       if (this.name.length >= 15) {
-        alert("请输入15个字符以内")
+        alert("请输入15个字符以内");
       }
     },
     //回车键
     handleSubmit(item) {
-      console.log('回车键被按下');
-      this.nameClick(item)
+      this.nameClick(item);
     }
-
   },
-  mounted() {
-    // 获取 URL 参数
+  async mounted() {
     const urlParams = new URLSearchParams(window.location.search);
     const category = urlParams.get('category');
+    
+    await this.productTypesLoading();
+    await this.brandsLoading();
+    
     if (category) {
-      // 从 productTypes 中找到匹配的 typeId（需要在接口请求后执行）
-      this.productTypesLoading().then(() => {
-        const type = this.productTypes.find(item => item.productTypeName === category);
-        if (type) {
-          this.productType = type.id;
-        }
-        this.loadingProduct();
-      });
-    } else {
-      this.loadingProduct();
+      const type = this.productTypes.find(item => item.productTypeName === category);
+      if (type) {
+        this.productType = type.id;
+      }
     }
-
-    this.brandsLoading();
+    
+    await this.loadingProduct();
   }
 }
-
 </script>
+
 <template>
   <!--头部-->
   <div class="top" id="top">
@@ -196,13 +157,22 @@ export default {
     <!--logo+搜索-->
     <div class="top-header w1230 clear-float">
       <a href="/" target="_blank" class="logo">
-        <img src="@/assets/img/logo.png"/>
+        <el-image 
+          src="@/assets/img/logo.png"
+          style="width: 100px; height: 40px"
+        />
       </a>
       <div class="top-header-right">
         <!--搜索框-->
         <div class="search clear-float">
-          <input type="text" placeholder="爱购网-专业的综合网上购物商城" class="search-txt" v-model="this.name"
-                 @keyup.enter="handleSubmit(this.name)" @blur="handleFocus"/>
+          <input 
+            type="text" 
+            placeholder="优购网-专业的综合网上购物商城" 
+            class="search-txt" 
+            v-model="name"
+            @keyup.enter="handleSubmit(name)" 
+            @blur="handleFocus"
+          />
           <a href="#" class="search-btn" @click="loadingProduct()">搜索</a>
         </div>
         <!--热搜-->
@@ -226,7 +196,8 @@ export default {
                   <el-icon :size="20">
                     <component :is="type.productTypeIcon"></component>
                   </el-icon>
-                  {{ type.productTypeName }}</a>
+                  {{ type.productTypeName }}
+                </a>
               </h3>
             </li>
           </ul>
@@ -237,7 +208,7 @@ export default {
   <!--面包屑导航栏-->
   <div class="crumbSlide w1230">
     <i class="fa fa-th-large classify-icon"></i>
-    <span>{{ this.product.productName }}</span>
+    <span>{{ product.productName }}</span>
     <i class="fa fa-angle-right"></i>
   </div>
   <!--相关分类（品牌）-->
@@ -245,243 +216,166 @@ export default {
     <div class="brand-title">品牌</div>
     <div class="brands">
       <ul class="clear-float">
-        <li v-for="item in brandHH">
-          <input type="checkbox" class="chk" :id="item.id" v-model="this.brands" :value="item.id"/>
+        <li v-for="item in brandHH" :key="item.id">
+          <input 
+            type="checkbox" 
+            class="chk" 
+            :id="item.id" 
+            v-model="brands" 
+            :value="item.id"
+          />
           <label :for="item.id">
-            <!--            <img src="@/assets/img/liangpin.jpg" width="50" height="50px"/><br/>{{item.brandName}}-->
-            <img :src="item.brandImg" width="50" height="50px"/><br/>{{ item.brandName }}
-            <img src="../assets/img/choose.png" class="choose"/>
+            <el-image 
+              :src="item.brandImg" 
+              style="width: 100px; height: 40px"
+              fit="contain"
+            />
           </label>
         </li>
       </ul>
-      <div class="brands-btn">
-        <a href="#" class="brands-sure" @click="brandsClick()">确定</a>
-        <a href="javascript:void(0)" class="brands-cancel" id="brands-cancel" @click="cancelbrandsClick()">重置</a>
+    </div>
+  </div>
+  <!--商品列表-->
+  <div class="product-list w1230">
+    <div class="product-list-header">
+      <div class="product-list-title">
+        <span>商品列表</span>
+        <span class="product-count">共 {{ products.length }} 个商品</span>
+      </div>
+      <div class="product-list-sort">
+        <span 
+          :class="{ active: status === 0 }" 
+          @click="statusProduct(0)"
+        >默认排序</span>
+        <span 
+          :class="{ active: status === 1 }" 
+          @click="statusProduct(1)"
+        >价格从低到高</span>
+        <span 
+          :class="{ active: status === 2 }" 
+          @click="statusProduct(2)"
+        >价格从高到低</span>
+      </div>
+    </div>
+    <div class="product-list-content">
+      <div v-if="msg" class="no-data">{{ msg }}</div>
+      <div v-else class="product-grid">
+        <div v-for="product in products" :key="product.id" class="product-item">
+          <el-image 
+            :src="product.productImage" 
+            style="width: 200px; height: 200px"
+            fit="cover"
+          />
+          <div class="product-info">
+            <h3 class="product-name">{{ product.productName }}</h3>
+            <p class="product-price">￥{{ product.price }}</p>
+            <p class="product-desc">{{ product.productDesc }}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <!--综合分类-->
-  <div class="search-select w1230">
-    <ul>
-      <li><a href="#" @click="statusProduct(0)">综合</a></li>
-      <li><a href="#" @click="statusProduct(this.status==1?2:1)">销量</a></li>
-      <li><a href="#" @click="statusProduct(this.status==3?4:3)">新品</a></li>
-      <li>
-        <a href="javascript:void(0)">
-          <span>价格</span>
-          <input type="number" placeholder="￥" min="0" class="price" v-model="this.minP"/> -
-          <input type="number" placeholder="￥" min="0" class="price" v-model="this.maxP"/>
-        </a>
-        <a href="#" class="price-sure" @click="priceProduct()">确定</a>
-        <a href="javascript:void(0)" class="price-cancel" id="price-cancel" @click="priceNullProduct()">清空</a>
-      </li>
-
-    </ul>
-  </div>
-  <!--商品展示-->
-  <div v-if="msg!=''" style="margin: 100px auto;width: 100px;height: 150px;">{{ msg }}</div>
-  <div class="goods-show w1230">
-    <ul class="clear-float">
-      <li v-for="(item, index) in products" :key="item.id">
-        <a :href="'/goodsDetail?id=' + item.id">
-          <div class="g-img">
-            <img :src="item.productImage" alt="" width="230px" height="230px"/>
-          </div>
-          <p class="g-title">{{ item.productName }}</p>
-          <span class="g-price">￥{{ item.price }}</span>
-          <span class="g-num">销量:{{ item.salesNum }}</span>
-        </a>
-      </li>
-    </ul>
-  </div>
-
-  <!--脚注-->
-  <div class="footer">
-    <p class="w1230">
-      <a href="#">关于爱购</a>
-      <a href="#">合作伙伴</a>
-      <a href="#">营销中心</a>
-      <a href="#">廉正举报</a>
-      <a href="#">联系客服</a>
-      <a href="#">开发平台</a>
-      <a href="#">诚征英才</a>
-      <a href="#">联系我们</a>
-      <a href="#">网站地图</a>
-      <a href="#">知识产权</a><span>|</span>
-      <span>&copy;2018-2020 igo.com 版权所有</span>
-    </p>
-  </div>
 </template>
+
 <style scoped>
 @import "@/assets/css/classify.css";
 
-.time {
-  font-size: 12px;
-  color: #999;
+.product-list {
+  margin-top: 20px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 4px;
 }
 
-.bottom {
-  margin-top: 13px;
-  line-height: 12px;
+.product-list-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
 }
 
-.button {
-  padding: 0;
-  min-height: auto;
+.product-list-title {
+  font-size: 18px;
+  font-weight: bold;
 }
 
-.image {
-  width: 100%;
-  display: block;
+.product-count {
+  margin-left: 10px;
+  color: #999;
+  font-size: 14px;
+}
+
+.product-list-sort {
+  display: flex;
+  gap: 20px;
+}
+
+.product-list-sort span {
+  cursor: pointer;
+  color: #666;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.product-list-sort span.active {
+  color: #409EFF;
+  background: #ecf5ff;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.product-item {
+  border: 1px solid #eee;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.product-item:hover {
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+  transform: translateY(-5px);
+}
+
+.product-info {
+  padding: 10px;
+}
+
+.product-name {
+  font-size: 16px;
+  margin: 0 0 10px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.product-price {
+  color: #f56c6c;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 0 5px 0;
+}
+
+.product-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 16px;
 }
 </style>
-<!--
-<template>
-  <div>
-    <div class="mt-4">
-      <el-input
-          v-model="input3"
-          placeholder="Please input"
-          class="input-with-select"
-      >
-        <template #prepend>
-          <el-select v-model="select" placeholder="Select" style="width: 115px">
-            <el-option label="Restaurant" value="1"/>
-            <el-option label="Order No." value="2"/>
-            <el-option label="Tel" value="3"/>
-          </el-select>
-        </template>
-        <template #append>
-          <el-button :icon="Search"/>
-        </template>
-      </el-input>
-    </div>
-
-    <el-row>
-      <el-col
-          v-for="(item, index) in records"
-          :key="item"
-          :span="8"
-          :offset="index > 0 ? 2 : 0"
-      >
-        <el-card :body-style="{ padding: '0px' }">
-          <img
-              :src=item.productImage
-              class="image"
-          />
-          <div style="padding: 14px">
-            <span>{{item.productName}}</span>
-            <div>{{item.price}}</div>
-            <div class="bottom">
-              <time class="time">{{ currentDate }}</time>
-              <el-button text class="button">Operating</el-button>
-            </div>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
-
-  </div>
-</template>
-<script setup lang="ts">
-import {ref} from 'vue'
-import {Search} from '@element-plus/icons-vue'
-
-const input3 = ref('')
-const select = ref('')
-
-const products = []
-const product = {
-  id: '',
-  productName: '',
-  productImage: '',
-  price: '',
-  productType: '',
-  productDesc: '',
-  createTime: '',
-  productBrand: '',
-  salesNum: ''
-}
-
-const records=[
-  {
-    "id": "55fd5fb1ceb24f00a1dc55a5f1e1830c",
-    "productName": "平凡的世界(共3册)全三册3册 完整版 路遥原著 全套全集 茅盾文学奖经典文学小说书籍 畅销书排行榜 八年级下册书籍",
-    "productImage": "78e66ef1eea14f7ea18c7212f113d839.jpg",
-    "price": 47.5,
-    "productType": "758afbf0a4d1474e8b53043c6697a9f7",
-    "productDesc": "754b2baf653748af99522f8483053196.jpg",
-    "createTime": "2018-09-19T11:00:44.000+00:00",
-    "productBrand": "e4f4a6cc046741268edc0279007a50e7",
-    "salesNum": 0
-  },
-  {
-    "id": "9de787791f0f44fa9b6b344368f14c17",
-    "productName": "朗读者董卿正版书籍全套(1-3辑)全3册现当代文学随笔中国诗词大会见字如面平凡的世界畅销书籍排行榜正版",
-    "productImage": "797395b3a4424b408688e7131dbbe0d2.jpg",
-    "price": 88.0,
-    "productType": "758afbf0a4d1474e8b53043c6697a9f7",
-    "productDesc": "afa8d1788f3b48c28d521891184a4300.jpg",
-    "createTime": "2018-09-19T10:59:59.000+00:00",
-    "productBrand": "e4f4a6cc046741268edc0279007a50e7",
-    "salesNum": 0
-  },
-  {
-    "id": "dd31d79d9b2f4524be351934e6adb7f3",
-    "productName": "龙应台人生三书：目送+亲爱的安德烈+孩子你慢慢来 全3册经典套装 龙应台的书籍 畅销",
-    "productImage": "2c76927bbdce47fbbc19e48812561984.jpg",
-    "price": 59.8,
-    "productType": "758afbf0a4d1474e8b53043c6697a9f7",
-    "productDesc": "f374288be4be4dd9a9275bedffac5da0.jpg",
-    "createTime": "2018-09-19T10:59:35.000+00:00",
-    "productBrand": "e4f4a6cc046741268edc0279007a50e7",
-    "salesNum": 0
-  },
-  {
-    "id": "8d0860d8aaea486b9448067f73963cf9",
-    "productName": "正版包邮 HTML5权威指南 弗里曼 html5+css3 从入门到精通  网页源码 web应用开发 ",
-    "productImage": "7bd2902c8d8e4fbab36af9db946d866b.jpg",
-    "price": 87.0,
-    "productType": "758afbf0a4d1474e8b53043c6697a9f7",
-    "productDesc": "3a8fdc4931b749c0b304594689474039.jpg",
-    "createTime": "2018-09-19T11:01:09.000+00:00",
-    "productBrand": "e4f4a6cc046741268edc0279007a50e7",
-    "salesNum": 45
-  }
-]
-
-const currentDate = ref(new Date())
-
-</script>
-
-<style>
-.input-with-select .el-input-group__prepend {
-  background-color: var(&#45;&#45;el-fill-color-blank);
-}
-
-.time {
-  font-size: 12px;
-  color: #999;
-}
-
-.bottom {
-  margin-top: 13px;
-  line-height: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.button {
-  padding: 0;
-  min-height: auto;
-}
-
-.image {
-  width: 100%;
-  display: block;
-}
-</style>-->

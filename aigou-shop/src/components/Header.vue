@@ -31,7 +31,7 @@ onMounted(() => {
       <div class="w1230 top-main">
         <router-link to="/" class="toIndex" v-if="!isHomeRoute">
           <i class="fa fa-home"></i>
-          <span>爱购网首页</span>
+          <span>优购网首页</span>
         </router-link>
 
         <div class="w1230 top-bar-main" v-if="!isLogin">

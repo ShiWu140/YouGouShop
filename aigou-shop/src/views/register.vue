@@ -4,6 +4,7 @@ import {ref} from 'vue';
 import axios from 'axios';
 import {useRouter} from 'vue-router';
 import {ElMessage} from "element-plus";
+import {register as registerApi} from '@/api/user';
 
 // 表单数据
 const userName = ref('');
@@ -23,28 +24,21 @@ const register = async () => {
     alert('两次输入的密码不一致');
     return;
   }
-  // 请求数据
-  const data = {
-    // 后端自动注入
-    userId: '',
-    userName: userName.value,
-    userPwd: userPwd.value,
-    // 默认普通用户
-    userType: 0,
-  };
 
   try {
-    const response = await axios.post('/user/add', data);
-    console.log('请求数据:', response.data)
-    if (response.data.code === 1) {
+    const response = await registerApi({
+      userName: userName.value,
+      userPwd: userPwd.value
+    });
+    
+    if (response.code === 1) {
       ElMessage.success('注册成功')
       await router.push('/login'); // 注册成功后跳转到登录页面
     } else {
       ElMessage.error('注册失败,请重试')
     }
   } catch (error) {
-    console.error('注册接口调用失败:', error);
-    ElMessage.warning('注册接口调用失败', error)
+    ElMessage.warning('注册失败，请稍后重试');
   }
 };
 </script>

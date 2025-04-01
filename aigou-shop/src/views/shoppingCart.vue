@@ -1,7 +1,7 @@
 <script lang="js" setup>
 import {ElMessage, ElTable} from 'element-plus';
 import {onMounted, ref} from 'vue';
-import axios from "axios";
+import {shoppingCartApi} from '@/api/shoppingCart';
 
 
 const userId = localStorage.getItem('userId')
@@ -48,43 +48,36 @@ const extractProvinceOrCity = (address) => {
 // 商品数量更改
 const handleChange = async (row) => {
   try {
-    const response = await axios.get('/shopCartProduct/updateProductNum', {
-      params: {
-        cartId: row.cartId,       // 购物车ID
-        productId: row.productId,  // 商品ID
-        productNum: row.productNum // 更新后的商品数量
-      }
+    const response = await shoppingCartApi.updateProductNum({
+      cartId: row.cartId,
+      productId: row.productId,
+      productNum: row.productNum
     });
-    if (response.data.code === 1) {
+    if (response.code === 1) {
       ElMessage.success("商品数量更新成功！");
     } else {
-      ElMessage.error(`更新失败：${response.data.msg}`);
+      ElMessage.error(`更新失败：${response.msg}`);
     }
   } catch (error) {
-    console.error("更新商品数量失败：", error);
     ElMessage.error("更新失败，请稍后重试！");
   }
 };
 
-// 删除商品 /shopCart/deleteProductFromCart
+// 删除商品
 const handleClick = async (row) => {
   try {
-    const response = await axios.delete('/shopCart/deleteProductFromCart', {
-      params: {
-        cartId: row.cartId,
-        productId: row.productId
-      }
+    const response = await shoppingCartApi.deleteProductFromCart({
+      cartId: row.cartId,
+      productId: row.productId
     });
-    console.log("删除商品请求：" + response)
-    if (response.data.code === 1) {
+    if (response.code === 1) {
       ElMessage.success('删除成功');
       tableData.value = tableData.value.filter(item => item !== row);
-      console.log('删除商品：', row);
     } else {
       ElMessage.error('删除失败');
     }
   } catch (error) {
-    ElMessage.error("删除商品失败")
+    ElMessage.error("删除商品失败");
   }
 };
 
@@ -95,26 +88,16 @@ const batchDelete = async () => {
     return;
   }
   try {
-    const promises = multipleSelection.value.map(item =>
-        axios.delete('/shopCart/deleteProductFromCart', {
-          params: {
-            cartId: item.cartId,
-            productId: item.productId,
-          },
-        })
-    );
-    const results = await Promise.all(promises);
-    const failedDeletes = results.filter(res => res.data.code !== 1);
+    const results = await shoppingCartApi.batchDeleteProducts(multipleSelection.value);
+    const failedDeletes = results.filter(res => res.code !== 1);
     if (failedDeletes.length === 0) {
       ElMessage.success("批量删除成功！");
-      // 更新购物车数据
       tableData.value = tableData.value.filter(item => !multipleSelection.value.includes(item));
-      clearSelection(); // 清空选中状态
+      clearSelection();
     } else {
       ElMessage.warning(`部分商品删除失败：${failedDeletes.length}个`);
     }
   } catch (error) {
-    console.error("批量删除失败：", error);
     ElMessage.error("批量删除失败，请稍后重试！");
   }
 };
@@ -122,11 +105,9 @@ const batchDelete = async () => {
 // 获取购物车数据
 const fetchProducts = async () => {
   try {
-    const response = await axios.get('/shopCart/getProductsByUserId?userId=' + userId);
-    // console.log('API Response:', response.data);
-    if (response.data.code === 1) {
-      // 接收产品列表
-      const products = response.data.data || [];
+    const response = await shoppingCartApi.getProductsByUserId(userId);
+    if (response.code === 1) {
+      const products = response.data || [];
       tableData.value = products.map(product => ({
         cartId: product.cartId,
         productId: product.productId,
@@ -134,9 +115,8 @@ const fetchProducts = async () => {
         productPrice: product.productPrice,
         productNum: product.productNum,
       }));
-      // console.log("购物车返回数据为：", tableData.value);
     } else {
-      console.error('获取购物车数据失败:', response.data.msg);
+      console.error('获取购物车数据失败:', response.msg);
     }
   } catch (error) {
     console.error('获取购物车数据失败:', error);
@@ -146,17 +126,15 @@ const fetchProducts = async () => {
 // 获取收货地址数据
 const fetchAddress = async () => {
   try {
-    const response = await axios.get(`/receivingAddress/getReceivingAddressByUserId?userId=${userId}`);
-    if (response.data.code === 1) {
-      const addresses = response.data.data;
+    const response = await shoppingCartApi.getReceivingAddressByUserId(userId);
+    if (response.code === 1) {
+      const addresses = response.data;
       addressList.value = addresses;
       
-      // 查找默认地址
       const defaultAddress = addresses.find(item => item.isDefault === 1);
       if (defaultAddress) {
         addressData.value = defaultAddress;
       } else if (addresses.length > 0) {
-        // 如果没有默认地址，使用第一个地址
         addressData.value = addresses[0];
       }
     } else {
@@ -178,52 +156,44 @@ const submitForm = async () => {
     ElMessage.warning("请先设置收货地址！");
     return;
   }
-  // 准备提交的数据
+  
   const orderData = {
     id: "",
     userId: userId,
     createTime: "",
     state: 0,
-    receivingAddress: addressData.value.id, // 收货地址 ID
+    receivingAddress: addressData.value.id,
     products: multipleSelection.value.map(item => ({
-      productId: item.productId, // 假设你的商品数据包含 `id` 字段
+      productId: item.productId,
       productNum: item.productNum,
     })),
   };
-  try {
-    // 调用后端接口
-    console.log("准备提交的数据:", orderData);
-    const response = await axios.post('/order/add', orderData);
-    if (response.data.code === 1) {
-      console.log("订单 ID:", response.data);
-      const orderId = response.data.data.orderId;
-      const totalAmount = response.data.data.totalAmount;
 
-      // 调用微信下单接口
-      const wxPayResponse = await axios.get('/wxpay/makeOrder', {
-        params: {
-          orderId: orderId,
-          price: totalAmount
-        }
+  try {
+    const response = await shoppingCartApi.submitOrder(orderData);
+    if (response.code === 1) {
+      const orderId = response.data.orderId;
+      const totalAmount = response.data.totalAmount;
+
+      const wxPayResponse = await shoppingCartApi.createWxPayOrder({
+        orderId: orderId,
+        price: totalAmount
       });
-      if (wxPayResponse.data.code === 1) {
-        const qrCodeUrl = wxPayResponse.data.data.code_url;
-        const tradeNo = wxPayResponse.data.data.trade_no;
-        console.log("微信下单返回数据:", wxPayResponse.data.data)
-        // 跳转到支付页面并展示二维码
+
+      if (wxPayResponse.code === 1) {
+        const qrCodeUrl = wxPayResponse.data.code_url;
+        const tradeNo = wxPayResponse.data.trade_no;
         window.location.href = `/payment?&totalAmount=${encodeURIComponent(totalAmount)}
         &qrCodeUrl=${encodeURIComponent(qrCodeUrl)}
         &tradeNo=${encodeURIComponent(tradeNo)}`;
       } else {
-        ElMessage.error(`微信下单失败：${wxPayResponse.data.msg}`);
+        ElMessage.error(`微信下单失败：${wxPayResponse.msg}`);
       }
-      // 清空选中项
       clearSelection();
     } else {
-      ElMessage.error(`订单提交失败：${response.data.msg}`);
+      ElMessage.error(`订单提交失败：${response.msg}`);
     }
   } catch (error) {
-    console.error("订单提交失败：", error);
     ElMessage.error("订单提交失败，请稍后重试！");
   }
 };

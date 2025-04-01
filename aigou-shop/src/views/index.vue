@@ -1,74 +1,39 @@
 <script setup>
 import {onMounted, ref} from 'vue';
-import axios from 'axios';
 import Header from "@/components/Header.vue";
 import Search from "@/components/Search.vue";
 import Footer from "@/components/Footer.vue";
+import { carouselApi, productTypeApi, productApi } from '@/api';
 
 const carouselFigures = ref([]);
-
-const fetchCarouselFigures = async () => {
-  try {
-    const response = await axios.get('/carouselFigure/all');
-    // 对获取的轮播图数据根据 sequenceNum 进行排序，并截取前五个
-    carouselFigures.value = response.data.data.sort((a, b) => a.sequenceNum - b.sequenceNum);
-    console.log('Carousel figures fetched:', carouselFigures.value)
-  } catch (error) {
-    console.error('Error fetching carousel figures:', error);
-  }
-};
 const productTypes = ref([]);
-
-const fetchProductTypes = async () => {
-  try {
-    const response = await axios.get('/productType/all');
-    productTypes.value = response.data.data;
-    productTypes.value = productTypes.value.filter(item => item !== null && item.id);
-    console.log('Product types fetched:', productTypes.value)
-  } catch (error) {
-    console.error('Error fetching product types:', error);
-  }
-};
 const productNews = ref([]);
-const fetchProductNews = async () => {
-  try {
-    const response = await axios.get('/product/newProduct');
-    productNews.value = response.data.data;
-    productNews.value = productNews.value.filter(item => item !== null && item.id);
-    console.log('Product news fetched:', productNews.value)
-  } catch (error) {
-    console.error('Error fetching product news:', error);
-  }
-};
+const newProductImage = ref('');
 const productSales = ref([]);
-const fetchProductSales = async () => {
-  try {
-    const response = await axios.get('/product/getProductSalesList');
-    productSales.value = response.data.data;
-    productSales.value = productSales.value.filter(item => item !== null && item.id);
-    console.log('Product sales fetched:', productSales.value)
-  } catch (error) {
-    console.error('Error fetching product sales:', error);
-  }
-};
 const allCategoryProduct = ref([]);
-const fetchAllCategoryProduct = async () => {
-  try {
-    const response = await axios.get(`/product/allCategoryProduct`);
-    // allCategoryProduct.value = response.data.data;
-    allCategoryProduct.value = response.data.data.filter(item => item !== null && item.id);
 
-    console.log('allCategoryProduct fetched:', allCategoryProduct.value)
-  } catch (error) {
-    console.error('Error allCategoryProduct:', error);
+const fetchData = async () => {
+  // 获取轮播图数据
+  carouselFigures.value = await carouselApi.getAllCarouselFigures();
+  
+  // 获取商品类型数据
+  productTypes.value = await productTypeApi.getAllProductTypes();
+  
+  // 获取新品数据
+  productNews.value = await productApi.getNewProducts();
+  if (productNews.value.length > 0) {
+    newProductImage.value = productNews.value[0].productImage;
   }
+  
+  // 获取销量排行数据
+  productSales.value = await productApi.getProductSales();
+  
+  // 获取所有分类商品数据
+  allCategoryProduct.value = await productApi.getAllCategoryProduct();
 };
+
 onMounted(() => {
-  fetchProductTypes();
-  fetchCarouselFigures();
-  fetchProductNews();
-  fetchProductSales();
-  fetchAllCategoryProduct();
+  fetchData();
 });
 </script>
 <template>
@@ -99,7 +64,13 @@ onMounted(() => {
   </div>
   <!--新品+排行榜-->
   <div class="new-rank w1230 clear-float">
-    <a href="#" class="new-img"><img src="@/assets/img/new.jpg" width="267px" height="400px"/></a>
+    <a href="#" class="new-img">
+      <el-image 
+        :src="newProductImage || '@/assets/img/new.jpg'" 
+        fit="cover" 
+        style="width: 267px; height: 400px"
+      />
+    </a>
     <!--新品-->
     <div class="new">
       <h3 class="title">新品</h3>

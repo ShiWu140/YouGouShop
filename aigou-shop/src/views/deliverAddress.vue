@@ -1,8 +1,10 @@
 <script>
+import { deliverAddressApi } from '@/api/deliverAddress';
 
 export default {
   data() {
     return {
+      loading: false,
       ReceivingAddress: {
         id: '',
         receivingAddress: '',
@@ -29,25 +31,35 @@ export default {
     }
   },
   methods: {
-    loadingReceivingAddress() {
-      // 从localStorage获取当前用户ID
+    // 加载收货地址
+    async loadingReceivingAddress() {
       const userId = localStorage.getItem('userId');
+      console.log('当前用户ID:', userId);
+      
       if (!userId) {
-        this.$message.error('请先登录');
+        console.log('用户未登录');
+        this.$message.warning('请先登录');
         return;
       }
-      this.$http.get("/receivingAddress/getReceivingAddressByUserId", {
-        params: {userId: userId}
-      }).then((response) => {
-        if (response.data.code == 1) {
-          this.ReceivingAddresses = response.data.data;
-        } else {
-          this.$message.error('获取收货地址失败');
-        }
-      }).catch(error => {
-        console.error('Error loading addresses:', error);
-        this.$message.error('获取收货地址失败');
-      });
+
+      this.loading = true;
+      console.log('开始请求收货地址数据...');
+      try {
+        const addresses = await deliverAddressApi.getReceivingAddresses(userId);
+        console.log('获取收货地址成功，数据:', addresses);
+        this.ReceivingAddresses = addresses;
+      } catch (error) {
+        console.error('获取收货地址请求失败:', error);
+        console.error('错误详情:', {
+          message: error.message,
+          response: error.response,
+          request: error.request,
+          config: error.config
+        });
+        this.$message.error('获取收货地址失败，请稍后重试');
+      } finally {
+        this.loading = false;
+      }
     },
     // 验证表单
     validateForm() {
@@ -74,41 +86,26 @@ export default {
     // 添加或修改地址
     async addAddress(flag) {
       try {
-        // 从localStorage获取当前用户ID
         const userId = localStorage.getItem('userId');
         if (!userId) {
           this.$message.error('请先登录');
           return;
         }
 
-        // 验证表单
         await this.validateForm();
-
-        // 设置用户ID
         this.ReceivingAddress.userId = userId;
 
         if (flag) {
-          // 修改地址
-          const response = await this.$http.post("/receivingAddress/modify", this.ReceivingAddress);
-          if (response.data.code === 1) {
-            this.$message.success('修改成功');
-            this.resetForm();
-            this.loadingReceivingAddress();
-          } else {
-            this.$message.error(response.data.msg || '修改失败');
-          }
+          await deliverAddressApi.modifyReceivingAddress(this.ReceivingAddress);
+          this.$message.success('修改成功');
         } else {
-          // 新增地址
           this.ReceivingAddress.isDefault = 0;
-          const response = await this.$http.post("/receivingAddress/add", this.ReceivingAddress);
-          if (response.data.code === 1) {
-            this.$message.success('添加成功');
-            this.resetForm();
-            this.loadingReceivingAddress();
-          } else {
-            this.$message.error(response.data.msg || '添加失败');
-          }
+          await deliverAddressApi.addReceivingAddress(this.ReceivingAddress);
+          this.$message.success('添加成功');
         }
+
+        this.resetForm();
+        this.loadingReceivingAddress();
       } catch (error) {
         console.error('操作失败:', error);
         this.$message.error(error.message || '操作失败');
@@ -117,17 +114,21 @@ export default {
     // 删除地址
     async deleteAddress(id) {
       try {
-        const response = await this.$http.post("/receivingAddress/delete", {id});
-        if (response.data.code === 1) {
-          this.$message.success('删除成功');
-          this.resetForm();
-          this.loadingReceivingAddress();
-        } else {
-          this.$message.error(response.data.msg || '删除失败');
-        }
+        await this.$confirm('确认删除该地址吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        });
+        
+        await deliverAddressApi.deleteReceivingAddress(id);
+        this.$message.success('删除成功');
+        this.resetForm();
+        this.loadingReceivingAddress();
       } catch (error) {
-        console.error('删除失败:', error);
-        this.$message.error('删除失败');
+        if (error !== 'cancel') {
+          console.error('删除失败:', error);
+          this.$message.error('删除失败，请稍后重试');
+        }
       }
     },
     // 更新地址
@@ -152,9 +153,7 @@ export default {
         isDefault: 0
       };
     },
-    /*statusAddress(status){
-      this.ReceivingAddress.isDefault = status
-    }*/
+
   },
   mounted() {
     this.loadingReceivingAddress();
@@ -212,7 +211,12 @@ export default {
     </div>
     <!--收货地址列表-->
     <div class="add-list w1230">
-      <el-table :data="ReceivingAddresses" border style="width: 80%">
+      <el-table 
+        v-loading="loading"
+        :data="ReceivingAddresses" 
+        border 
+        style="width: 80%"
+      >
         <el-table-column prop="receivingPerson" label="收货人" width="80"/>
         <el-table-column prop="receivingAddress" label="收货地址"/>
         <el-table-column prop="mobilePhone" label="手机号" width="150"/>

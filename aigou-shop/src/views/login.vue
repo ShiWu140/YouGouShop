@@ -4,6 +4,7 @@ import {ref} from 'vue';
 import axios from 'axios';
 import {useRouter} from 'vue-router';
 import {ElMessage} from "element-plus";
+import {login as loginApi} from '@/api/user';
 
 const userName = ref('');
 const password = ref('');
@@ -16,12 +17,9 @@ const login = async () => {
     alert('请输入用户名和密码');
     return;
   }
-  const url = `/user/login?username=${encodeURIComponent(userName.value)}&password=${encodeURIComponent(password.value)}`;
-  console.log('请求地址:', url);
   try {
-    const response = await axios.post(url);
-    const {statusCode, statusCodeValue, body} = response.data
-    console.log('token:', body)
+    const response = await loginApi(userName.value, password.value);
+    const {statusCodeValue, body} = response;
 
     if (statusCodeValue === 200) {
       // 登录成功，保存 token 和 userId
@@ -40,7 +38,6 @@ const login = async () => {
       ElMessage.error(`登录失败!`);
     }
   } catch (error) {
-    console.error('登录接口调用失败', error);
     ElMessage.warning('登录失败，请稍后重试');
   }
 };
@@ -60,8 +57,8 @@ const login = async () => {
   <div class="lr-main">
     <div class="w1230">
       <div class="reg-div">
-        <h3 class="login-title">登录爱购</h3>
-        <p class="go-reg">还没有爱购账号？
+        <h3 class="login-title">登录优购</h3>
+        <p class="go-reg">还没有优购账号？
           <router-link to="/register">在此注册</router-link>
         </p>
         <form @submit.prevent="login">

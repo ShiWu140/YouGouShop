@@ -5,7 +5,7 @@
 .top-link{
 	width: 460px;
 	float: right;
-	padding-top: 15px;
+	padding-top: 35px;
 }
 .top-link a{
 	display: inline-block;
@@ -25,7 +25,7 @@
 /******登录/注册的中部******/
 .lr-main{
 	height: 600px;
-	background-image: url(../img/login-bg.jpg);
+	background-image: url(../img/login-bg.png);
 	background-repeat:no-repeat;
 	background-position: center;
 }
