@@ -1,5 +1,6 @@
 package com.training.aigoushopapi.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.training.aigoushopapi.entity.Order;
@@ -9,10 +10,14 @@ import com.training.aigoushopapi.entity.request.OrderDetailDTO;
 import com.training.aigoushopapi.mapper.OrderMapper;
 import com.training.aigoushopapi.mapper.OrderProductMapper;
 import com.training.aigoushopapi.mapper.ProductMapper;
+import com.training.aigoushopapi.service.IOrderProductService;
 import com.training.aigoushopapi.service.IOrderService;
+import com.training.aigoushopapi.service.IProductService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +41,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Resource
     private ProductMapper productMapper;
 
+    @Resource
+    private IOrderProductService orderProductService;
+
+    @Resource
+    private IProductService productService;
+
+    @Override
     public List<OrderDetailDTO> getOrderDetailsByUserId(String userId) {
         // 获取用户的所有订单
         List<Order> orders = orderMapper.selectList(new QueryWrapper<Order>().lambda().eq(Order::getUserId, userId));
@@ -58,7 +70,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         for (Order order : orders) {
             List<OrderProduct> orderProductList = orderProducts.stream()
                     .filter(op -> op.getOrderId().equals(order.getId()))
-                    .collect(Collectors.toList());
+                    .toList();
 
             // 查询商品信息并封装
             List<OrderDetailDTO.OrderProductDTO> productDTOList = new ArrayList<>();
@@ -89,5 +101,61 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
 
         return orderDetailDTOList;
+    }
+
+    @Override
+    public long countOrdersByDate(LocalDateTime start, LocalDateTime end) {
+        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
+        wrapper.between(Order::getCreateTime, start, end);
+        return this.count(wrapper);
+    }
+
+    @Override
+    public BigDecimal getRevenueByDate(LocalDateTime start, LocalDateTime end) {
+        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
+        wrapper.between(Order::getCreateTime, start, end)
+                // 只统计已支付的订单
+               .eq(Order::getState, 1);
+
+        List<Order> orders = this.list(wrapper);
+        return orders.stream()
+            .map(order -> {
+                List<OrderProduct> orderProducts = orderProductService.getByOrderId(order.getId());
+                return orderProducts.stream()
+                    .map(op -> {
+                        Product product = productService.getById(op.getProductId());
+                        return BigDecimal.valueOf(product.getPrice()).multiply(new BigDecimal(op.getProductNum()));
+                    })
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            })
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Override
+    public long countPendingOrders() {
+        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
+        // 未支付的订单
+        wrapper.eq(Order::getState, 0);
+        return this.count(wrapper);
+    }
+
+    @Override
+    public long countUrgentOrders() {
+        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
+        // 未支付的订单
+        wrapper.eq(Order::getState, 0)
+                // 超过24小时的订单
+               .lt(Order::getCreateTime, LocalDateTime.now().minusHours(24));
+        return this.count(wrapper);
+    }
+
+    @Override
+    public long countToBeShippedOrders() {
+        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
+        // 已支付的订单
+        wrapper.eq(Order::getState, 1)
+                // 未发货的订单
+               .eq(Order::getDeliveryStatus, 0);
+        return this.count(wrapper);
     }
 }
