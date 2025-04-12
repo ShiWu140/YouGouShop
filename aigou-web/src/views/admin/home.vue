@@ -27,10 +27,10 @@ export default {
     this.fetchDashboardStats()
     this.initRevenueChart()
     this.initOrderStatusChart()
-    
+
     // 监听窗口大小变化，重绘图表
     window.addEventListener('resize', this.handleResize)
-    
+
     // 设置定时刷新
     this.statsTimer = setInterval(this.fetchDashboardStats, 60000) // 每分钟刷新一次
   },
@@ -140,40 +140,40 @@ export default {
               show: false
             },
             data: [
-              { 
-                value: 0, 
+              {
+                value: 0,
                 name: '已完成',
-                itemStyle: { 
+                itemStyle: {
                   color: this.themeColors.success,
                   borderRadius: 10,
                   borderColor: '#fff',
                   borderWidth: 2
                 }
               },
-              { 
-                value: 0, 
+              {
+                value: 0,
                 name: '进行中',
-                itemStyle: { 
+                itemStyle: {
                   color: this.themeColors.warning,
                   borderRadius: 10,
                   borderColor: '#fff',
                   borderWidth: 2
                 }
               },
-              { 
-                value: 0, 
+              {
+                value: 0,
                 name: '待处理',
-                itemStyle: { 
+                itemStyle: {
                   color: this.themeColors.primary,
                   borderRadius: 10,
                   borderColor: '#fff',
                   borderWidth: 2
                 }
               },
-              { 
-                value: 0, 
+              {
+                value: 0,
                 name: '已取消',
-                itemStyle: { 
+                itemStyle: {
                   color: this.themeColors.danger,
                   borderRadius: 10,
                   borderColor: '#fff',
@@ -200,7 +200,7 @@ export default {
         this.loading = true
         const response = await axios.get('/dashboard/stats')
         const data = response.data.data || response.data // 兼容两种返回格式
-        
+
         // 更新卡片数据
         this.cardData = [
           {
@@ -284,40 +284,40 @@ export default {
           const option = {
             series: [{
               data: [
-                { 
-                  value: orderStatusData['已完成'] || 0, 
+                {
+                  value: orderStatusData['已完成'] || 0,
                   name: '已完成',
-                  itemStyle: { 
+                  itemStyle: {
                     color: this.themeColors.success,
                     borderRadius: 10,
                     borderColor: '#fff',
                     borderWidth: 2
                   }
                 },
-                { 
-                  value: orderStatusData['进行中'] || 0, 
+                {
+                  value: orderStatusData['进行中'] || 0,
                   name: '进行中',
-                  itemStyle: { 
+                  itemStyle: {
                     color: this.themeColors.warning,
                     borderRadius: 10,
                     borderColor: '#fff',
                     borderWidth: 2
                   }
                 },
-                { 
-                  value: orderStatusData['待处理'] || 0, 
+                {
+                  value: orderStatusData['待处理'] || 0,
                   name: '待处理',
-                  itemStyle: { 
+                  itemStyle: {
                     color: this.themeColors.primary,
                     borderRadius: 10,
                     borderColor: '#fff',
                     borderWidth: 2
                   }
                 },
-                { 
-                  value: orderStatusData['已取消'] || 0, 
+                {
+                  value: orderStatusData['已取消'] || 0,
                   name: '已取消',
-                  itemStyle: { 
+                  itemStyle: {
                     color: this.themeColors.danger,
                     borderRadius: 10,
                     borderColor: '#fff',
@@ -419,7 +419,7 @@ export default {
 }
 
 .data-card {
-  height: 120px;
+  height: 100px;
   background: #fff;
   border-radius: 4px;
   transition: all 0.3s;
