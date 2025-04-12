@@ -30,5 +30,24 @@ export const buyerTradeApi = {
       console.error('Error updating delivery status:', error);
       throw error;
     }
+  },
+  
+  // 更新订单支付状态（取消订单）
+  updatePaymentStatus: async (orderId, state) => {
+    try {
+      const response = await axios.post('/order/updatePaymentStatus', null, {
+        params: {
+          orderId,
+          state
+        }
+      });
+      if (!response.data) {
+        throw new Error('更新支付状态失败');
+      }
+      return response.data;
+    } catch (error) {
+      console.error('Error updating payment status:', error);
+      throw error;
+    }
   }
 };

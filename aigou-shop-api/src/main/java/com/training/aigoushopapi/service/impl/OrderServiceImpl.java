@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -157,5 +159,36 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 // 未发货的订单
                .eq(Order::getDeliveryStatus, 0);
         return this.count(wrapper);
+    }
+
+    @Override
+    public Map<String, Long> getOrderStatusStats() {
+        Map<String, Long> stats = new HashMap<>();
+        
+        // 统计各状态的订单数量
+        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
+        
+        // 已完成订单（已支付且已收货）
+        wrapper.eq(Order::getState, 1)
+               .eq(Order::getDeliveryStatus, 2);
+        stats.put("已完成", this.count(wrapper));
+        
+        // 进行中订单（已支付但未收货）
+        wrapper.clear();
+        wrapper.eq(Order::getState, 1)
+               .lt(Order::getDeliveryStatus, 2);
+        stats.put("进行中", this.count(wrapper));
+        
+        // 待处理订单（未支付）
+        wrapper.clear();
+        wrapper.eq(Order::getState, 0);
+        stats.put("待处理", this.count(wrapper));
+        
+        // 已取消订单（支付状态为2）
+        wrapper.clear();
+        wrapper.eq(Order::getState, 2);
+        stats.put("已取消", this.count(wrapper));
+        
+        return stats;
     }
 }

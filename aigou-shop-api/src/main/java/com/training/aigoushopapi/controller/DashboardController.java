@@ -61,36 +61,43 @@ public class DashboardController {
         
         // 最近7天的营收数据
         List<Map<String, Object>> revenueData = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
         for (int i = 6; i >= 0; i--) {
-            LocalDateTime start = LocalDateTime.now().minusDays(i).withHour(0).withMinute(0).withSecond(0);
+            LocalDateTime start = today.minusDays(i);
             LocalDateTime end = start.plusDays(1);
             BigDecimal revenue = orderService.getRevenueByDate(start, end);
-            revenueData.add(Map.of(
-                "date", start.format(DateTimeFormatter.ofPattern("MM-dd")),
-                "revenue", revenue
-            ));
+            
+            Map<String, Object> dayData = new HashMap<>();
+            dayData.put("date", start.format(formatter));
+            dayData.put("revenue", revenue);
+            revenueData.add(dayData);
         }
         
-        result.put("todayOrders", Map.of(
-            "count", todayOrderCount,
-            "increase", orderIncrease
-        ));
+        // 订单状态统计
+        Map<String, Long> orderStatusStats = orderService.getOrderStatusStats();
         
-        result.put("todayRevenue", Map.of(
-            "amount", todayRevenue,
-            "increase", revenueIncrease
-        ));
+        // 组装返回数据
+        result.put("todayOrders", new HashMap<String, Object>() {{
+            put("count", todayOrderCount);
+            put("increase", orderIncrease);
+        }});
         
-        result.put("pendingOrders", Map.of(
-            "count", pendingOrders,
-            "urgentCount", urgentOrders
-        ));
+        result.put("todayRevenue", new HashMap<String, Object>() {{
+            put("amount", todayRevenue);
+            put("increase", revenueIncrease);
+        }});
         
-        result.put("toBeShipped", Map.of(
-            "count", toBeShipped
-        ));
+        result.put("pendingOrders", new HashMap<String, Object>() {{
+            put("count", pendingOrders);
+            put("urgentCount", urgentOrders);
+        }});
+        
+        result.put("toBeShipped", new HashMap<String, Object>() {{
+            put("count", toBeShipped);
+        }});
         
         result.put("revenueData", revenueData);
+        result.put("orderStatusStats", orderStatusStats);
         
         return result;
     }

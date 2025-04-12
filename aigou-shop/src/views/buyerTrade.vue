@@ -19,7 +19,10 @@ const loadOrder = async () => {
 
 // 获取支付状态文本
 const getPaymentStatusText = (state) => {
-  return state === 0 ? '未支付' : '已支付';
+  if (state === 0) return '未支付';
+  if (state === 1) return '已支付';
+  if (state === 2) return '已取消';
+  return '未知状态';
 };
 
 // 获取发货状态文本
@@ -52,6 +55,17 @@ const confirmReceive = async (orderId) => {
     loadOrder(); // 重新加载订单列表
   } catch (error) {
     ElMessage.error('确认收货失败，请重试！');
+  }
+};
+
+// 取消订单
+const cancelOrder = async (orderId) => {
+  try {
+    await buyerTradeApi.updatePaymentStatus(orderId, 2);
+    ElMessage.success('订单已取消！');
+    loadOrder(); // 重新加载订单列表
+  } catch (error) {
+    ElMessage.error('取消订单失败，请重试！');
   }
 };
 
@@ -127,7 +141,7 @@ onMounted(() => {
               <li class="num">{{ product.productNum }}</li>
               <li class="real-price">￥{{ product.price * product.productNum }}</li>
               <li class="status">
-                <el-tag :type="order.state === 0 ? 'danger' : 'success'">
+                <el-tag :type="order.state === 0 ? 'danger' : order.state === 1 ? 'success' : 'info'">
                   {{ getPaymentStatusText(order.state) }}
                 </el-tag>
                 <el-tag :type="getDeliveryStatusType(order.deliveryStatus)" class="ml-2">
@@ -142,6 +156,14 @@ onMounted(() => {
                   @click="$router.push(`/payment?orderId=${order.orderId}&totalAmount=${order.products.reduce((sum, p) => sum + p.price * p.productNum, 0)}`)"
                 >
                   去支付
+                </el-button>
+                <el-button 
+                  v-if="order.state === 0" 
+                  type="danger" 
+                  size="small"
+                  @click="cancelOrder(order.orderId)"
+                >
+                  取消订单
                 </el-button>
                 <el-button 
                   v-if="order.state === 1 && order.deliveryStatus === 1" 

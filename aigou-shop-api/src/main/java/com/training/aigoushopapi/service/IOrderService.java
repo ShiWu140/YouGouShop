@@ -8,6 +8,7 @@ import com.training.aigoushopapi.entity.request.OrderRequest;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -45,4 +46,10 @@ public interface IOrderService extends IService<Order> {
      * 统计待发货订单数量
      */
     long countToBeShippedOrders();
+
+    /**
+     * 获取订单状态统计数据
+     * @return 包含各状态订单数量的Map
+     */
+    Map<String, Long> getOrderStatusStats();
 }

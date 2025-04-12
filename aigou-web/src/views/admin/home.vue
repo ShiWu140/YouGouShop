@@ -107,7 +107,8 @@ export default {
       this.orderStatusChart = echarts.init(this.$refs.orderStatusChart)
       const option = {
         tooltip: {
-          trigger: 'item'
+          trigger: 'item',
+          formatter: '{b}: {c} ({d}%)'
         },
         legend: {
           top: '5%',
@@ -140,7 +141,7 @@ export default {
             },
             data: [
               { 
-                value: 60, 
+                value: 0, 
                 name: '已完成',
                 itemStyle: { 
                   color: this.themeColors.success,
@@ -150,7 +151,7 @@ export default {
                 }
               },
               { 
-                value: 15, 
+                value: 0, 
                 name: '进行中',
                 itemStyle: { 
                   color: this.themeColors.warning,
@@ -160,7 +161,7 @@ export default {
                 }
               },
               { 
-                value: 20, 
+                value: 0, 
                 name: '待处理',
                 itemStyle: { 
                   color: this.themeColors.primary,
@@ -170,7 +171,7 @@ export default {
                 }
               },
               { 
-                value: 5, 
+                value: 0, 
                 name: '已取消',
                 itemStyle: { 
                   color: this.themeColors.danger,
@@ -275,6 +276,58 @@ export default {
             }]
           }
           this.revenueChart.setOption(option)
+        }
+
+        // 更新订单状态统计图数据
+        if (this.orderStatusChart) {
+          const orderStatusData = data.orderStatusStats
+          const option = {
+            series: [{
+              data: [
+                { 
+                  value: orderStatusData['已完成'] || 0, 
+                  name: '已完成',
+                  itemStyle: { 
+                    color: this.themeColors.success,
+                    borderRadius: 10,
+                    borderColor: '#fff',
+                    borderWidth: 2
+                  }
+                },
+                { 
+                  value: orderStatusData['进行中'] || 0, 
+                  name: '进行中',
+                  itemStyle: { 
+                    color: this.themeColors.warning,
+                    borderRadius: 10,
+                    borderColor: '#fff',
+                    borderWidth: 2
+                  }
+                },
+                { 
+                  value: orderStatusData['待处理'] || 0, 
+                  name: '待处理',
+                  itemStyle: { 
+                    color: this.themeColors.primary,
+                    borderRadius: 10,
+                    borderColor: '#fff',
+                    borderWidth: 2
+                  }
+                },
+                { 
+                  value: orderStatusData['已取消'] || 0, 
+                  name: '已取消',
+                  itemStyle: { 
+                    color: this.themeColors.danger,
+                    borderRadius: 10,
+                    borderColor: '#fff',
+                    borderWidth: 2
+                  }
+                }
+              ]
+            }]
+          }
+          this.orderStatusChart.setOption(option)
         }
       } catch (error) {
         console.error('获取仪表盘数据失败:', error)
