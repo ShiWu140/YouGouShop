@@ -52,7 +52,7 @@ export default {
     <el-container>
       <el-header>
         <div class="title">
-          爱购后台管理
+          优购后台管理
         </div>
         <div class="user">
           <el-avatar icon="el-icon-user-solid"></el-avatar>

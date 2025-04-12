@@ -33,13 +33,14 @@ const routes = [
     {
         path: '/login',
         name: 'Login',
-        component: LoginView
+        component: LoginView,
+        meta: { requiresAuth: false }
     },
     {
         path: '/admin',
         name: 'AdminView',
         component: AdminView,
-        meta: {requiresAuth: true},
+        meta: { requiresAuth: true },
         children: [
             {
                 path: '',
@@ -49,83 +50,83 @@ const routes = [
                 path: 'home',
                 name: 'Home',
                 component: adminHome,
-                meta: {requiresAuth: true}
+                meta: { requiresAuth: true }
             },
             // 商品
             {
                 path: 'product',
                 name: 'Product',
                 component: adminProduct,
-                meta: {requiresAuth: true}
+                meta: { requiresAuth: true }
             },
             {
                 path: 'product-type',
                 name: 'ProductType',
                 component: adminProductType,
-                meta: {requiresAuth: true}
+                meta: { requiresAuth: true }
             },
             {
                 path: 'brand',
                 name: 'Brand',
                 component: adminBrand,
-                meta: {requiresAuth: true}
+                meta: { requiresAuth: true }
             },
             {
                 path: 'sales',
                 name: 'Sales',
                 component: adminSales,
-                meta: {requiresAuth: true}
+                meta: { requiresAuth: true }
             },
             // 购物车
             {
                 path: 'shop-cart',
                 name: 'ShopCart',
                 component: adminShopCart,
-                meta: {requiresAuth: true}
+                meta: { requiresAuth: true }
             },
             {
                 path: 'shop-cart-product',
                 name: 'ShopCartProduct',
                 component: adminShopCartProduct,
-                meta: {requiresAuth: true}
+                meta: { requiresAuth: true }
             },
             {
                 path: 'receiving-address',
                 name: 'ReceivingAddress',
                 component: adminReceivingAddress,
-                meta: {requiresAuth: true}
+                meta: { requiresAuth: true }
             },
             // 订单
             {
                 path: 'order',
                 name: 'Order',
                 component: adminOrder,
-                meta: {requiresAuth: true}
+                meta: { requiresAuth: true }
             },
             {
                 path: 'order-product',
                 name: 'OrderProduct',
                 component: adminOrderProduct,
-                meta: {requiresAuth: true}
+                meta: { requiresAuth: true }
             },
             // 系统
             {
                 path: 'user',
                 name: 'User',
                 component: adminUser,
-                meta: {requiresAuth: true}
+                meta: { requiresAuth: true }
             },
             {
                 path: 'carousel-figure',
                 name: 'CarouselFigure',
                 component: adminCarouselFigure,
-                meta: {requiresAuth: true}
+                meta: { requiresAuth: true }
             },
             {
                 path: 'search-history',
                 name: 'SearchHistory',
                 component: adminSearchHistory,
-                meta: {requiresAuth: true}
+                meta: { requiresAuth: true }
             }
         ]
     }
@@ -137,41 +138,31 @@ const router = new VueRouter({
     routes
 });
 
-let isRedirecting = false;
 // 创建全局前置守卫
 router.beforeEach((to, from, next) => {
-    const token = localStorage.getItem('token'); // 获取本地存储中的token
+    const token = localStorage.getItem('token');
+    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
-    // 检查目标路由是否需要授权
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        // 如果没有token，则重定向到登录页面
+    // 如果需要认证
+    if (requiresAuth) {
         if (!token) {
-            if (!isRedirecting) {
-                isRedirecting = true;
-                next({
-                    path: '/login',
-                    query: {redirect: to.fullPath} // 将当前路由作为参数传递给登录页面
-                });
-            } else {
-                next(false); // 阻止进一步的导航
-            }
+            // 没有token，重定向到登录页
+            next({
+                path: '/login',
+                query: { redirect: to.fullPath }
+            });
         } else {
-            isRedirecting = false;
-            // 如果有token且是从登录页重定向过来的，检查是否有重定向参数
-            if (from.path === '/login' && to.query.redirect) {
-                // 解析并重定向到原始目标页面
-                const redirectPath = decodeURIComponent(to.query.redirect);
-                next(redirectPath);
-            } else if (from.path.startsWith('/admin') && to.path.startsWith('/admin')) {
-                // 如果是从 /admin 下的子路由跳转到另一个 /admin 子路由，直接放行
-                next();
-            } else {
-                // 直接放行，避免不必要的重定向
-                next();
-            }
+            // 有token，直接放行
+            next();
         }
     } else {
-        next(); // 对于不需要授权的路由，直接放行
+        // 不需要认证的路由，直接放行
+        if (to.path === '/login' && token) {
+            // 如果已登录且访问登录页，重定向到首页
+            next({ path: '/admin' });
+        } else {
+            next();
+        }
     }
 });
 

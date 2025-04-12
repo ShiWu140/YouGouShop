@@ -93,7 +93,7 @@ onMounted(() => {
           </el-row>
         </div>
 
-        <!-- 注释掉微信支付二维码部分
+        <!-- 注释掉微信支付二维码部分 -->
         <div class="payment-qr">
           <el-row>
             <el-col :span="24" class="qr-title">扫码支付</el-col>
@@ -107,7 +107,7 @@ onMounted(() => {
             </el-col>
           </el-row>
         </div>
-        -->
+       
 
         <div class="payment-action" v-if="paymentStatus !== 'SUCCESS'">
           <el-button type="primary" size="large" @click="handlePayment">立即支付</el-button>

@@ -1,10 +1,11 @@
 <script setup>
 import Footer from "@/components/Footer.vue";
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import axios from 'axios';
 import {useRouter} from 'vue-router';
 import {ElMessage} from "element-plus";
 import {login as loginApi} from '@/api/user';
+import SIdentify  from "@/components/Sidentify.vue";
 
 const userName = ref('');
 const password = ref('');
@@ -12,9 +13,22 @@ const code = ref('');
 const rememberMe = ref(false);
 const router = useRouter();
 
+let sidentifyMode = ref('') //输入框验证码
+let identifyCode = ref('') //图形验证码
+let identifyCodes = ref('1234567890abcdefjhijklinopqrsduvwxyz') //验证码出现的数字和字母
+
 const login = async () => {
   if (!userName.value || !password.value) {
-    alert('请输入用户名和密码');
+    ElMessage.warning('请输入用户名和密码');
+    return;
+  }
+  if (!code.value) {
+    ElMessage.warning('请输入验证码');
+    return;
+  }
+  if (code.value.toLowerCase() !== identifyCode.value.toLowerCase()) {
+    ElMessage.warning('验证码错误');
+    refreshCode();
     return;
   }
   try {
@@ -41,6 +55,27 @@ const login = async () => {
     ElMessage.warning('登录失败，请稍后重试');
   }
 };
+// 生成随机数
+const randomNum = (min, max) => {
+  max = max + 1
+  return Math.floor(Math.random() * (max - min) + min)
+}
+// 随机生成验证码字符串
+const makeCode = (o, l) => {
+  for (let i = 0; i < l; i++) {
+    identifyCode.value += o[randomNum(0, o.length)]
+  }
+}
+// 更新验证码
+const refreshCode = () => {
+  identifyCode.value = ''
+  makeCode(identifyCodes.value, 4)
+}
+
+onMounted(() => {
+  identifyCode.value = ''
+  makeCode(identifyCodes.value, 4)
+})
 </script>
 
 <template>
@@ -65,8 +100,10 @@ const login = async () => {
           <p><span class="icon-account"></span><input type="text" v-model="userName" placeholder="请输入已注册的账号"/>
           </p>
           <p><span class="icon-pwd"></span><input type="password" v-model="password" placeholder="请输入密码"/></p>
-          <p class="clear-float"><input type="text" v-model="code" placeholder="验证码" class="code"/><img
-              src="@/assets/img/code.jpg" width="110" height="42" class="code-img"/></p>
+          <p class="clear-float">
+            <input type="text" v-model="code" placeholder="验证码" class="code"/>
+            <SIdentify :identifyCode="identifyCode" @click="refreshCode" class="code-img"/>
+          </p>
           <p><input type="checkbox" v-model="rememberMe" class="chk-login"/><span>7天免登录</span>
           </p>
           <button type="submit" class="sum-btn">登录</button>
@@ -78,5 +115,16 @@ const login = async () => {
 </template>
 
 <style scoped>
-/* 添加样式 */
+.code-img {
+  cursor: pointer;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+.code {
+  width: 110px;
+  height: 42px;
+  padding: 0 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
 </style>

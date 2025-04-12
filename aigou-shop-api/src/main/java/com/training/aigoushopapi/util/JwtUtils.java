@@ -12,7 +12,7 @@ import java.util.Date;
 public class JwtUtils {
 
     public static final String JWT_KEY_USERNAME = "username";
-    public static final int EXPIRE_MINUTES = 120;
+    public static final int EXPIRE_MINUTES = 1;
 
     /**
      * 私钥加密token
