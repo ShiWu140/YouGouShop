@@ -1,107 +1,78 @@
-旧代码地址：https://gitee.com/ethanzhao2001/aigou
+# Aigou SpringBoot Project
 
-# 运行
+## 项目介绍
+Aigou是一个基于SpringBoot3和Vue的电商商城系统，采用前后端分离架构，包含后台管理系统和前台商城系统。
 
-**aigou-api 文件已归档，请使用aigou-shop-api**
+## 技术栈
 
-**接口文档**：https://apifox.com/apidoc/shared-d00c1de8-2798-4948-ab8d-2d17dbc242d3
+### 后端技术
+- JDK 17
+- SpringBoot 3.4.0
+- Spring Security
+- MyBatis
+- Redis
+- MySQL
+- Maven
 
-## 接口
+### 前端技术
+- Vue2 + Element UI (后台管理)
+- Vue3 + Element Plus (前台商城)
 
-JDK 17
+## 项目结构
+- aigou-shop-api: 后端接口服务
+- aigou-web: 后台管理系统
+- aigou-shop: 前台商城系统
 
-Springboot 3.4.0
+## 运行说明
 
-端口：8080
+### 后端接口服务
+- 端口：8080
+- 环境要求：JDK 17
+- 启动方式：直接运行主类或使用Maven命令
 
-## 后台管理
-
-vue2 + element-ui
-
-端口：8081
-
-```
+### 后台管理系统
+- 端口：8081
+- 技术栈：Vue2 + Element UI
+- 启动步骤：
+```bash
 cd aigou-web
 npm install
 npm run serve
 ```
 
-## 前台页面
-
-vue3 + element-plus
-
-端口：8091
-
-```
+### 前台商城系统
+- 端口：8091
+- 技术栈：Vue3 + Element Plus
+- 启动步骤：
+```bash
 cd aigou-shop
 npm install
 npm run dev
 ```
 
-# 后台
+## 主要功能
+- 商品管理
+- 订单管理
+- 会员管理
+- 权限管理
+- 系统设置
+- 数据统计
 
-## 规范
+## 开发环境
+- IDE推荐：IntelliJ IDEA
+- 数据库：MySQL
+- 缓存：Redis
+- 包管理：Maven
 
-1. 小驼峰命名
-2. 多写注释
-3. **不要**随意改动接口定义
-4. **主要修改controller**，修改之前dao.impl，service.impl不规范的地方
-5. 后端接口修改好后，记得同步**修改前端请求**
-6. 部分页面需要添加**搜索功能**
+## 注意事项
+1. 确保已安装所需环境（JDK 17、Node.js、MySQL、Redis）
+2. 按照顺序启动服务：先启动后端，再启动前端
+3. 首次运行需要初始化数据库
 
-## 🚧施工进度
+## 相关截图
 
-### 商品
+## 贡献指南
+欢迎提交Issue和Pull Request
 
-- [x] 商品管理
-- [x] 商品类型管理
-- [x] 商品品牌管理
-- [x] 商品销量管理
-
-### 购物车 李科
-
-- [x] 购物车管理
-- [x] 购物车商品管理
-- [x] 收货地址
-
-### 订单 王熙
-
-- [x] 订单管理
-- [x] 订单商品管理
-
-### 系统 杜杰龙
-
-- [x] 用户管理
-- [x] 轮播图管理
-- [x] 搜索历史管理
-
-# 前台
-
-## 🚧施工进度
-
-### 赵映添
-
-- [X] goodsDetail.html
-
-- [X] index.html
-
-
-### 杜杰龙
-
-- [X] shoppingCart.html
-
-- [X] login.html
-
-- [X] register.html
-
-
-### 王熙
-
-- [X] buyerTrade.html
-
-
-### 熊诗怡
-
-- [X] deliverAddress.html
-
-- [X] classify.html
+## 许可证
+本项目采用开源协议
