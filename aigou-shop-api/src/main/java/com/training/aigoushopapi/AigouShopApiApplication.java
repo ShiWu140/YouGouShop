@@ -1,9 +1,11 @@
 package com.training.aigoushopapi;
 
-import org.apache.log4j.Logger;
 import org.mybatis.spring.annotation.MapperScan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -12,10 +14,11 @@ import org.springframework.core.env.Environment;
  * @author shiwu
  * @since 2024-12-18
  */
+@EnableCaching
 @SpringBootApplication
 @MapperScan("com.training.aigoushopapi.mapper")
 public class AigouShopApiApplication {
-    private static final Logger logger = Logger.getLogger(AigouShopApiApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(AigouShopApiApplication.class);
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(AigouShopApiApplication.class, args);
@@ -27,7 +30,8 @@ public class AigouShopApiApplication {
         String contextPath = env.getProperty("server.servlet.context-path", "");
 
         // 输出启动信息
-        logger.info("\n\n===========> 系统启动成功！后台地址：http://localhost:" + serverPort + contextPath);
+        String message = "\n\n===========> 系统启动成功！后台地址：http://localhost:" + serverPort + contextPath;
+        logger.info(message);
     }
 
 }
