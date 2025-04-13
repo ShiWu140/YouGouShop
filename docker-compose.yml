@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./aigou-shop-api
+      dockerfile: Dockerfile
+    container_name: aigou-backend
+    restart: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/aigou?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=your_password
+      - SPRING_REDIS_HOST=redis
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - aigou-network
+
+  frontend:
+    build:
+      context: ./aigou-shop
+      dockerfile: Dockerfile
+    container_name: aigou-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - aigou-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: aigou-mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=your_password
+      - MYSQL_DATABASE=aigou
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - aigou-network
+
+  redis:
+    image: redis:alpine
+    container_name: aigou-redis
+    restart: always
+    volumes:
+      - redis-data:/data
+    networks:
+      - aigou-network
+
+networks:
+  aigou-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  redis-data: 
