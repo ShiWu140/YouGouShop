@@ -134,7 +134,7 @@ export default {
           <el-input v-model.trim="this.imageUrl" autocomplete="off"></el-input>
           <el-upload
               class="avatar-uploader"
-              action="http://localhost:8080/upload/fileupload"
+              action="http://localhost:8088/upload/fileupload"
               accept=".jpg,.png,.webp"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"

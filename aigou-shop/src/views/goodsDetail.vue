@@ -2,10 +2,10 @@
 import Header from "@/components/Header.vue";
 import Search from "@/components/Search.vue";
 import Footer from "@/components/Footer.vue";
-import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
-import { ElMessage } from "element-plus";
-import { goodsApi } from "@/api/goods";
+import {onMounted, ref} from "vue";
+import {useRoute} from "vue-router";
+import {ElMessage} from "element-plus";
+import {goodsApi} from "@/api/goods";
 
 const route = useRoute();
 const productTypes = ref([]);
@@ -16,42 +16,18 @@ const quantity = ref(1);
 const loadData = async () => {
   try {
     const [types, detail, similar] = await Promise.all([
-      fetchTypes(),
-      fetchDetail(),
-      fetchRandomProducts()
+      goodsApi.fetchProductTypes(),
+      goodsApi.fetchGoodsDetail(route.query.id),
+      goodsApi.fetchRandomProductsByType(route.query.id)
     ]);
     productTypes.value = types;
     goodsDetail.value = detail;
     sameType.value = similar;
   } catch (error) {
+    console.log(productTypes.value)
+    console.log(goodsDetail.value)
+    console.log(sameType.value)
     ElMessage.error('数据加载失败，请刷新页面重试');
-  }
-};
-
-const fetchTypes = async () => {
-  try {
-    const types = await goodsApi.fetchProductTypes();
-    productTypes.value = types;
-  } catch (error) {
-    console.error('获取商品分类失败:', error);
-  }
-};
-
-const fetchDetail = async () => {
-  try {
-    const detail = await goodsApi.fetchGoodsDetail(route.query.id);
-    goodsDetail.value = detail;
-  } catch (error) {
-    console.error('获取商品详情失败:', error);
-  }
-};
-
-const fetchRandomProducts = async () => {
-  try {
-    const products = await goodsApi.fetchRandomProductsByType(route.query.id);
-    sameType.value = products;
-  } catch (error) {
-    console.error('获取同类商品失败:', error);
   }
 };
 
@@ -60,7 +36,6 @@ const handleAddToCart = async () => {
     await goodsApi.addToCart(localStorage.getItem('userId'), route.query.id, quantity.value);
     ElMessage.success('添加购物车成功！');
   } catch (error) {
-    console.error('添加到购物车失败:', error);
     ElMessage.error('添加失败，请重试');
   }
 };
@@ -80,10 +55,11 @@ onMounted(() => {
 });
 </script>
 
+
 <template>
   <Header/>
   <Search/>
-  
+
   <!-- 导航栏 -->
   <div class="nav">
     <div class="w1230">
@@ -110,15 +86,15 @@ onMounted(() => {
   <!-- 商品详情 -->
   <div class="w1230 clear-float goods-main">
     <div class="goods-content">
-      <div class="big-img">
-        <el-image 
-          :src="goodsDetail.productImage" 
-          fit="contain" 
-          style="width: 360px; height: 360px"
-          :preview-src-list="[goodsDetail.productImage]"
-        />
-      </div>
-      
+            <div class="big-img">
+              <el-image
+                :src="goodsDetail.productImage"
+                fit="contain"
+                style="width: 360px; height: 360px"
+                :preview-src-list="[goodsDetail.productImage]"
+              />
+            </div>
+
       <div class="goods-detail">
         <h3 class="goods-title">{{ goodsDetail.productName }}</h3>
         <p class="price">
@@ -128,36 +104,38 @@ onMounted(() => {
         <p class="store-num">
           销量：<span>{{ goodsDetail.salasNum }}件</span>
         </p>
-        
+
         <div class="update-num">
           <div class="quantity">
-            <el-button 
-              :disabled="quantity <= 1" 
-              @click="decrement" 
-              circle
-              size="large"
-              class="quantity-btn"
-            >-</el-button>
-            <el-input-number 
-              v-model="quantity" 
-              :min="1" 
-              size="large"
-              controls-position="right"
-              class="quantity-input"
+            <el-button
+                :disabled="quantity <= 1"
+                @click="decrement"
+                circle
+                size="large"
+                class="quantity-btn"
+            >-
+            </el-button>
+            <el-input-number
+                v-model="quantity"
+                :min="1"
+                size="large"
+                controls-position="right"
+                class="quantity-input"
             />
-            <el-button 
-              @click="increment" 
-              circle
-              size="large"
-              class="quantity-btn"
-            >+</el-button>
+            <el-button
+                @click="increment"
+                circle
+                size="large"
+                class="quantity-btn"
+            >+
+            </el-button>
           </div>
-          
-          <el-button 
-            type="primary" 
-            @click="handleAddToCart"
-            size="large"
-            class="add-cart-btn"
+
+          <el-button
+              type="primary"
+              @click="handleAddToCart"
+              size="large"
+              class="add-cart-btn"
           >
             加入购物车
           </el-button>
@@ -168,7 +146,9 @@ onMounted(() => {
     <!-- 店家承诺 -->
     <div class="promise">
       <h3>
-        <el-icon><Check /></el-icon>
+        <el-icon>
+          <Check/>
+        </el-icon>
         优购商城承诺
       </h3>
       <p>优购平台上的商品均由卖家自行销售并发货，卖家负责提供发票及相关售后服务，请您放心购买！
@@ -192,10 +172,10 @@ onMounted(() => {
       <div class="recommend-grid">
         <div v-for="product in sameType" :key="product.id" class="recommend-item">
           <a :href="`/goodsDetail?id=${product.id}`">
-            <el-image 
-              :src="product.productImage" 
-              fit="contain" 
-              style="width: 180px; height: 180px"
+            <el-image
+                :src="product.productImage"
+                fit="contain"
+                style="width: 180px; height: 180px"
             />
             <p class="g-title">{{ product.productName }}</p>
             <div class="g-info">
@@ -323,7 +303,7 @@ onMounted(() => {
 }
 
 .recommend {
-  flex: 0 0 220px;  /* 固定宽度，不伸缩 */
+  flex: 0 0 220px; /* 固定宽度，不伸缩 */
   background: #fff;
   padding: 20px;
   border-radius: 8px;
@@ -375,7 +355,7 @@ onMounted(() => {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   height: 40px;
-  text-align: left;  /* 标题左对齐 */
+  text-align: left; /* 标题左对齐 */
 }
 
 .g-info {

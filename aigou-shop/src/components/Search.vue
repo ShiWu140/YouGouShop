@@ -12,11 +12,11 @@ const handleSearch = () => {
   if (!searchKeyword.value.trim()) {
     return;
   }
-  
+
   // 根据当前路由决定跳转行为
   if (route.path === '/classify') {
     // 在分类页面时，触发父组件的搜索方法
-    const event = new CustomEvent('search', { 
+    const event = new CustomEvent('search', {
       detail: { keyword: searchKeyword.value.trim() }
     });
     window.dispatchEvent(event);
@@ -37,7 +37,7 @@ const handleKeyPress = (event) => {
 
 const fetchSearchHistory = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/searchHistory/page', {
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/searchHistory/page`, {
       params: {
         current: 1,
         size: 10
@@ -51,7 +51,7 @@ const fetchSearchHistory = async () => {
 
 onMounted(() => {
   fetchSearchHistory();
-  
+
   // 如果有搜索关键词，设置到搜索框
   if (route.query.keyword) {
     searchKeyword.value = route.query.keyword;
@@ -68,10 +68,10 @@ onMounted(() => {
     <div class="top-header-right">
       <!--搜索框-->
       <div class="search">
-        <input 
-          type="text" 
+        <input
+          type="text"
           v-model="searchKeyword"
-          :placeholder="route.path === '/classify' ? '优购网-专业的综合网上购物商城' : '请输入商品关键词'" 
+          :placeholder="route.path === '/classify' ? '优购网-专业的综合网上购物商城' : '请输入商品关键词'"
           class="search-txt"
           @keyup="handleKeyPress"
         />
@@ -79,9 +79,9 @@ onMounted(() => {
       </div>
       <!--热搜-->
       <p class="hotkey">
-        <a 
-          v-for="history in searchHistory" 
-          :key="history.id" 
+        <a
+          v-for="history in searchHistory"
+          :key="history.id"
           @click="searchKeyword = history.searchWords; handleSearch()"
         >
           {{ history.searchWords }}

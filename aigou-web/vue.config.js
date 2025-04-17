@@ -1,7 +1,7 @@
 module.exports = {
     devServer: {
         allowedHosts: 'all',
-        port: 8081,
+        port: 8089,
         client: {
             overlay: false
         }

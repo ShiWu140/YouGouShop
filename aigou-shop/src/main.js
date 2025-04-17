@@ -20,7 +20,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 app.config.productionTip = false;
 // 挂载全局属性
 app.config.globalProperties.$http = axios;
-app.config.globalProperties.$http.defaults.baseURL = 'http://localhost:8080';
+app.config.globalProperties.$http.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 
 //请求拦截器
 app.config.globalProperties.$http.interceptors.request.use(req => {
@@ -62,24 +62,7 @@ app.config.globalProperties.$http.interceptors.response.use(
         console.log("失败信息" + err);
     }
 );
-// const refreshToken = async () => {
-//     try {
-//         const oldToken = localStorage.getItem('token'); // 获取旧 Token
-//         const response = await axios.post('/user/refresh-token', oldToken, {
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//         });
-//
-//         const newToken = response.data; // 获取新 Token
-//         localStorage.setItem('token', newToken); // 将新 Token 存储到本地
-//         console.log('New Token:', newToken);
-//     } catch (error) {
-//         console.error('Error refreshing token:', error);
-//         // 可能需要处理 Token 过期或无效的情况，提示用户重新登录
-//     }
-// };
-// onMounted(refreshToken)
+
 app.component('Header', Header)
 app.component('Footer', Footer)
 app.mount('#app')

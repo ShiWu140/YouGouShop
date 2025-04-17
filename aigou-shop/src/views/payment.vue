@@ -31,7 +31,7 @@ const handlePayment = async () => {
         state: 1  // 1 表示已支付
       }
     });
-    
+
     if (response.data.code === 1) {
       ElMessage.success('支付成功！');
       paymentStatus.value = 'SUCCESS';
@@ -98,16 +98,16 @@ onMounted(() => {
           <el-row>
             <el-col :span="24" class="qr-title">扫码支付</el-col>
             <el-col :span="24" class="qr-image">
-              <el-image 
-                :src="'http://localhost:8080/wxpay/code?url=' + route.query.qrCodeUrl" 
-                fit="contain" 
-                width="200px" 
+              <el-image
+                :src="'http://yougou.dushiwu.cn/api/wxpay/code?url=' + route.query.qrCodeUrl"
+                fit="contain"
+                width="200px"
                 height="200px"
               ></el-image>
             </el-col>
           </el-row>
         </div>
-       
+
 
         <div class="payment-action" v-if="paymentStatus !== 'SUCCESS'">
           <el-button type="primary" size="large" @click="handlePayment">立即支付</el-button>

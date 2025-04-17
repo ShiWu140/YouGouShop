@@ -1,0 +1,44 @@
+server:
+  port: 8088
+spring:
+  freemarker:
+    enabled: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/aigou?serverTimezone=GMT&useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password:
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 0
+      jedis:
+        pool:
+          max-active: 8
+          max-wait: 100ms
+          max-idle: 8
+          min-idle: 10
+mybatis-plus:
+  type-aliases-package: com.training.aigoushopapi.entity
+  mapper-locations: mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+security:
+  # URL白名单
+  whitelist:
+    - /user/add
+    - /user/login
+    - /product/getProductSalesList
+    - /product/allCategoryProduct
+    - /carouselFigure/all
+    - /productType/all
+    - /product/newProduct
+    - /searchHistory/page
+    - /wxpay/makeOrder
+    - /wxpay/code
+    - /wxpay/checkOrder
+    - /wxpay/callback
+    - /product/detail
+    - /product/sameType
