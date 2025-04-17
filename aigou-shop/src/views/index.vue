@@ -15,19 +15,19 @@ const allCategoryProduct = ref([]);
 const fetchData = async () => {
   // 获取轮播图数据
   carouselFigures.value = await carouselApi.getAllCarouselFigures();
-  
+
   // 获取商品类型数据
   productTypes.value = await productTypeApi.getAllProductTypes();
-  
+
   // 获取新品数据
   productNews.value = await productApi.getNewProducts();
   if (productNews.value.length > 0) {
     newProductImage.value = productNews.value[0].productImage;
   }
-  
+
   // 获取销量排行数据
   productSales.value = await productApi.getProductSales();
-  
+
   // 获取所有分类商品数据
   allCategoryProduct.value = await productApi.getAllCategoryProduct();
 };
@@ -56,18 +56,18 @@ onMounted(() => {
       </ul>
     </div>
     <!--轮播-->
-    <el-carousel width="1020px" height="360px">
+    <el-carousel width="1020px" height="360px" >
       <el-carousel-item v-for="item in carouselFigures" :key="item">
-        <el-image :src="item.url" alt="" fit="fill" style="width: 1020px;height: 360px"/>
+        <el-image :src="item.url" alt="" fit="fill" class="carousel-img"/>
       </el-carousel-item>
     </el-carousel>
   </div>
   <!--新品+排行榜-->
   <div class="new-rank w1230 clear-float">
     <a href="#" class="new-img">
-      <el-image 
-        :src="newProductImage || '@/assets/img/new.jpg'" 
-        fit="cover" 
+      <el-image
+        :src="newProductImage || '@/assets/img/new.jpg'"
+        fit="cover"
         style="width: 267px; height: 400px"
       />
     </a>
@@ -329,5 +329,12 @@ onMounted(() => {
 }
 .rank-list li:hover img{
 	transform: scale(1.1);
+}
+.carousel-img {
+  width: 1015px;
+  height: 360px;
+  margin-left: 5px;
+  object-fit: cover;
+  border-radius: 12px;
 }
 </style>
