@@ -31,7 +31,7 @@ public class WxPayService {
     public static final String BODY = "泡泡教育";
     public static final String FEE_TYPE = "CNY";
     //支付成功回调接口的URL，内网测试时需要配置内网穿透
-    public static final String NOTIFY_URL = "http://wxpay.dushiwu.cn/wxpay/callback";
+    public static final String NOTIFY_URL = "http://y2938328.natappfree.cc/wxpay/callback";
     public static final String TRADE_TYPE = "NATIVE";
     public static final String SIGN = "5E00F9F72173C9449F802411E36208734B8138870ED3F66D8E2821D55B317078";
 

@@ -129,6 +129,9 @@ export default {
     //回车键
     handleSubmit(item) {
       this.nameClick(item);
+    },
+    goToDetail(id) {
+      this.$router.push({ path: '/goodsDetail', query: { id } });
     }
   },
   async mounted() {
@@ -254,7 +257,7 @@ export default {
     <div class="product-list-content">
       <div v-if="msg" class="no-data">{{ msg }}</div>
       <div v-else class="product-grid">
-        <div v-for="product in products" :key="product.id" class="product-item">
+        <div v-for="product in products" :key="product.id" class="product-item" @click="goToDetail(product.id)" style="cursor:pointer">
           <el-image 
             :src="product.productImage" 
             style="width: 200px; height: 200px"

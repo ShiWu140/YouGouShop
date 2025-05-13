@@ -74,7 +74,7 @@ export default {
             </el-image>
           </el-col>
           <el-col :span="12">
-            <h1>优购网后台管理系统</h1>
+            <h1>优购商城后台管理系统</h1>
             <el-form ref="form" :model="form" :rules="rules" style="padding: 30px">
               <el-form-item label="用户名" prop="username">
                 <el-input v-model.trim="form.username" placeholder="请输入内容" @keyup.enter.native="login"></el-input>

@@ -391,25 +391,25 @@ export default {
     </el-row>
 
     <!-- 最近订单列表 -->
-    <el-card shadow="hover" style="margin-top: 20px;">
-      <div class="section-header">
-        <span class="section-title">最近订单</span>
-        <el-button type="text" @click="viewAllOrders">查看全部</el-button>
-    </div>
-      <el-table :data="recentOrders" style="width: 100%" v-loading="tableLoading">
-        <el-table-column prop="orderId" label="订单号" width="180"></el-table-column>
-        <el-table-column prop="product" label="商品" width="180"></el-table-column>
-        <el-table-column prop="price" label="价格" width="100"></el-table-column>
-        <el-table-column prop="time" label="时间" width="180"></el-table-column>
-        <el-table-column prop="status" label="状态">
-          <template #default="scope">
-            <el-tag :type="getStatusType(scope.row.status)">{{ scope.row.status }}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="quantity" label="销量" width="100"></el-table-column>
-        <el-table-column prop="amount" label="销售额" width="120"></el-table-column>
-      </el-table>
-    </el-card>
+<!--    <el-card shadow="hover" style="margin-top: 20px;">-->
+<!--      <div class="section-header">-->
+<!--        <span class="section-title">最近订单</span>-->
+<!--        <el-button type="text" @click="viewAllOrders">查看全部</el-button>-->
+<!--    </div>-->
+<!--      <el-table :data="recentOrders" style="width: 100%" v-loading="tableLoading">-->
+<!--        <el-table-column prop="orderId" label="订单号" width="180"></el-table-column>-->
+<!--        <el-table-column prop="product" label="商品" width="180"></el-table-column>-->
+<!--        <el-table-column prop="price" label="价格" width="100"></el-table-column>-->
+<!--        <el-table-column prop="time" label="时间" width="180"></el-table-column>-->
+<!--        <el-table-column prop="status" label="状态">-->
+<!--          <template #default="scope">-->
+<!--            <el-tag :type="getStatusType(scope.row.status)">{{ scope.row.status }}</el-tag>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--        <el-table-column prop="quantity" label="销量" width="100"></el-table-column>-->
+<!--        <el-table-column prop="amount" label="销售额" width="120"></el-table-column>-->
+<!--      </el-table>-->
+<!--    </el-card>-->
   </div>
 </template>
 

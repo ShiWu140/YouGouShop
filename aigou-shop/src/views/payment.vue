@@ -21,11 +21,13 @@ orderId.value = route.query.orderId;
 orderAmount.value = route.query.totalAmount;
 tradeNo.value = route.query.tradeNo;
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 // 测试环境的支付处理函数
 const handlePayment = async () => {
   try {
     // 直接更新订单状态为已支付
-    const response = await axios.post('/order/updatePaymentStatus', null, {
+    const response = await axios.post(`${API_BASE_URL}/order/updatePaymentStatus`, null, {
       params: {
         orderId: orderId.value,
         state: 1  // 1 表示已支付
@@ -48,17 +50,26 @@ const handlePayment = async () => {
   }
 };
 
-/* 以下为原微信支付相关代码，暂时注释保存
+// /* 以下为原微信支付相关代码，暂时注释保存
 // 检查订单状态
 const checkStatus = async () => {
   try {
-    const {code, msg, data} = await checkOrderStatus(tradeNo.value);
+    const {code, msg, data} = await checkOrderStatus(tradeNo.value, API_BASE_URL);
     if (code === 1 && msg === "success") {
       paymentStatus.value = data;
       if (paymentStatus.value === 'SUCCESS') {
         ElMessage.success('支付成功！');
-        // 停止轮询
         clearInterval(intervalId);
+        // 主动更新订单状态
+        await axios.post(`${API_BASE_URL}/order/updatePaymentStatus`, null, {
+          params: {
+            orderId: orderId.value,
+            state: 1
+          }
+        });
+        setTimeout(() => {
+          router.push('/buyerTrade');
+        }, 3000);
       } else {
         ElMessage.info("未支付");
       }
@@ -75,7 +86,7 @@ onMounted(() => {
   // 每10秒检查一次订单状态
   intervalId = setInterval(checkStatus, 10000);
 });
-*/
+// */
 </script>
 
 <template>
@@ -99,7 +110,7 @@ onMounted(() => {
             <el-col :span="24" class="qr-title">扫码支付</el-col>
             <el-col :span="24" class="qr-image">
               <el-image
-                :src="'http://yougou.dushiwu.cn/api/wxpay/code?url=' + route.query.qrCodeUrl"
+                :src="API_BASE_URL + '/wxpay/code?url=' + route.query.qrCodeUrl"
                 fit="contain"
                 width="200px"
                 height="200px"
@@ -117,7 +128,7 @@ onMounted(() => {
           <el-row>
             <el-col :span="24" class="success-title">
               <el-icon><Check /></el-icon>
-              支付成功！3秒后跳转到订单页面...
+              支付成功！
             </el-col>
           </el-row>
         </div>
