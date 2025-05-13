@@ -160,9 +160,21 @@ onMounted(() => {
   <div class="w1230 clear-float content-section">
     <!-- 商品介绍 -->
     <div class="goods-des">
-      <h3 class="goods-tro">商品介绍</h3>
-      <div class="goods-info">
-        <p>{{ goodsDetail.productDesc }}</p>
+      <h3 class="goods-tro">商品详情</h3>
+      <div class="goods-info goods-images">
+        <div v-if="goodsDetail.productDesc">
+          <el-image
+            v-for="(image, index) in goodsDetail.productDesc.split(',')"
+            :key="index"
+            :src="image"
+            fit="contain"
+            :preview-src-list="goodsDetail.productDesc.split(',')"
+            style="display: block; width: 100%; margin: 0; border-radius: 0; box-shadow: none;"
+          />
+        </div>
+        <div v-else>
+          暂无商品图片
+        </div>
       </div>
     </div>
 
@@ -413,9 +425,16 @@ onMounted(() => {
   border-bottom: 1px solid #eee;
 }
 
-.goods-info {
-  margin-top: 20px;
-  line-height: 1.6;
-  color: #666;
+.goods-info,
+.goods-images {
+  padding: 0;
+  margin: 0;
+}
+.goods-images .el-image {
+  display: block;
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 </style>

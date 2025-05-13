@@ -7,16 +7,17 @@
   <div class="footer">
     <div class="w1230">
       <p>
+
+        <a href="#">品类齐全，轻松购物</a>
+        <a href="#">正品行货，精致服务</a>
+        <a href="#">天天低价，畅选无忧</a>
+<!--        <a href="#">联系客服</a>-->
+<!--        <a href="#">开发平台</a>-->
+<!--        <a href="#">诚征英才</a>-->
         <a href="#">关于优购</a>
-        <a href="#">合作伙伴</a>
-        <a href="#">营销中心</a>
-        <a href="#">廉正举报</a>
-        <a href="#">联系客服</a>
-        <a href="#">开发平台</a>
-        <a href="#">诚征英才</a>
         <a href="#">联系我们</a>
-        <a href="#">网站地图</a>
-        <a href="#">知识产权</a>
+<!--        <a href="#">网站地图</a>-->
+<!--        <a href="#">知识产权</a>-->
         <span>|</span>
         <span>&copy;2024-2025 dushiwu.n 版权所有</span>
       </p>

@@ -20,6 +20,8 @@ export default {
       pageSize: 5,
       current: 1,
       operate: '',
+      imageUrl: '', // 商品主图
+      descImageUrls: [], // 商品介绍图片列表
       //表单验证
       rules: {
         productName: [
@@ -82,6 +84,7 @@ export default {
       this.operate = 'modify';
       this.product = JSON.parse(JSON.stringify(row));
       this.imageUrl = this.product.productImage;
+      this.descImageUrls = this.product.productDesc ? this.product.productDesc.split(',') : [];
       this.FormVisible = true;
     },
     addFrom() {
@@ -96,8 +99,8 @@ export default {
         productBrand: '',
         createTime: '',
       };
-      // 清空图片 URL
       this.imageUrl = '';
+      this.descImageUrls = [];
       this.FormVisible = true;
     },
     loadData() {
@@ -120,6 +123,36 @@ export default {
       console.log('upload', res)
       this.imageUrl = res
       this.product.productImage = res
+    },
+    // 商品介绍图片上传成功
+    handleDescImageSuccess(res, file) {
+      if (res) {
+        this.descImageUrls.push(res);
+        this.product.productDesc = this.descImageUrls.join(',');
+      }
+    },
+    // 商品介绍图片移除
+    handleDescImageRemove(file) {
+      const index = this.descImageUrls.indexOf(file.url);
+      if (index !== -1) {
+        this.descImageUrls.splice(index, 1);
+        this.product.productDesc = this.descImageUrls.join(',');
+      }
+    },
+    // 上传前检查
+    beforeDescImageUpload(file) {
+      const isImage = file.type.startsWith('image/');
+      const isLt5M = file.size / 1024 / 1024 < 5;
+
+      if (!isImage) {
+        this.$message.error('只能上传图片文件！');
+        return false;
+      }
+      if (!isLt5M) {
+        this.$message.error('图片大小不能超过 5MB！');
+        return false;
+      }
+      return true;
     }
   },
   mounted() {
@@ -164,7 +197,19 @@ export default {
           </el-upload>
         </el-form-item>
         <el-form-item label="商品详情" prop="productDesc">
-          <el-input v-model.trim="product.productDesc" autocomplete="off"></el-input>
+          <el-upload
+            class="desc-image-uploader"
+            action="http://localhost:8088/upload/fileupload"
+            accept=".jpg,.png"
+            list-type="picture-card"
+            :on-success="handleDescImageSuccess"
+            :on-remove="handleDescImageRemove"
+            :before-upload="beforeDescImageUpload"
+            :headers="uploadHeaders"
+            :file-list="descImageUrls.map(url => ({url}))"
+            multiple>
+            <i class="el-icon-plus"></i>
+          </el-upload>
         </el-form-item>
         <el-form-item label="商品价格" prop="price">
           <el-input v-model.trim.number="product.price" autocomplete="off"></el-input>
@@ -199,7 +244,7 @@ export default {
     <el-table
         :data="products"
         :height="tableHeight"
-        border
+        :fit="true"
         style="width: 100%;">
       <el-table-column
           label="商品名称"
@@ -220,6 +265,13 @@ export default {
           label="商品详情"
           min-width="100px"
           prop="productDesc">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.productDesc" placement="top">
+            <div class="desc-cell">
+              {{ scope.row.productDesc }}
+            </div>
+          </el-tooltip>
+        </template>
       </el-table-column>
       <el-table-column
           label="价格"
@@ -314,6 +366,37 @@ export default {
   width: 100%;
   height: auto;
   object-fit: contain; /* 保持图片比例，避免图片被拉伸 */
+}
+
+.desc-image-uploader {
+  margin-top: 10px;
+}
+
+.desc-image-uploader .el-upload--picture-card {
+  width: 120px;
+  height: 120px;
+  line-height: 120px;
+}
+
+.desc-image-uploader .el-upload-list--picture-card .el-upload-list__item {
+  width: 120px;
+  height: 120px;
+}
+
+.el-upload__tip {
+  color: #666;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.desc-cell {
+  max-height: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  cursor: pointer;
 }
 </style>
 
