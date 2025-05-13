@@ -1,6 +1,6 @@
 <script lang="js" setup>
 import {ElMessage, ElTable} from 'element-plus';
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, computed} from 'vue';
 import {shoppingCartApi} from '@/api/shoppingCart';
 
 
@@ -212,6 +212,12 @@ onMounted(() => {
   fetchProducts();
   fetchAddress();
 })
+// 计算已选中商品的总价
+const totalPrice = computed(() => {
+  return multipleSelection.value.reduce((sum, item) => {
+    return sum + (item.productPrice * item.productNum);
+  }, 0);
+});
 </script>
 
 <template>
@@ -292,6 +298,8 @@ onMounted(() => {
           </template>
         </el-table-column>
       </el-table>
+      <div style="margin-top: 10px;margin-right: 30px; font-size: 18px; color: #B41E23; text-align: right;">总价：<b>￥{{ totalPrice }}</b>
+</div>
       <div style="margin: 2px">
         <el-button @click="toggleSelection(tableData)">全选</el-button>
         <el-button type="danger" @click="batchDelete()">批量删除</el-button>
