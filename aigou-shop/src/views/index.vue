@@ -67,7 +67,7 @@ onMounted(() => {
     <a href="#" class="new-img">
       <el-image
         :src="newProductImage || '@/assets/img/new.jpg'"
-        fit="cover"
+        fit="contain"
         style="width: 267px; height: 400px"
       />
     </a>

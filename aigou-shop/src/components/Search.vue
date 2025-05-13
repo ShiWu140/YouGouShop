@@ -8,9 +8,22 @@ const route = useRoute();
 const searchHistory = ref([]);
 const searchKeyword = ref('');
 
-const handleSearch = () => {
+const handleSearch = async () => {
   if (!searchKeyword.value.trim()) {
     return;
+  }
+
+  // 更新搜索历史
+  try {
+    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/searchHistory/updateKeyword`, null, {
+      params: {
+        keyword: searchKeyword.value.trim()
+      }
+    });
+    // 刷新搜索历史
+    await fetchSearchHistory();
+  } catch (error) {
+    console.error('Error updating search history:', error);
   }
 
   // 根据当前路由决定跳转行为
@@ -141,7 +154,6 @@ onMounted(() => {
 .search-txt {
   flex: 1;
   height: 40px;
-  padding: 0 px;
   border: 2px solid #B41E23;
   border-right: none;
   font-size: 14px;

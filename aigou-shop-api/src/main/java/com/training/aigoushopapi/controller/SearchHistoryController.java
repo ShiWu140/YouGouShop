@@ -92,4 +92,15 @@ public class SearchHistoryController {
     public boolean delete(@RequestBody SearchHistory searchHistory) {
         return searchHistoryService.removeById(searchHistory.getId());
     }
+
+    /**
+     * 更新或添加搜索关键词
+     *
+     * @param keyword 搜索关键词
+     * @return 成功或失败信息
+     */
+    @PostMapping("/updateKeyword")
+    public boolean updateKeyword(@RequestParam String keyword) {
+        return searchHistoryService.updateOrAddKeyword(keyword);
+    }
 }
